@@ -86,7 +86,7 @@ struct ManualPlanView: View {
             ForEach(suggestions) { m in
                 Button { picked = m; slots = []; special = nil; typing = false } label: {
                     HStack(spacing: 12) {
-                        PillTile(look: m.look, box: 48)
+                        PillTile(look: m.look, box: 48, zoomable: false)
                         VStack(alignment: .leading) {
                             Text(m.title).font(.title3.weight(.bold))
                             if let i = m.indication { Text(i.de).font(.callout).foregroundStyle(.secondary) }

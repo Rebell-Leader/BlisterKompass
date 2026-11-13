@@ -42,7 +42,7 @@ struct LookPickerView: View {
                     ForEach(ShapeInfo.all, id: \.code) { s in
                         Button { shape = s.code } label: {
                             VStack(spacing: 6) {
-                                PillTile(look: sample(s.code), box: 46)
+                                PillTile(look: sample(s.code), box: 46, zoomable: false)
                                 Text(s.name).font(.callout.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.7)
                             }
                             .frame(maxWidth: .infinity, minHeight: 92)
@@ -164,7 +164,7 @@ struct DayPlanList: View {
     /// The pill as it looks (big when due now), name and strength beside it, how many.
     private func row(_ e: Day.Entry, big: Bool) -> some View {
         HStack(spacing: big ? 16 : 12) {
-            PillTile(look: e.med.look, box: big ? 104 : 56)
+            PillTile(look: e.med.look, box: big ? 104 : 56, zoomable: false)
                 .frame(width: big ? 112 : 60, height: big ? 112 : 60)
                 .background(Theme.bg, in: RoundedRectangle(cornerRadius: 16))
             VStack(alignment: .leading, spacing: 2) {

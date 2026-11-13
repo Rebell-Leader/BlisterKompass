@@ -25,7 +25,10 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
-      - name: npm test (node --test, no install needed)
+      - name: npm install (pdfjs-dist for the leaflet PDF tests; the app itself has no dependencies)
+        working-directory: pwa
+        run: npm install --no-audit --no-fund
+      - name: npm test (node --test)
         working-directory: pwa
         run: npm test
 

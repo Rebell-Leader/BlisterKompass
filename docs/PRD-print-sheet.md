@@ -116,7 +116,7 @@ small type (8.5 pt), its own 2D code, or licensed product images.
 - No text tells anyone to take out, add, replace or re-sort a tablet (INV-16).
 - Fonts measured in the printed PDF meet PS-20 (pdf.js check, as done for the review); the 5 cm bar measures 5 cm on paper.
 - A black-and-white test print is legible.
-- The demo generator's BMP page and picture sheet carry the identical, XSD-valid code (`tools/test_make_bmp_sheet.py`; T-47).
+- The demo generator's BMP page and picture sheet carry the identical, XSD-valid code (`tools/test_make_bmp_sheet.py`; the schema is `tools/bmp/bmp_V2.8.xsd`).
 
 ## 6. Accessibility
 

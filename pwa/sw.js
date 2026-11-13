@@ -1,7 +1,7 @@
 // Service worker: precaches the whole app on the first visit, then serves it from the cache, so BlisterKompass
 // works in flight mode. Nothing is fetched from anywhere else. Bump VERSION when any file changes.
 
-const VERSION = "blisterkompass-v3";
+const VERSION = "blisterkompass-v4";
 
 const PRECACHE = [
   "./",
@@ -15,6 +15,8 @@ const PRECACHE = [
   "js/dose-form.js",
   "js/icons.js",
   "js/install.js",
+  "js/leaflet-parser.js",
+  "js/leaflet-pdf.js",
   "js/matcher.js",
   "js/model.js",
   "js/pack-code.js",
@@ -31,6 +33,8 @@ const PRECACHE = [
   "vendor/zxing-wasm/zxing_reader.wasm",
   "vendor/zxing-wasm/es/writer/index.js",
   "vendor/zxing-wasm/zxing_writer.wasm",
+  "vendor/pdfjs/pdf.min.mjs",
+  "vendor/pdfjs/pdf.worker.min.mjs",
   "data/catalog.json",
   "data/pzn-names.json",
   "icons/icon-192.png",

@@ -193,14 +193,14 @@ Every change goes into both columns (`AGENTS.md` → “Two clients, one product
 | Dosage forms, BMP units | `DoseForm.swift` | `js/dose-form.js` (+ KBV forms, Anhang 4 units; iOS: T-29) | both |
 | Code reading | `Bmp.swift` (zxing-cpp + Vision) | `js/code-reader.js` (zxing-wasm), `js/vision.js`, `js/vision-worker.js` | both |
 | Pill pixels | `PillRecognizer.swift` (+ Vision OCR) | `js/recognizer.js` (no OCR: the imprint is typed) | PWA (`recognizer.test.js`), iOS (`ios/eval/`) |
-| State (`myMeds`, `unknownPZNs`) | `Store.swift` (UserDefaults) | `js/store.js` (localStorage) | PWA (`pwa.test.js`) |
+| State (`myMeds`, `unknownPZNs`, learned leaflet looks) | `Store.swift` (UserDefaults) | `js/store.js` (localStorage, + `learnedLeaflets`) | PWA (`pwa.test.js`) |
 | Meal tags | `MealTiming.swift` (iOS: T-31) | `js/bmp-writer.js` `meal()` | both |
 | Plan drucken | `PlanPrint.swift`, `BmpWriter.swift` (iOS: T-30) | `js/print-sheet.js` ("Meine Medikamente mit Bildern", no code); `bmp-writer.js` / `code-writer.js` unused for print (D-09) | PWA (`print.test.js`) |
-| Leaflet look for an unknown PZN | `LeafletLookup.swift`, `LeafletOnline.swift`, `LeafletParser.swift` | none: the PWA stays offline; the staged lookup rows are T-21 | iOS |
+| Leaflet look for an unknown PZN | `LeafletLookup.swift`, `LeafletOnline.swift` (live download after "Erlauben"), `LeafletParser.swift` | `js/leaflet-parser.js` (1:1 port), `js/leaflet-pdf.js` (the person opens the leaflet link, saves the PDF and picks it; read with vendored pdf.js – no download: the hosts send no CORS headers) | both (`leaflet.test.js`) |
 | Screens and building blocks | `RootView`, `ResultViews`, `PackViews`, `PlanInput`, `OtherViews`, `ExamplesView`, `PillView`, `Theme` | `js/app.js`, `js/ui.js`, `js/icons.js`, `app.css` | — |
 | Read-aloud | `Theme.swift` (AVSpeechSynthesizer) | `js/speech.js` (speechSynthesis, de-DE) | — |
 | Install, offline | App Store / Xcode | `manifest.webmanifest`, `sw.js`, `js/install.js` | PWA (`pwa.test.js`) |
-| Offline checks | `ios/checks/main.swift` (86, macOS) | `tests/checks.test.js` + 4 more files (128, CI) | pair new checks by name |
+| Offline checks | `ios/checks/main.swift` (86, macOS) | `tests/checks.test.js` + 5 more files (141, CI) | pair new checks by name |
 
 ## Privacy guarantees and how they are enforced
 
@@ -212,11 +212,12 @@ Every change goes into both columns (`AGENTS.md` → “Two clients, one product
 | Unknown stays unknown | unresolved plan entries and packs without a look are listed by name with their dosage-form outline, never given a colour or shape from appearance or defaults |
 
 PWA: no network at runtime at all (CSP `connect-src 'self'`, everything served from the service-worker cache; a test fails if any other host
-appears in the code). `localStorage` holds only `myMeds` and `unknownPZNs`. The plan's `X` free-text lines are shown at import and never stored.
+appears in the code, except the two leaflet links the person opens). `localStorage` holds `myMeds`, `unknownPZNs` and `learnedLeaflets`
+(products whose look was read from a leaflet PDF the person picked; no person data). The plan's `X` free-text lines are shown at import and never stored.
 
 ## Testing
 
-- **PWA** (`cd pwa && npm test`, Node 22, CI on every PR): 128 tests – the iOS checks ported one by one plus the BMP 2.8 checks
+- **PWA** (`cd pwa && npm install && npm test`, Node 22, CI on every PR): 141 tests (incl. `leaflet.test.js`: the iOS leaflet-parser checks by name + PDF → look with a synthetic PDF) – the iOS checks ported one by one plus the BMP 2.8 checks
   (`checks.test.js`), example codes decoded through zxing-wasm (`codes.test.js`), print sheet and meal tags (`print.test.js`), pill
   pixels (`recognizer.test.js`), PWA rules (`pwa.test.js`: CSP, precache, storage keys, data identical to iOS).
 - **iOS** (`ios/checks/run.sh`, macOS + `swiftc`, no Xcode test target): 86 checks – plan reader (plan A, KBV sample incl. the spec's

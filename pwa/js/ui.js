@@ -131,8 +131,17 @@ export function photo(blob, cls = "photo") {
 let uid = 0;
 
 /** Draws a pill from its appearance record (port of PillView.swift). px per mm. */
+/** Drawing size in mm. Leaflets often state no size: then a shape's typical proportions are drawn (a capsule stays long),
+ *  only for the picture; the look itself keeps lengthMm/widthMm unknown. */
+const TYPICAL = { capsule: [18, 7], oblong: [15, 7], oval: [11, 7.5], softgel: [12, 8] };
+export function drawSize(look) {
+  if (look.lengthMm == null && look.widthMm == null && TYPICAL[look.shape]) return TYPICAL[look.shape];
+  return [look.lengthMm ?? 8, look.widthMm ?? 8];
+}
+
 export function pillSVG(look, ppm = 7) {
-  const L = (look.lengthMm ?? 8) * ppm, W = (look.widthMm ?? 8) * ppm;
+  const [lMm, wMm] = drawSize(look);
+  const L = lMm * ppm, W = wMm * ppm;
   const id = `p${++uid}`;
   const shapeEl = () => {
     switch (look.shape) {
@@ -191,7 +200,7 @@ export function pillSVG(look, ppm = 7) {
 /** Fixed-size box so pills of different sizes line up in grids. */
 export function pillTile(look, box = 90, cls = "") {
   if (!look) return doseFormTile(null, box);
-  const longest = Math.max(look.lengthMm ?? 8, look.widthMm ?? 8);
+  const longest = Math.max(...drawSize(look));
   return h(`div.pilltile${cls ? "." + cls : ""}`, { style: { "--box": `${box}px` } }, pillSVG(look, Math.min(9, (box * 0.85) / longest)));
 }
 

@@ -73,10 +73,23 @@ test("service worker precaches every app file, and only files that exist", () =>
   assert.ok(precache.includes("./"));
 });
 
-test("no network at runtime: app code names no other host", () => {
+// The only other hosts in the code are links the person opens themselves (the leaflet page at Apotheken Umschau and
+// the leaflet PDF the iPhone app downloads, js/leaflet-parser.js); the app never fetches them: connect-src stays 'self' (CSP test above).
+const LINK_ONLY = ["https://www.apotheken-umschau.de/", "https://cdn.shop-apotheke.com/"];
+test("no network at runtime: app code names no other host, apart from the leaflet link the person opens", () => {
   for (const p of ["index.html", "app.css", "sw.js", "manifest.webmanifest", ...walk("js")]) {
-    assert.ok(!/https?:\/\//.test(text(p).replace(/http:\/\/www\.w3\.org\/2000\/svg/g, "")), p);
+    const src = text(p).replace(/http:\/\/www\.w3\.org\/2000\/svg/g, "");
+    const hosts = [...src.matchAll(/https?:\/\/[^/"'`\s]+\//g)].map((m) => m[0]);
+    assert.ok(hosts.every((u) => LINK_ONLY.includes(u) && p === "js/leaflet-parser.js"), `${p}: ${hosts.join(", ")}`);
   }
+  assert.ok(!/fetch\(\s*leaflet(Page|Pdf)|fetch\([^)]*(apotheken-umschau|shop-apotheke)/.test(walk("js").map(text).join("\n")), "the leaflet page is never fetched");
+});
+
+test("pdf.js loads from this folder, with eval off (strict CSP)", () => {
+  const src = text("js/leaflet-pdf.js");
+  assert.match(src, /\.\.\/vendor\/pdfjs\/pdf\.min\.mjs/);
+  assert.match(src, /\.\.\/vendor\/pdfjs\/pdf\.worker\.min\.mjs/);
+  assert.match(src, /isEvalSupported: false/);
 });
 
 test("zxing loads its .wasm from this folder, never from its default CDN", () => {
@@ -84,10 +97,11 @@ test("zxing loads its .wasm from this folder, never from its default CDN", () =>
   assert.match(text("js/code-reader.js"), /vendor\/zxing-wasm\/zxing_reader\.wasm/);
 });
 
-test("nothing personal is stored: localStorage holds only myMeds and unknownPZNs", () => {
+test("nothing personal is stored: localStorage holds only myMeds, unknownPZNs and learnedLeaflets (products)", () => {
   const keys = new Set();
   for (const p of walk("js")) for (const m of text(p).matchAll(/localStorage\.(?:get|set)Item\("([^"]+)"/g)) keys.add(m[1]);
-  assert.deepEqual([...keys].sort(), ["myMeds", "unknownPZNs"]);
+  for (const m of text("js/store.js").matchAll(/read\("([^"]+)"/g)) keys.add(m[1]);
+  assert.deepEqual([...keys].sort(), ["learnedLeaflets", "myMeds", "unknownPZNs"]);
 });
 
 test("the plan reader never reads P, A or O", () => {

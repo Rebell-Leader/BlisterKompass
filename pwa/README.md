@@ -29,10 +29,10 @@ iPhone or **Installieren** in the app's own banner on Android/Chrome.
 cd pwa && npm test   # node --test, no install needed (Node 22)
 ```
 
-128 tests: the 64 checks of `ios/checks/main.swift` ported one by one plus the BMP 2.8 checks (`tests/checks.test.js`), the bundled example plan and pack
+141 tests (`npm install` once for the leaflet-PDF tests; without it they are skipped): the 64 checks of `ios/checks/main.swift` ported one by one plus the BMP 2.8 checks (`tests/checks.test.js`), the bundled example plan and pack
 codes decoded through zxing-wasm (`codes.test.js`), the print sheet, the code writer and meal tags (`print.test.js`), pill pixels on synthetic photos (`recognizer.test.js`), and the PWA rules
-(`pwa.test.js`: manifest and icons, strict CSP, every file precached, no other host named in the code, only `myMeds` and
-`unknownPZNs` in `localStorage`, data identical to the iPhone app's).
+(`pwa.test.js`: manifest and icons, strict CSP, every file precached, no other host named in the code apart from the two leaflet links, only `myMeds`,
+`unknownPZNs` and `learnedLeaflets` in `localStorage`, data identical to the iPhone app's).
 
 ## What is where
 
@@ -45,6 +45,8 @@ codes decoded through zxing-wasm (`codes.test.js`), the print sheet, the code wr
 | `js/print-sheet.js`, `bmp-writer.js`, `code-writer.js` | **Plan drucken**: the companion sheet "Meine Medikamente mit Bildern" (A4 landscape in mm, `window.print()`, [PRD](../docs/PRD-print-sheet.md)) – no BMP code on it (`docs/DECISIONS.md` D-09). `bmp-writer.js` keeps the meal tags (with negation guard) and the code-XML writer, which is no longer printed; `code-writer.js` (zxing-wasm writer) is unused until D-09 is decided |
 | `js/app.js`, `ui.js`, `icons.js`, `store.js`, `speech.js`, `install.js` | Screens, building blocks, icons, `localStorage`, `speechSynthesis` (de-DE), install prompt |
 | `data/`, `examples/` | Copies of `ios/PillSnap/Data` and `Examples` (`npm run sync`; a test checks they match) |
+| `js/leaflet-parser.js`, `leaflet-pdf.js` | Leaflet section 6 → look (port of `LeafletParser`), picked PDF → text (pdf.js) → product |
+| `vendor/pdfjs/` | pdf.js 4.10.38 (Apache-2.0), loaded on first use, eval off |
 | `vendor/zxing-wasm/` | zxing-wasm 3.1.6 reader and writer (MIT, zxing-cpp compiled to WebAssembly), loaded from here, never from a CDN |
 | `scripts/sync.sh`, `scripts/make-icons.py` | Refresh copies and the vendored decoder; make the app icons from the mascot (`icons/mascot-wave.png`, art by Anna P.) |
 | `icons/` | App icons and the mascot pictures shown on the welcome screen and the landing page |
@@ -65,6 +67,11 @@ codes decoded through zxing-wasm (`codes.test.js`), the print sheet, the code wr
   pages of one plan (`MP/@U`, `@a`/`@z`) are merged, a missing page is named.
 - **No imprint OCR (v1).** After the photo, the app asks "Was steht auf der Tablette?" with a short text field (also in
   "Aussehen antippen"). The matcher takes the typed text as it took the OCR text, look-alike glyphs included.
+- **Leaflet lookup by a PDF the person picks, not by download.** The leaflet hosts send no CORS headers, so the browser can't fetch a
+  leaflet as the iPhone app does. For a PZN without picture data (pack screen, plan import), the app links to the leaflet PDF
+  ("Beipackzettel öffnen" → save the PDF; fallback: the PZN's page at Apotheken Umschau), and "PDF wählen" reads the file on the phone
+  with pdf.js and `js/leaflet-parser.js`. A leaflet of another substance is refused; an unclear section 6 leaves the look unknown.
+  Found products are kept in `localStorage` (`learnedLeaflets`). The app still fetches nothing from another host.
 - **Camera = file input** (`capture="environment"`), no live viewfinder.
 - Pack screen buttons show icon **and** word (the iPhone app went icon-only).
 

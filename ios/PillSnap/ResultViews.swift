@@ -323,7 +323,7 @@ struct MedTile: View {
 
     var body: some View {
         VStack(spacing: 6) {
-            PillTile(look: med.look, box: compact ? 56 : 84)
+            PillTile(look: med.look, box: compact ? 56 : 84, zoomable: false)
             Text(med.substance).font(compact ? .callout.weight(.bold) : .title3.weight(.bold)).lineLimit(1).minimumScaleFactor(0.6)
             if let i = med.indication, !compact {
                 let p = Purpose.icon(for: med.atc)

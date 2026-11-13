@@ -1,6 +1,6 @@
 #!/bin/sh
 # Copies the data the PWA shares with the iPhone app (ios/PillSnap is the source of truth)
-# and, when node_modules has it, the zxing-wasm reader and writer. tests/pwa.test.js checks the copies match.
+# and, when node_modules has them, the zxing-wasm reader and writer and pdf.js (leaflet PDFs). tests/pwa.test.js checks the copies match.
 set -e
 cd "$(dirname "$0")/.."
 SRC=../ios/PillSnap
@@ -16,5 +16,11 @@ if [ -d "$ZX" ]; then
   cp "$ZX/dist/es/writer/index.js" vendor/zxing-wasm/es/writer/
   cp "$ZX/dist/writer/zxing_writer.wasm" vendor/zxing-wasm/
   node -p "require('./$ZX/package.json').version" > vendor/zxing-wasm/VERSION
+fi
+PJ=node_modules/pdfjs-dist
+if [ -d "$PJ" ]; then
+  mkdir -p vendor/pdfjs
+  cp "$PJ/legacy/build/pdf.min.mjs" "$PJ/legacy/build/pdf.worker.min.mjs" "$PJ/LICENSE" vendor/pdfjs/
+  node -p "require('./$PJ/package.json').version" > vendor/pdfjs/VERSION
 fi
 echo "synced"

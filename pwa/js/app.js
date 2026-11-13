@@ -13,6 +13,8 @@ import { PALETTE, colorName } from "./recognizer.js";
 import { scanCode, analyzePill } from "./vision.js";
 import { say, sayLines, stop } from "./speech.js";
 import { watchInstall, installCard } from "./install.js";
+import * as LeafletPdf from "./leaflet-pdf.js";
+import { leafletPage, leafletPdf } from "./leaflet-parser.js";
 import * as PrintSheet from "./print-sheet.js";
 import * as Bmp from "./bmp-writer.js";
 
@@ -263,7 +265,7 @@ function planLookup(plan) {
   ];
   if (!items.length) return emptyPlan(plan);
   const el = h("main.screen");
-  const showResult = () => { set(el, ...bmpResult(plan)); };
+  const showResult = (p = plan) => { set(el, ...bmpResult(p, showResult)); };
   const skip = h("button.link", { type: "button", onclick: () => { alive = false; showResult(); } }, "Überspringen");
   const list = h("div.stack.tight");
   el.append(backBar({ title: "Medikationsplan", onBack: home }),
@@ -293,7 +295,10 @@ function notesBlock(notes) {
     h("p.muted.small", null, "Werden nicht gespeichert – sie stehen weiter auf Ihrem Papierplan."));
 }
 
-function bmpResult(plan) {
+function bmpResult(plan, rerender) {
+  // Entries without picture data: their look can still come from the leaflet PDF the person picks.
+  const pickable = plan.unknownPZNs.filter((p) => leafletWanted(doseForm(store.pznName(p)?.form)));
+  const reread = () => { if (plan.code) rerender(store.resolvePlan(plan.code)); };
   return [
     backBar({ title: "Medikationsplan", onBack: home }),
     statusBanner({ icon: "seal", text: "Plan erkannt", color: "ok", mascot: "found" }),
@@ -302,6 +307,7 @@ function bmpResult(plan) {
     plan.unknown.length ? h("p.tone-warn.with-icon", null, icon("question"), `${plan.unknown.length} ohne Bilddaten: ${plan.unknown.join(", ")}`) : null,
     h("div.grid3", null, plan.meds.map((m) => h("div.card.mini", null, medPic(m, 50), h("strong", null, m.substance)))),
     plan.notes?.length ? notesBlock(plan.notes) : null,
+    pickable.length && plan.code ? [leafletHint(), pickable.map((p) => leafletPicker(p, store.nameOf(p), reread))] : null,
     store.hasPlan ? h("p.muted.with-icon.center", null, icon("refresh"), "Ersetzt Ihren bisherigen Plan.") : null,
     bigButton({ icon: "check", title: "Übernehmen", height: 96, color: "ok", onClick: () => {
       store.adopt(plan);
@@ -336,6 +342,52 @@ function lookupRow(it, busy) {
   else status = h("div.small.tone-warn", null, it.form ? `Keine Packungsbeilage · ${it.form.label}, Aussehen unbekannt` : "Keine Packungsbeilage · Aussehen unbekannt");
   const mark = busy ? null : h(`span.mark.tone-${source === "leaflet" ? "ok" : source === "reference" ? "muted" : "warn"}`, null, icon(source === "leaflet" || source === "reference" ? "seal" : "question"));
   return h("div.card.lookup", null, h("div.lookup-pic", null, pic), h("div.lookup-text", null, h("strong", null, it.title), status), mark);
+}
+
+// Leaflet PDF picked by the person ----------------------------------------------
+// The leaflet hosts send no CORS headers, so the web app can't download a leaflet as the iPhone app does. Instead the
+// person opens it at Apotheken Umschau, saves the "Original Beipackzettel" PDF and picks it here. The file is read on
+// the phone (pdf.js) and never uploaded; only a clear section 6 gives a picture, otherwise the look stays unknown.
+
+/** Leaflets describe the look of tablets and capsules; drops, sprays, creams … have none to read. */
+const leafletWanted = (form) => form == null || form.family === "tablet" || form.family === "capsule";
+
+const leafletHint = () => h("p.muted.small.with-icon", null, icon("info"),
+  "Aussehen aus der Packungsbeilage: „Beipackzettel öffnen“ und das PDF sichern (Teilen → In Dateien sichern). Dann hier „PDF wählen“. Die Datei bleibt auf dem Handy.");
+
+const LEAFLET_FAIL = {
+  wrong: (t, other) => `Diese Packungsbeilage gehört zu einem anderen Medikament${other ? ` (${other})` : ""}. Bitte die Beilage zu ${t} wählen.`,
+  unclear: () => "Die Packungsbeilage beschreibt das Aussehen nicht eindeutig. Es bleibt unbekannt.",
+  notPdf: () => "Das ist keine lesbare PDF-Datei.",
+};
+
+function leafletPicker(pzn, titleText, onFound) {
+  const pdf = leafletPdf(pzn);
+  if (!pdf) return null;
+  const status = h("div");
+  const input = h("input", { type: "file", accept: "application/pdf,.pdf", hidden: true });
+  input.addEventListener("change", async () => {
+    const f = input.files?.[0];
+    input.value = "";
+    if (!f) return;
+    set(status, h("div.muted.small.with-icon", null, h("span.spinner"), "Packungsbeilage wird gelesen …"));
+    let r;
+    try { r = await LeafletPdf.read(f, pzn, store.names); } catch (e) { console.warn("leaflet", e); r = { state: "notPdf" }; }
+    if (r.state === "found") {
+      store.learn(r.med);
+      say(`Aussehen aus der Packungsbeilage gelesen: ${title(r.med)}.`);
+      onFound(r.med);
+      return;
+    }
+    set(status, h("p.small.tone-warn.with-icon", null, icon("question"), LEAFLET_FAIL[r.state](titleText, r.leafletSubstance)));
+  });
+  return h("div.card.stack.tight.leaflet-pick", null,
+    h("strong", null, titleText),
+    h("div.grid2", null,
+      h("a.big.fill-gray", { href: pdf, target: "_blank", rel: "noopener noreferrer", style: { "--h": "76px" } }, icon("search"), h("span", null, "Beipackzettel öffnen")),
+      bigButton({ icon: "doc", title: "PDF wählen", height: 76, onClick: () => input.click() })),
+    h("a.link", { href: leafletPage(pzn), target: "_blank", rel: "noopener noreferrer" }, "Nicht gefunden? Bei Apotheken Umschau"),
+    input, status);
 }
 
 // Results -------------------------------------------------------------------
@@ -626,7 +678,7 @@ function packSpoken(r) {
   return s;
 }
 
-function PackResult({ result: r }) {
+function PackResult({ result: r, photo: blob }) {
   const [bText, bIcon, bColor, bMascot] = PACK_BANNER[r.kind];
   const text = packSpoken(r);
   say(text);
@@ -649,7 +701,11 @@ function PackResult({ result: r }) {
 
   const card = () => {
     set(middle, productCard(r, form),
-      shownMed?.look?.leaflet ? h("p.muted.small.with-icon.clamp3", null, icon("doc"), `„${shownMed.look.leaflet}“`) : null);
+      shownMed?.look?.leaflet ? h("p.muted.small.with-icon.clamp3", null, icon("doc"), `„${shownMed.look.leaflet}“`) : null,
+      // No picture data for this PZN: read its look from the leaflet PDF the person picks (counterpart of the
+      // iPhone app's online lookup; the browser can't download it itself).
+      !shownMed && leafletWanted(form) ? [leafletHint(), leafletPicker(r.code.pzn, Pack.resultTitle(r),
+        () => go({ name: "pack", result: store.check(r.code), photo: blob }))] : null);
   };
   if (r.kind === "otherMaker" && r.mine) {
     middle.append(compare(r));

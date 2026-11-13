@@ -23,8 +23,8 @@ scanned pack or a pharmacist; a photo only suggests.
 |---|---|---|
 | Code | [`ios/`](ios/) (SwiftUI) | [`pwa/`](pwa/README.md) (plain ES modules, no build step) |
 | Get it | Xcode 26 → simulator or your iPhone ([below](#install-the-iphone-app)) | open the [web app](https://blisterkompass.vercel.app/pwa/) → "Zum Home-Bildschirm" |
-| Tests | `ios/checks/run.sh` (86 checks, macOS) | `cd pwa && npm test` (128 tests, CI on every PR) |
-| Differs | imprint read by OCR; leaflet lookup online after consent | imprint typed; fully offline; ahead on BMP 2.8 reading and the print sheet ([TODO](TODO.md) T-29…T-31) |
+| Tests | `ios/checks/run.sh` (86 checks, macOS) | `cd pwa && npm install && npm test` (141 tests, CI on every PR) |
+| Differs | imprint read by OCR; leaflet lookup online after consent | imprint typed; offline: the person opens the leaflet and picks the PDF, read on the phone; ahead on BMP 2.8 reading and the print sheet ([TODO](TODO.md) T-29…T-31) |
 
 Every feature and fix goes into both clients ([`AGENTS.md`](AGENTS.md) → “Two clients, one product”). The iOS ↔ PWA code map is in
 [ARCHITECTURE.md](ARCHITECTURE.md#code-map-ios--pwa); open work, each item with problem, fix and test, is in [TODO.md](TODO.md).
@@ -64,7 +64,7 @@ No settings, no account, nothing personal. Big buttons with icon and word, read-
 
 ```bash
 python3 -m http.server 8090      # then open http://localhost:8090/pwa/ (landing page: /docs/landing.html)
-cd pwa && npm test               # 128 tests, Node 22, no install needed
+cd pwa && npm install && npm test   # 141 tests, Node 22 (without the install, the 3 leaflet-PDF tests are skipped)
 ```
 
 ### Install the iPhone app
@@ -94,7 +94,7 @@ Demo inputs ship with both clients ([`ios/PillSnap/Examples/`](ios/PillSnap/Exam
 ## Develop
 
 ```bash
-cd pwa && npm test                    # web app: 128 tests; CI runs them on every PR
+cd pwa && npm install && npm test     # web app: 141 tests; CI runs them on every PR
 cd pwa && npm run sync                # after editing ios/PillSnap/Data or Examples: copy them into the web app (a test checks they match)
 ios/checks/run.sh                     # iPhone app: 86 offline checks (macOS, swiftc); pair new checks with pwa/tests/checks.test.js
 python3 -m pytest -q tools/test_make_bmp_sheet.py   # print generator rules (pip install zxing-cpp==3.1.1 pillow xmlschema pytest)
@@ -143,6 +143,7 @@ Code: [MIT](LICENSE). Details on every dataset and what was cut for this public 
 | KBV sample plan, BMP key tables (dosing units, dosage forms) | KBV BMP specification 2.8 | free to reuse |
 | Example plans A–C, pack codes | synthetic | – |
 | Barcode reading | [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp) 3.1.1 (iOS), [zxing-wasm](https://github.com/Sec-ant/zxing-wasm) 3.1.6 (web) | Apache-2.0, MIT |
+| PDF reading (web, leaflet the person picks) | [pdf.js](https://github.com/mozilla/pdf.js) 4.10.38, `pwa/vendor/pdfjs/` | Apache-2.0 |
 | Font | Atkinson Hyperlegible | SIL OFL 1.1 |
 | Mascot art (`pwa/icons/mascot-*.png`) | © Anna P. (AnnXQP) | used with permission for this project |
 | Pill mascot states (`pwa/img/mascot/`, `ios/PillSnap/Assets.xcassets/mascot-*`) | generated with ChatGPT for this project, cut and drawn by `docs/brand/pill-mascot/*.py` | project asset |
