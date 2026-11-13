@@ -1,0 +1,547 @@
+import SwiftUI
+import PhotosUI
+
+@main
+struct PillSnapApp: App {
+    @StateObject private var store = Store()
+
+    var body: some Scene {
+        WindowGroup {
+            RootView()
+                .environmentObject(store)
+                .tint(Theme.accent)
+        }
+    }
+}
+
+/// What the user asked to scan. Each button opens its own camera and only that kind of input is accepted:
+/// a plan or pack photo never falls through to pill recognition, and a pill photo with a code on it is not read as a pill.
+enum ScanMode {
+    case plan, pack, pill
+
+    init(_ kind: ExampleKind) {
+        switch kind {
+        case .plan: self = .plan
+        case .pack: self = .pack
+        case .photo: self = .pill
+        }
+    }
+}
+
+/// One screen at a time, always a big "Zurück". No tab bars, no hidden gestures.
+enum Route {
+    case home
+    case analyzing(UIImage, ScanMode)
+    case bmpImport(ScannedPlan, UIImage)
+    case result(Answer, UIImage?)
+    case picker(UIImage?)
+    case manualPlan
+    case addToPlan(Med)
+    case pack(PackResult, UIImage?)
+    case detail(Med, UIImage?)
+    case printPlan
+
+    var key: String {
+        switch self {
+        case .home: "home"
+        case .analyzing: "analyzing"
+        case .bmpImport: "bmp"
+        case .result(let a, _): "result-\(a.state)-\(a.candidates?.first?.pzn ?? "")"
+        case .picker: "picker"
+        case .manualPlan: "manualPlan"
+        case .addToPlan(let m): "add-\(m.pzn)"
+        case .pack(let r, _): "pack-\(r.code.pzn)"
+        case .detail(let m, _): "detail-\(m.pzn)"
+        case .printPlan: "print"
+        }
+    }
+}
+
+struct RootView: View {
+    @EnvironmentObject var store: Store
+    @State private var route: Route = .home
+
+    var body: some View {
+        ZStack {
+            Theme.bg.ignoresSafeArea()
+            switch route {
+            case .home: HomeView(go: go)
+            case .analyzing(let img, let mode): AnalyzingView(photo: img, mode: mode, go: go)
+            case .bmpImport(let plan, let img): BmpImportView(plan: plan, photo: img, go: go)
+            case .result(let a, let img): ResultView(answer: a, photo: img, go: go)
+            case .picker(let img): LookPickerView(photo: img, go: go)
+            case .manualPlan: ManualPlanView(go: go)
+            case .addToPlan(let med): ManualPlanView(go: go, adding: med)
+            case .pack(let r, let img): PackResultView(scanned: r, photo: img, go: go)
+            case .detail(let med, let img): MedCardScreen(med: med, photo: img, banner: .confirmed, go: go)
+            case .printPlan: PrintPlanView(go: go)
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: route.key)
+        #if DEBUG
+        .task { demoPrint() }
+        #endif
+    }
+
+    #if DEBUG
+    /// `-printDemo plan-a`: load a bundled example plan, open "Plan drucken" and save its PDF to Documents (for checks without taps).
+    private func demoPrint() {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-printDemo"), i + 1 < args.count,
+              let url = Bundle.main.url(forResource: args[i + 1], withExtension: "xml"),
+              let xml = try? String(contentsOf: url, encoding: .utf8), let plan = store.readPlan(xml: xml) else { return }
+        store.adopt(plan)
+        let xmlOut = BmpWriter.xml(myMeds: store.myMeds, unknownPZNs: store.unknownPZNs)
+        let rows = PlanPrinter.rows(store)
+        let pdf = PlanPrinter.pdf(PlanSheet(main: rows.main, prn: rows.prn, code: xmlOut.flatMap(PlanPrinter.dataMatrix)))
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        try? pdf.write(to: docs.appendingPathComponent("Medikationsplan.pdf"))
+        try? xmlOut?.write(to: docs.appendingPathComponent("Medikationsplan.xml"), atomically: true, encoding: .isoLatin1)
+        route = .printPlan
+    }
+    #endif
+
+    private func go(_ r: Route) {
+        Speaker.shared.stop()
+        route = r
+    }
+}
+
+/// Fits the screen without scrolling; scrolls only if it really can't fit
+/// (very large Dynamic Type, small phones).
+struct FitOrScroll<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        ViewThatFits(in: .vertical) {
+            content.frame(maxHeight: .infinity, alignment: .top)
+            ScrollView { content }
+        }
+    }
+}
+
+// MARK: - Home (and first-run: scan your Medikationsplan)
+
+struct HomeView: View {
+    @EnvironmentObject var store: Store
+    let go: (Route) -> Void
+    @State private var showCamera = false
+    /// The phone's own photo library (plan codes, pack codes, pill photos).
+    @State private var showLibrary = false
+    /// Example plan codes, pack codes or pill photos bundled with the app.
+    @State private var examples: ExampleKind?
+    @State private var libraryItem: PhotosPickerItem?
+    @State private var showPlanSource = false
+    @State private var showPillSource = false
+    @State private var showPackSource = false
+    /// Set by the button that opened the camera, photo library or examples.
+    @State private var mode: ScanMode = .pill
+    private let hasCamera = UIImagePickerController.isSourceTypeAvailable(.camera)
+
+    var body: some View {
+        FitOrScroll {
+            VStack(spacing: 16) {
+                header
+                if store.hasPlan { scanPill } else { onboarding }
+            }
+            .padding(16)
+        }
+        .fullScreenCover(isPresented: $showCamera) {
+            CameraPicker { img in
+                showCamera = false
+                if let img { go(.analyzing(img, mode)) }
+            }
+            .ignoresSafeArea()
+        }
+        .photosPicker(isPresented: $showLibrary, selection: $libraryItem, matching: .images)
+        .fullScreenCover(item: $examples) { kind in
+            ExamplesView(kind: kind, onPick: { img in examples = nil; go(.analyzing(img, ScanMode(kind))) }, onCancel: { examples = nil })
+        }
+        .onChange(of: libraryItem) { _, item in
+            guard let item else { return }
+            Task {
+                if let data = try? await item.loadTransferable(type: Data.self), let img = UIImage(data: data) { go(.analyzing(img, mode)) }
+                libraryItem = nil
+            }
+        }
+        .sheet(isPresented: $showPillSource) {
+            PhotoSourceSheet(title: "Tablette prüfen", camera: { mode = .pill; openAfterSheet { showCamera = true } },
+                             gallery: { openAfterSheet { examples = .photo } })
+        }
+        .sheet(isPresented: $showPackSource) {
+            PhotoSourceSheet(title: "Packung scannen", camera: { mode = .pack; openAfterSheet { showCamera = true } },
+                             gallery: { openAfterSheet { examples = .pack } })
+        }
+        .sheet(isPresented: $showPlanSource) {
+            PlanSourceSheet(camera: { mode = .plan; openAfterSheet { showCamera = true } },
+                            gallery: { openAfterSheet { examples = .plan } },
+                            typing: { go(.manualPlan) })
+        }
+    }
+
+    /// Camera on a phone; the gallery on the simulator.
+    private func capture() { if hasCamera { showCamera = true } else { showLibrary = true } }
+
+    /// Present a full-screen cover once the popup has finished closing.
+    private func openAfterSheet(_ open: @escaping () -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: open)
+    }
+
+    /// Home: check a pill or a pack on top, then my pills for now and later.
+    private var scanPill: some View {
+        VStack(spacing: 14) {
+            HStack(spacing: 14) {
+                BigButton(icon: "camera.fill", title: "Tablette", height: 110) { showPillSource = true }
+                BigButton(icon: "barcode.viewfinder", title: "Packung", height: 110) { showPackSource = true }
+            }
+            DayPlanList(go: go)
+            HStack(spacing: 10) {
+                Tile(icon: "qrcode.viewfinder", title: "Plan neu\neinlesen") { showPlanSource = true }
+                Tile(icon: "printer.fill", title: "Plan\ndrucken") { go(.printPlan) }
+            }
+            .padding(.top, 6)
+        }
+    }
+
+    private var onboarding: some View {
+        VStack(spacing: 18) {
+            Image(systemName: "doc.text.viewfinder").font(.system(size: 72, weight: .semibold)).foregroundStyle(Theme.accent)
+                .padding(.top, 8)
+            Text("Willkommen!").font(.system(.largeTitle, design: .rounded, weight: .bold))
+            Text("Lesen Sie zuerst Ihren **Medikationsplan** ein – per Kamera, aus den Beispielen oder selbst eingeben.")
+                .font(.title3).multilineTextAlignment(.center)
+            BigButton(icon: "qrcode.viewfinder", title: "Plan einlesen", height: 190) { showPlanSource = true }
+            Tip(icon: "lightbulb.fill", text: "Den **Code oben rechts** auf dem Plan ganz ins Bild nehmen.")
+        }
+    }
+
+    /// No account, no name, no settings – just a privacy note.
+    private var header: some View {
+        Label(store.onlineLeaflets == true ? "Nur die PZN geht online · keine persönlichen Daten" : "Offline · keine Daten verlassen das Handy",
+              systemImage: "lock.shield.fill")
+            .font(.footnote.weight(.semibold)).foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity)
+    }
+}
+
+struct Tip: View {
+    let icon: String
+    let text: LocalizedStringKey
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 14) {
+            Image(systemName: icon).font(.title2).foregroundStyle(Theme.warn)
+            Text(text).font(.body)
+            Spacer(minLength: 0)
+        }
+        .padding(14)
+        .background(Theme.card, in: RoundedRectangle(cornerRadius: Theme.corner))
+    }
+}
+
+// MARK: - Analyzing: only what the chosen mode asked for
+
+struct AnalyzingView: View {
+    @EnvironmentObject var store: Store
+    let photo: UIImage
+    let mode: ScanMode
+    let go: (Route) -> Void
+    @State private var seen: PillCues?
+    @State private var scan = false
+
+    var body: some View {
+        VStack(spacing: 22) {
+            BackBar(title: "Erkennen") { go(.home) }
+            // Fill a fixed box: a wide photo must not make the whole screen wider.
+            Color.clear.frame(maxWidth: .infinity).frame(height: 340)
+                .overlay { Image(uiImage: photo).resizable().scaledToFill() }
+                .clipShape(RoundedRectangle(cornerRadius: Theme.corner))
+                .overlay(alignment: .top) {
+                    Rectangle().fill(LinearGradient(colors: [Theme.accent.opacity(0), Theme.accent.opacity(0.6)], startPoint: .top, endPoint: .bottom))
+                        .frame(height: 60)
+                        .offset(y: scan ? 280 : 0)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: Theme.corner))
+            HStack(spacing: 14) {
+                ProgressView().controlSize(.large)
+                Text("Ich schaue mir das Foto an …").font(.title3.weight(.semibold))
+            }
+            if let seen, seen.found { SeenChips(cues: seen) }
+            Spacer()
+        }
+        .padding(16)
+        .onAppear { withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: true)) { scan = true } }
+        .task { await run() }
+    }
+
+    private func run() async {
+        let started = Date()
+        func settle() async {
+            let wait = 1.2 - Date().timeIntervalSince(started)
+            if wait > 0 { try? await Task.sleep(nanoseconds: UInt64(wait * 1e9)) }
+        }
+
+        func noCode(_ problem: String) async { await settle(); go(.result(.local("no_code", problem: problem), photo)) }
+        let code = await CodeReader.scan(photo)
+
+        switch (mode, code) {
+        case (.plan, .plan(let xml)?):
+            // Plan code → read the medication lines (nothing else) on the phone.
+            await settle()
+            if let plan = store.readPlan(xml: xml) {
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                go(.bmpImport(plan, photo))
+            } else {
+                go(.result(.local("not_a_plan"), photo))
+            }
+            return
+        case (.pack, .pack(let code)?):
+            // A medicine pack: exact identity from its PZN, compared with the plan.
+            await settle()
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            go(.pack(store.check(code), photo))
+            return
+        case (.plan, .pack?): await noCode("pack_not_plan"); return
+        case (.plan, nil): await noCode("no_plan_code"); return
+        case (.pack, .plan?): await noCode("plan_not_pack"); return
+        case (.pack, nil): await noCode("no_pack_code"); return
+        case (.pill, _?): await noCode("code_not_pill"); return
+        case (.pill, nil): break
+        }
+        // Pill mode, no code in the photo: a pill, matched against the scanned plan, on the phone.
+        guard store.hasPlan else { await settle(); go(.result(.local("need_plan"), photo)); return }
+        let cues = await PillRecognizer.analyze(photo)
+        seen = cues
+        let answer: Answer = cues.found && !cues.colors.isEmpty ? store.identify(cues) : .local("retake", problem: "no_pill")
+        await settle()
+        UINotificationFeedbackGenerator().notificationOccurred(["sure", "likely"].contains(answer.state) ? .success : .warning)
+        go(.result(answer, photo))
+    }
+}
+
+/// "Ich sehe: ● rosa · rund · „5“" – shows what the on-device recognition found.
+struct SeenChips: View {
+    let cues: PillCues
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Ich sehe:").font(.headline).foregroundStyle(.secondary)
+            HStack(spacing: 10) {
+                ForEach(Array(zip(cues.colors, cues.seenHex)), id: \.0) { code, hex in
+                    chip { Circle().fill(Color(hex: hex)).frame(width: 22, height: 22).overlay(Circle().stroke(Color.primary.opacity(0.2))); Text(PillRecognizer.name(of: code)) }
+                }
+                if let s = cues.shape { chip { Image(systemName: "circle.dashed"); Text(ShapeInfo.name(s)) } }
+                if let i = cues.imprint { chip { Image(systemName: "textformat"); Text("„\(i)“") } }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func chip<C: View>(@ViewBuilder _ c: () -> C) -> some View {
+        HStack(spacing: 6, content: c)
+            .font(.title3.weight(.semibold))
+            .padding(.horizontal, 12).padding(.vertical, 8)
+            .background(Theme.card, in: Capsule())
+    }
+}
+
+// MARK: - Plan scanned → take over my meds
+
+struct BmpImportView: View {
+    @EnvironmentObject var store: Store
+    let plan: ScannedPlan
+    let photo: UIImage
+    let go: (Route) -> Void
+    @State private var lookedUp = false
+    /// The plan read again after leaflets were found online (their meds now have a picture).
+    @State private var updated: ScannedPlan?
+    @State private var asked = false
+    private var shown: ScannedPlan { updated ?? plan }
+    private var needsConsent: Bool { !plan.unknownPZNs.isEmpty && store.onlineLeaflets == nil && !asked }
+
+    /// Each plan line: its look and where it comes from (leaflet, reference data, or only the dosage form).
+    private var lookupItems: [LeafletLookupItem] {
+        plan.meds.map { LeafletLookupItem(id: $0.pzn, title: $0.title, look: $0.look, form: nil) }
+            + plan.unknownPZNs.map { p in
+                LeafletLookupItem(id: p, title: store.nameOf(pzn: p), look: nil, form: store.pznNames[p].flatMap { DoseForm(code: $0.form) })
+            }
+    }
+
+    var body: some View {
+        if lookedUp { result } else { lookup }
+    }
+
+    /// Step 1: "Wie sehen die Tabletten aus?" – row by row, from the package leaflets on the phone.
+    private var lookup: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    BackBar(title: "Medikationsplan") { go(.home) }
+                    StatusBanner(icon: "checkmark.seal.fill", text: "Plan erkannt", color: Theme.okFill)
+                    Label("Aussehen wird nachgeschlagen", systemImage: "doc.text.magnifyingglass")
+                        .font(.title3.weight(.bold))
+                    if needsConsent {
+                        OnlineLeafletConsent(count: plan.unknownPZNs.count) { ok in
+                            store.onlineLeaflets = ok
+                            withAnimation { asked = true }
+                        }
+                    } else {
+                        LeafletLookupList(items: lookupItems,
+                                          fetch: store.onlineLeaflets == true ? { await store.lookupRow($0) } : nil,
+                                          step: { id in withAnimation { proxy.scrollTo(id, anchor: .bottom) } }) {
+                            Task {
+                                if let xml = plan.xml, let again = store.readPlan(xml: xml), again.meds.count > plan.meds.count { updated = again }
+                                try? await Task.sleep(for: .seconds(0.8))
+                                withAnimation { lookedUp = true }
+                            }
+                        }
+                    }
+                    Button("Überspringen") { withAnimation { lookedUp = true } }
+                        .font(.callout.weight(.semibold)).frame(maxWidth: .infinity).padding(.top, 4)
+                }
+                .padding(16)
+            }
+        }
+        .onAppear { Speaker.shared.say("Medikationsplan erkannt: \(plan.meds.count + plan.unknownPZNs.count) Medikamente. Ich schaue nach, wie sie aussehen.") }
+    }
+
+    private var result: some View {
+        FitOrScroll {
+            VStack(spacing: 14) {
+                BackBar(title: "Medikationsplan") { go(.home) }
+                StatusBanner(icon: "checkmark.seal.fill", text: "Plan erkannt", color: Theme.okFill)
+                Text(shown.meds.count == 1 ? "1 Medikament" : "\(shown.meds.count) Medikamente").font(.title3.weight(.semibold)).frame(maxWidth: .infinity, alignment: .leading)
+                if !shown.unknown.isEmpty {
+                    // Entries the bundled catalog has no look for stay unknown – listed, never guessed.
+                    Label("\(shown.unknown.count) ohne Bilddaten: \(shown.unknown.joined(separator: ", "))", systemImage: "questionmark.square.dashed")
+                        .font(.callout).foregroundStyle(Theme.warn).lineLimit(3).frame(maxWidth: .infinity, alignment: .leading)
+                }
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
+                    ForEach(shown.meds) { m in
+                        VStack(spacing: 4) {
+                            PillTile(look: m.look, box: 50)
+                            Text(m.substance).font(.callout.weight(.bold)).lineLimit(1).minimumScaleFactor(0.6)
+                        }
+                        .padding(.vertical, 8).padding(.horizontal, 4)
+                        .frame(maxWidth: .infinity)
+                        .background(Theme.card, in: RoundedRectangle(cornerRadius: 14))
+                        .accessibilityElement(children: .combine)
+                    }
+                }
+                Spacer(minLength: 0)
+                if store.hasPlan {
+                    Label("Ersetzt Ihren bisherigen Plan.", systemImage: "arrow.triangle.2.circlepath")
+                        .font(.callout.weight(.semibold)).foregroundStyle(.secondary)
+                }
+                BigButton(icon: "checkmark", title: "Übernehmen", height: 96, color: Theme.okFill) {
+                    store.adopt(shown)
+                    Speaker.shared.say("\(shown.meds.count) Medikamente übernommen. Sie können jetzt eine Tablette scannen.")
+                    go(.home)
+                }
+            }
+            .padding(16)
+        }
+    }
+}
+
+// MARK: - Building blocks
+
+struct BigButtonLabel: View {
+    let icon: String
+    let title: String
+    var height: CGFloat = 120
+    var color: Color = Theme.accentFill
+    /// Big icon, no text (the title stays as the accessibility label).
+    var iconOnly = false
+
+    var body: some View {
+        VStack(spacing: 10) {
+            if iconOnly {
+                Image(systemName: icon).font(.system(size: min(72, height * 0.55), weight: .bold))
+            } else {
+                Image(systemName: icon).font(.system(size: min(64, height * 0.32), weight: .semibold))
+                Text(title).font(.system(.title, design: .rounded, weight: .bold)).minimumScaleFactor(0.7).lineLimit(1)
+            }
+        }
+        .foregroundStyle(.white)
+        .frame(maxWidth: .infinity).frame(height: height)
+        .background(color, in: RoundedRectangle(cornerRadius: Theme.corner + 6))
+        .contentShape(Rectangle())
+    }
+}
+
+struct BigButton: View {
+    let icon: String
+    let title: String
+    var height: CGFloat = 120
+    var color: Color = Theme.accentFill
+    var iconOnly = false
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) { BigButtonLabel(icon: icon, title: title, height: height, color: color, iconOnly: iconOnly) }
+            .buttonStyle(.plain)
+            .accessibilityLabel(title)
+    }
+}
+
+struct TileLabel: View {
+    let icon: String
+    let title: String
+    var wide = false
+
+    var body: some View {
+        Group {
+            if wide {
+                HStack(spacing: 16) { Image(systemName: icon).font(.system(size: 32)); Text(title).font(.title2.weight(.bold)); Spacer() }
+                    .padding(.horizontal, 22).frame(height: 80)
+            } else {
+                VStack(spacing: 10) { Image(systemName: icon).font(.system(size: 36)); Text(title).font(.title3.weight(.bold)).multilineTextAlignment(.center) }
+                    .frame(height: 120)
+            }
+        }
+        .foregroundStyle(Theme.accent)
+        .frame(maxWidth: .infinity)
+        .background(Theme.card, in: RoundedRectangle(cornerRadius: Theme.corner))
+        .overlay(RoundedRectangle(cornerRadius: Theme.corner).stroke(Theme.accent.opacity(0.25), lineWidth: 2))
+        .contentShape(Rectangle())
+    }
+}
+
+struct Tile: View {
+    let icon: String
+    let title: String
+    var wide = false
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) { TileLabel(icon: icon, title: title, wide: wide) }.buttonStyle(.plain)
+    }
+}
+
+struct BackBar: View {
+    let title: String
+    var speak: (() -> Void)? = nil
+    let back: () -> Void
+
+    var body: some View {
+        HStack {
+            Button(action: back) {
+                Label("Zurück", systemImage: "chevron.left")
+                    .font(.title3.weight(.semibold))
+                    .padding(.horizontal, 16).padding(.vertical, 12)
+                    .background(Theme.card, in: Capsule())
+            }
+            Spacer()
+            if let speak {
+                Button(action: speak) {
+                    Image(systemName: "speaker.wave.3.fill").font(.title2.weight(.semibold))
+                        .frame(width: 52, height: 52).background(Theme.card, in: Circle())
+                }
+                .accessibilityLabel("Vorlesen")
+            } else {
+                Text(title).font(.title3.weight(.bold)).foregroundStyle(.secondary)
+            }
+        }
+    }
+}

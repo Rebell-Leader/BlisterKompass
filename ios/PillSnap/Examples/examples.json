@@ -1,0 +1,17 @@
+[
+ {"file": "plan-a.png", "kind": "plan", "caption": "Beispielplan A · 12 Medikamente"},
+ {"file": "plan-b.png", "kind": "plan", "caption": "Beispielplan B · 6 Medikamente"},
+ {"file": "plan-c.png", "kind": "plan", "caption": "Beispielplan C · 6 Medikamente"},
+ {"file": "sheet-plan-a.png", "kind": "plan", "caption": "Bilderbogen zu Plan A mit Plan-Code (ganze Seite)"},
+ {"file": "plan-kbv-beispiel.png", "kind": "plan", "caption": "KBV-Musterplan (offiziell)"},
+ {"file": "pack-30477231.png", "kind": "pack", "caption": "Atorvastatin Alpinmed 20 mg"},
+ {"file": "pack-18342014.png", "kind": "pack", "caption": "Ramipril Medivia 5 mg"},
+ {"file": "pack-91200130.png", "kind": "pack", "caption": "Amlodipin Alpinmed 5 mg"},
+ {"file": "pack-72311869.png", "kind": "pack", "caption": "Levothyroxin 75 µg (abgelaufen)"},
+ {"file": "pack-06453257.png", "kind": "pack", "caption": "HCT 1A Pharma 25 mg"},
+ {"file": "pack-08693497.png", "kind": "pack", "caption": "Cefaclor STADA 500 mg (ohne Bilddaten)"},
+ {"file": "pack-05387239.png", "kind": "pack", "caption": "Aspirin N 100 mg (nur PZN-Strichcode)"},
+ {"file": "nlm-pantoprazol-1.jpg", "kind": "photo", "caption": "Pantoprazol (Foto)"},
+ {"file": "nlm-methotrexat-1.jpg", "kind": "photo", "caption": "Methotrexat (Foto)"},
+ {"file": "nlm-metformin-2.jpg", "kind": "photo", "caption": "Metformin (Foto)"}
+]

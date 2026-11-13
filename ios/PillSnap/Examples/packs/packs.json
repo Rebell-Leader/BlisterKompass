@@ -1,0 +1,49 @@
+[
+ {
+  "pzn": "18342014",
+  "batch": "MV2417",
+  "expiry": "280331",
+  "label": "Ramipril Medivia 5 mg",
+  "size": "20 Tabletten"
+ },
+ {
+  "pzn": "30477231",
+  "batch": "AP0912",
+  "expiry": "271130",
+  "label": "Atorvastatin Alpinmed 20 mg",
+  "size": "30 Filmtabletten"
+ },
+ {
+  "pzn": "91200130",
+  "batch": "AL3305",
+  "expiry": "280630",
+  "label": "Amlodipin Alpinmed 5 mg",
+  "size": "50 Tabletten"
+ },
+ {
+  "pzn": "06453257",
+  "batch": "HX1188",
+  "expiry": "270831",
+  "label": "HCT 1A Pharma 25 mg",
+  "size": "100 Tabletten"
+ },
+ {
+  "pzn": "08693497",
+  "batch": "ST4471",
+  "expiry": "271031",
+  "label": "Cefaclor STADA 500 mg",
+  "size": "Hartkapseln"
+ },
+ {
+  "pzn": "72311869",
+  "batch": "AP7702",
+  "expiry": "250930",
+  "label": "Levothyroxin Alpinmed 75 µg",
+  "size": "100 Tabletten"
+ },
+ {
+  "pzn": "05387239",
+  "label": "Aspirin N 100 mg",
+  "code": "Code 39"
+ }
+]
