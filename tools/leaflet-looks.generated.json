@@ -1,0 +1,339 @@
+[
+ {
+  "name": "BISOPROLOL 5 1A PHARMA",
+  "festbetrag_name": "BISOPROLOL 5 1A PHARMA",
+  "pzns": [
+   "03820206",
+   "03820471",
+   "03820525"
+  ],
+  "substance": "Bisoprolol",
+  "strength": "5MG",
+  "form": "FTBL",
+  "atc": "C07AB07",
+  "purpose": "Herz / Blutdruck",
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "size": null,
+   "score": "cross",
+   "imprint": "BIS5",
+   "coating": "film"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/17597/pdf"
+ },
+ {
+  "name": "BISOPROLOL 1A PHARMA 2.5MG",
+  "festbetrag_name": "BISOPROLOL 1A PHARMA 2.5MG",
+  "pzns": [
+   "05391726",
+   "05391732"
+  ],
+  "substance": "Bisoprolol",
+  "strength": "2.5MG",
+  "form": "FTBL",
+  "atc": "C07AB07",
+  "purpose": "Herz / Blutdruck",
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "size": null,
+   "score": null,
+   "imprint": "BIS 2,5",
+   "coating": "film"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/17595/pdf"
+ },
+ {
+  "name": "RAMIPRIL 1A PHARMA 5 MG",
+  "festbetrag_name": "RAMIPRIL 1A PHARMA 5 MG",
+  "pzns": [
+   "00766736",
+   "00766742",
+   "00766759"
+  ],
+  "substance": "Ramipril",
+  "strength": "5MG",
+  "form": "TABL",
+  "atc": "C09AA05",
+  "purpose": "Blutdruck",
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "size": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "uncoated"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/17937/pdf2"
+ },
+ {
+  "name": "RAMIPRIL 1A PHARMA 2.5 MG",
+  "festbetrag_name": "RAMIPRIL 1A PHARMA 2.5 MG",
+  "pzns": [
+   "00766699",
+   "00766707",
+   "00766713"
+  ],
+  "substance": "Ramipril",
+  "strength": "2.5MG",
+  "form": "TABL",
+  "atc": "C09AA05",
+  "purpose": "Blutdruck",
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "size": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "uncoated"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/17936/pdf2"
+ },
+ {
+  "name": "AMLODIPIN 1A PHARMA 5MG N",
+  "festbetrag_name": "AMLODIPIN 1A PHARMA 5MG N",
+  "pzns": [
+   "05881985",
+   "00889887",
+   "00889893"
+  ],
+  "substance": "Amlodipin",
+  "strength": "5MG",
+  "form": "TABL",
+  "atc": "C08CA01",
+  "purpose": "Blutdruck",
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "size": null,
+   "score": "single",
+   "imprint": "5",
+   "coating": "uncoated"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/17599/pdf"
+ },
+ {
+  "name": "AMLODIPIN 1A PHARMA 10MG N",
+  "festbetrag_name": "AMLODIPIN 1A PHARMA 10MG N",
+  "pzns": [
+   "00889947",
+   "00889976",
+   "00923360"
+  ],
+  "substance": "Amlodipin",
+  "strength": "10MG",
+  "form": "TABL",
+  "atc": "C08CA01",
+  "purpose": "Blutdruck",
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "size": null,
+   "score": "single",
+   "imprint": "10",
+   "coating": "uncoated"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/17601/pdf"
+ },
+ {
+  "name": "TORASEMID 1A PHARMA 10 MG",
+  "festbetrag_name": "TORASEMID 1A PHARMA 10 MG",
+  "pzns": [
+   "00773972",
+   "00774003",
+   "00774026"
+  ],
+  "substance": "Torasemid",
+  "strength": "10MG",
+  "form": "TABL",
+  "atc": "C03CA04",
+  "purpose": "Wassertablette",
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "size": null,
+   "score": "cross",
+   "imprint": null,
+   "coating": "uncoated"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/17991/pdf"
+ },
+ {
+  "name": "SIMVASTATIN 1A PHARMA 20MG",
+  "festbetrag_name": "SIMVASTATIN 1A PHARMA 20MG",
+  "pzns": [
+   "01970516",
+   "01970522",
+   "01970060"
+  ],
+  "substance": "Simvastatin",
+  "strength": "20MG",
+  "form": "FTBL",
+  "atc": "C10AA01",
+  "purpose": "Cholesterin",
+  "look": {
+   "shape": "oval",
+   "color": "orange",
+   "color2": null,
+   "size": null,
+   "score": "single",
+   "imprint": "20",
+   "coating": "film"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/17967/pdf3"
+ },
+ {
+  "name": "ATORVASTATIN 1A PHAR 20MG",
+  "festbetrag_name": "ATORVASTATIN 1A PHAR 20MG",
+  "pzns": [
+   "07752884",
+   "07752890",
+   "07752909"
+  ],
+  "substance": "Atorvastatin",
+  "strength": "20MG",
+  "form": "FTBL",
+  "atc": "C10AA05",
+  "purpose": "Cholesterin",
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "size": null,
+   "score": "single",
+   "imprint": "A20",
+   "coating": "film"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/17616/pdf"
+ },
+ {
+  "name": "LISINOPRIL PUREN 10MG",
+  "festbetrag_name": "LISINOPRIL PUREN 10MG",
+  "pzns": [
+   "13706285",
+   "13706316"
+  ],
+  "substance": "Lisinopril",
+  "strength": "10MG",
+  "form": "TABL",
+  "atc": "C09AA03",
+  "purpose": "Blutdruck",
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "size": null,
+   "score": null,
+   "imprint": null,
+   "coating": "uncoated"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/20675/pdf2"
+ },
+ {
+  "name": "CARMEN 10MG",
+  "festbetrag_name": "CARMEN 10MG",
+  "pzns": [
+   "01339806",
+   "01339812",
+   "01339835"
+  ],
+  "substance": "Lercanidipin",
+  "strength": "10MG",
+  "form": "FTBL",
+  "atc": "C08CA13",
+  "purpose": "Blutdruck",
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "size": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "film"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/18810/pdf2"
+ },
+ {
+  "name": "TAMSULOSIN-DURA 0.4MG REK",
+  "festbetrag_name": "TAMSULOSIN-DURA 0.4MG REK",
+  "pzns": [
+   "04555887"
+  ],
+  "substance": "Tamsulosin",
+  "strength": "0.4MG",
+  "form": "KAPR",
+  "atc": "G04CA02",
+  "purpose": "Prostata",
+  "look": {
+   "shape": "capsule",
+   "color": "orange",
+   "color2": "green",
+   "size": null,
+   "score": null,
+   "imprint": null,
+   "coating": "gelatin"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/16560/pdf2"
+ },
+ {
+  "name": "CITALOPRAM 1A PHARMA 20MG",
+  "festbetrag_name": "CITALOPRAM 1A PHARMA 20MG",
+  "pzns": [
+   "00176101",
+   "20329469",
+   "00176207",
+   "20329423",
+   "00176868"
+  ],
+  "substance": "Citalopram",
+  "strength": "20MG",
+  "form": "FTBL",
+  "atc": "N06AB04",
+  "purpose": "Stimmung",
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "size": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "film"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/20020/pdf3"
+ },
+ {
+  "name": "DONEPEZIL HCL 1A PHAR 5MG",
+  "festbetrag_name": "DONEPEZIL HCL 1A PHAR 5MG",
+  "pzns": [
+   "09322219",
+   "09322225",
+   "09322231"
+  ],
+  "substance": "Donepezil",
+  "strength": "5MG",
+  "form": "FTBL",
+  "atc": "N06DA02",
+  "purpose": "Gedächtnis",
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "size": [
+    7.0,
+    7.0
+   ],
+   "score": null,
+   "imprint": null,
+   "coating": "film"
+  },
+  "url": "https://www.patienteninfo-service.de/gi/21320/pdf3"
+ }
+]

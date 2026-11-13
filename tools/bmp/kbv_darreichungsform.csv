@@ -1,0 +1,283 @@
+code,display_de,bmp_short_display_de,system,cs_version
+---,keine Darreichungsform,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+AEO,Ätherisches Öl,Öl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+AMP,Ampullen,Amp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+APA,Ampullenpaare,Amp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ASN,Augen- und Nasensalbe,Salbe,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ASO,Augen- und Ohrensalbe,Salbe,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ATO,Augen- und Ohrentropfen,Tropf,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ATR,Augentropfen,AuTropf,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+AUB,Augenbad,AuBad,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+AUC,Augencreme,AuCreme,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+AUG,Augengel,AuGel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+AUS,Augensalbe,AuSalbe,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+BAD,Bad,Bad,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+BAL,Balsam,Balsam,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+BAN,Bandage,Bandage,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+BEU,Beutel,Beutel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+BIN,Binden,Binden,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+BON,Bonbons,Bonbons,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+BPL,Basisplatte,Platte,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+BRE,Brei,Brei,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+BTA,Brausetabletten,BrTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+CRE,Creme,Creme,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DFL,Durchstechflaschen,Flasche,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DIG,Digitale Gesundheitsanwendungen,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DIL,Dilution,Dilut,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DIS,Depot-Injektionssuspension,DIS,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DKA,Dragees in Kalenderpackung,Dragees,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DOS,Dosieraerosol,Spray,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DRA,Dragees,Dragees,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DRM,Dragees magensaftresistent,Dragees,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DSC,Dosierschaum,Schaum,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+DSS,Dosierspray,Spray,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+EDP,Einzeldosis-Pipetten,Pipette,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+EIN,Einreibung,Einreib,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ELE,Elektroden,Elektr,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ELI,Elixier,Elixier,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+EMU,Emulsion,Emul,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ESS,Essenz,Essenz,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ESU,Erwachsenen-Suppositorien,Supp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+EXT,Extrakt,Extrakt,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FBE,Filterbeutel,Beutel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FBW,Franzbranntwein,Einreib,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FDA,Filmdragees,Drag,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FER,Fertigspritzen,Spritze,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FET,Fettsalbe,Salbe,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FLA,Flasche,Flasche,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FLE,Flüssigkeit zum Einnehmen,Flüss,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FLU,Flüssig,Flüss,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FMR,Filmtabletten magensaftresistent,Tabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FOL,Folie,Folie,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FRB,Beutel mit retardierten Filmtabletten,FRB,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FSE,Flüssigseife,Seife,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+FTA,Filmtabletten,Tabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+GEK,Granulat zur Entnahme aus Kapseln,Gran,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+GEL,Gel,Gel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+GLI,Gas und Lösungsmittel zur Herstellung einer Injektions-/Infusionsdispersion,GLI,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+GLO,Globuli,Globuli,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+GMR,Magensaftresistentes Granulat,Gran,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+GPA,Gelplatte,Platte,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+GRA,Granulat,Gran,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+GSE,Granulat zur Herstellung einer Suspension zum Einnehmen,Saft,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+GUL,Gurgellösung,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+HAS,Handschuhe,Handsch,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+HKM,Magensaftresistente Hartkapseln,Kaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+HKP,Hartkapseln,Kaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+HPI,Hartkapseln mit Pulver zur Inhalation,InhKaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+HVW,Hartkapseln mit veränderter Wirkstofffreisetzung,Kaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IFA,Infusionsampullen,Amp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IFB,Infusionsbeutel,Beutel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IFD,Infusionsdispersion,InfDisp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IFE,Injektionslösung in einer Fertigspritze,Spritze,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IFF,Infusionsflaschen,Flasche,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IFK,Infusionslösungskonzentrat,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IFL,Injektionsflaschen,Flasche,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IFS,Infusionsset,Set,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IHA,Inhalationsampullen,InhAmp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IHP,Inhalationspulver,InhPulv,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IID,Injektions- und Infusionsdispersion,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IIE,Injektions- oder Infusionslösung oder Lösung zum Einnehmen,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IIL,"Injektions-, Infusionslösung",Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IIM,Injektionslösung zur intramuskulären Anwendung,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IJD,Injektionsdispersion,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IKA,Inhalationskapseln,InhKaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ILO,Injektionslösung,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IMP,Implantat,Impl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+INF,Infusionslösung,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+INH,Inhalat,Inhalat,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+INI,"Injektions-, Infusionsflaschen",Flasche,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+INL,Inhalationslösung,InhLös,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+INS,Instant-Tee,Tee,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IST,Instillation,Instill,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ISU,Injektionssuspension,Susp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+IUP,Intrauterinpessar,Spirale,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KAN,Kanülen,Kanüle,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KAP,Kapseln,Kaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KAT,Katheter,KAT,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KDA,Kaudragees,KauDrag,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KEG,Kegel,Kegel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KER,Kerne,Kerne,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KGU,Kaugummi,Kaug,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KID,Konzentrat zur Herstellung einer Infusionsdispersion,Konz,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KII,Konzentrat zur Herstellung einer Injektions- oder Infusionslösung,Konz,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KKS,Kleinkinder-Suppositorien,Supp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KLI,Klistiere,Klist,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KLT,Klistier-Tabletten,KlisTbl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KMP,Hartkapseln mit magensaftresistent überzogenen Pellets,Kaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KMR,Kapseln magensaftresistent,Kaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KOD,Kondome,Kondom,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KOM,Kompressen,Kompr,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KON,Konzentrat,Konz,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KPG,Kombipackung,KombiPg,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KRI,Kristallsuspension,KRI,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KSS,Kinder- und Säuglings-Suppositorien,Supp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KSU,Kinder-Suppositorien,Supp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+KTA,Kautabletten,KauTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LAN,Lanzetten,Lanz,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LII,"Lösung zur Injektion, Infusion und Inhalation",Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LIQ,Liquidum,Flüss,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LIV,Lösung zur intravesikalen Anwendung,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LOE,Lösung,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LOT,Lotion,Lotion,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LOV,Lösung für einen Vernebler,LOV,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LSE,Lösung zum Einnehmen,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LTA,Lacktabletten,Tabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LUP,Lutschpastillen,LUP,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LUT,Lutschtabletten,LuTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LYE,Lyophilisat zum Einnehmen,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+LYO,Lyophilisat zur Herstellung einer Infusionslösung,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+MIL,Milch,Milch,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+MIS,Mischung,Misch,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+MIX,Mixtur,Mixtur,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+MRG,Magensaftresistentes Retardgranulat,RetGran,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+MRP,Magensaftresistente Pellets,Pellets,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+MTA,Manteltabletten,Tabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+MUW,Mundwasser,MUW,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+NAG,Nasengel,NasGel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+NAO,Nasenöl,NasÖl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+NAS,Nasenspray,NasSpr,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+NAW,Wirkstoffhaltiger Nagellack,NAW,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+NDS,Nasendosierspray,NasSpr,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+NSA,Nasensalbe,NSalbe,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+NTR,Nasentropfen,NTropf,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+OCU,Ocusert,OCU,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+OEL,Öl,Öl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+OHT,Ohrentropfen,OTropf,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+OVU,Ovula,Ovula,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PAM,Packungsmasse,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PAS,Pastillen,Pastill,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PEL,Pellets,Pellets,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PEN,Injektionslösung in einem Fertigpen,Pen,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PER,Perlen,Perlen,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PFL,Pflaster,Pflast,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PFT,Pflaster transdermal,Pflast,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PHI,"Pulver zur Herstellung einer Injektions-, Infusions- oder Inhalationslösung",Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PHV,Pulver zur Herstellung einer Injektions- bzw. Infusionslösung oder Pulver und Lösungsmittel zur Herstellung einer Lösung zur intravesikalen Anwendung,Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PIE,"Pulver für ein Konzentrat zur Herstellung einer Infusionslösung, Pulver zur Herstellung einer Lösung zum Einnehmen",Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PIF,Pulver zur Herstellung einer Infusionslösung,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PII,Pulver zur Herstellung einer Injektions- oder Infusionslösung,Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PIJ,Pulver zur Herstellung einer Injektionslösung,Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PIK,Pulver zur Herstellung eines Infusionslösungskonzentrates,Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PIS,Pulver zur Herstellung einer Infusionssuspension,Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PIV,Pulver zur Herstellung einer Injektions- bzw. Infusionslösung oder einer Lösung zur intravesikalen Anwendung,PIV,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PKI,Pulver für ein Konzentrat zur Herstellung einer Infusionslösung,Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PLD,Pulver und Lösungsmittel zur Herstellung einer Depot-Injektionssuspension,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PLE,Pulver zur Herstellung einer Lösung zum Einnehmen,Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PLF,Pulver und Lösungsmittel zur Herstellung einer Infusionslösung,PLF,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PLG,Perlongetten,PLG,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PLH,Pulver und Lösungsmittel zur Herstellung einer Injektions- bzw. Infusionslösung,PLH,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PLI,Pulver und Lösungsmittel zur Herstellung einer Injektionslösung,PLI,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PLK,Pulver und Lösungsmittel für ein Konzentrat zur Herstellung einer Infusionslösung,PLK,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PLS,Pulver und Lösungsmittel zur Herstellung einer Injektionssuspension,Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PLV,Pulver und Lösungsmittel zur Herstellung einer Lösung zur intravesikalen Anwendung,PLV,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PPL,Pumplösung,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PRS,Presslinge,PRS,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PSE,Pulver zur Herstellung einer Suspension zum Einnehmen,Saft,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PST,Paste,Paste,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PUD,Puder,Puder,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PUE,Pulver zum Einnehmen,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+PUL,Pulver,Pulver,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+RED,Retard-Dragees,RetDrag,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+REK,Retard-Kapseln,RetKaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+RET,Retard-Tabletten,RetTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+RGR,Retard-Granulat,RetGran,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+RKA,Rektalkapseln,RekKaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+RKT,Retardkautablette,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+RMS,Retardmikrokapseln und Suspensionsmittel,Depot,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+RSC,Rektalschaum,Schaum,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+RSU,Rektalsuspension,RekSusp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+RUT,Retard-überzogene Tabletten,RetTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SAF,Saft,Saft,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SAL,Salbe,Salbe,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SAM,Salbe zur Anwendung in der Mundhöhle,Salbe,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SCH,Schaum,Schaum,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SEI,Seife,Seife,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SHA,Shampoo,Shampoo,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SIR,Sirup,Sirup,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SLZ,Salz,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SMF,Schmelzfilm,SMF,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SMT,Schmelztabletten,SMT,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SMU,Suppositorien mit Mulleinlage,Supp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SPA,Spritzampullen,Amp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SPF,Sprühflasche,Flasche,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SPL,Spüllösung,Lösung,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SPR,Spray,Spray,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SPT,Transdermales Spray,Spray,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SRI,Spritzen,Spritze,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SSU,Säuglings-Suppositorien,Supp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+STA,Stechampullen,Amp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+STB,Stäbchen,Stäbch,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+STI,Stifte,Stifte,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+STR,Streifen,Streif,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SUB,Substanz,Subst,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SUE,Suspension zum Einnehmen,Susp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SUF,Sublingualfilm,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SUI,Suspension zur Implantation,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SUL,"Sublingualspray, Lösung",SubSpr,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SUP,Suppositorien,Supp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SUS,Suspension,Susp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SUT,Sublingualtabletten,SubTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SUV,Suspension für einen Vernebler,Susp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+SWA,Schwämme,Schwamm,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TAB,Tabletten,Tabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TAE,Täfelchen,Tafel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TAM,Trockenampullen,Amp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TEE,Tee,Tee,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TEI,Tropfen zum Einnehmen,Tropfen,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TES,Test,Test,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TIN,Tinktur,Tinktur,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TKA,Tabletten in Kalenderpackung,Tabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TLE,Tablette zur Herstellung einer Lösung zum Einnehmen,LösTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TMR,Tabletten magensaftresistent,Tabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TON,Tonikum,Tonikum,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TPN,Tampon,Tampon,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TPO,Tamponaden,Tamp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TRA,Trinkampullen,TrAmp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TRI,Trituration,TRI,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TRO,Tropfen,Tropfen,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TRS,Trockensubstanz mit Lösungsmittel,TRS,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TRT,Trinktabletten,TrTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TSA,Trockensaft,Saft,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TSD,Tabletten zur Herstellung einer Suspension zum Einnehmen für einen Dosierspender,TSD,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TSE,Tablette zur Herstellung einer Suspension zum Einnehmen,SusTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TSS,Trockensubstanz ohne Lösungsmittel,TSS,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TST,Teststäbchen,Test,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TSY,Transdermales System,TSY,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TTR,Teststreifen,Test,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TUB,Tube,Tube,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TUE,Tücher,Tücher,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TUP,Tupfer,Tupfer,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+TVW,Tablette mit veränderter Wirkstofffreisetzung,RetTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+UTA,Überzogene Tabletten,Tabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VAL,Vaginallösung,VagLös,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VAR,Vaginalring,VagRing,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VCR,Vaginalcreme,VagCrem,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VER,Verband,Verband,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VGE,Vaginalgel,VagGel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VKA,Vaginalkapseln,VagKaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VLI,Vlies,Vlies,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VOV,Vaginalovula,VagOvul,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VST,Vaginalstäbchen,VagStäb,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VSU,Vaginalsuppositorien,VagSupp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+VTA,Vaginaltabletten,VagTabl,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+WAT,Watte,Watte,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+WGA,Wundgaze,Gaze,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+WKA,Weichkapseln,Kaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+WKM,Magensaftresistente Weichkapseln,Kaps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+WUE,Würfel,Würfel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+XDG,Duschgel,Gel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+XDS,Deo-Spray,Spray,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+XFE,Festiger,Festig.,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+XGM,Gesichtsmaske,Maske,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+XHA,Halsband,,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+XHS,Haarspülung,Spül.,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+XNC,Nachtcreme,Creme,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+XPK,Körperpflege,Pflege,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+XTC,Tagescreme,Creme,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ZAM,Zylinderampullen,Amp,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ZBU,Zahnbürste,Bürste,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ZCR,Zahncreme,Zahncr.,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ZGE,Zahngel,Zahngel,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ZKA,Zerbeisskapseln,ZerbKps,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16
+ZPA,Zahnpasta,Zahnp.,https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM,1.16

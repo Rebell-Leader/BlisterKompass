@@ -1,0 +1,482 @@
+[
+  {
+    "file": "ramipril-1.jpg",
+    "expect": {
+      "substance": "Ramipril",
+      "product": "RAMIPRIL 5MG CAP",
+      "ndc11": "00054010829",
+      "labeler": "ROXANE"
+    },
+    "look": {
+      "color": "RED",
+      "shape": "CAPSULE",
+      "imprint": "54;145;54;145",
+      "imprintType": "PRINTED",
+      "score": "1",
+      "sizeMm": 719477
+    },
+    "photo": {
+      "background": "BPA3 Domtar EarthChoice Office Paper (Item 2700; 20lb; 92 Brightness)",
+      "camera": "Vivitar ViviCam 5022 (5.1 megapixel)",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Soft"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc11/images/7HTVHTHP593-EFGH!E8NEJ4LYSPW19.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "ramipril-2.jpg",
+    "expect": {
+      "substance": "Ramipril",
+      "product": "RAMIPRIL 5MG CAP",
+      "ndc11": "16252057250",
+      "labeler": "COLBALT PHARM. INC"
+    },
+    "look": {
+      "color": "RED",
+      "shape": "CAPSULE",
+      "imprint": "RP;5",
+      "imprintType": "PRINTED",
+      "score": "1",
+      "sizeMm": 594451
+    },
+    "photo": {
+      "background": "BPA2 Office Depot Copy Paper - standard white paper - item 420-283",
+      "camera": "Microsoft HD webcam (widescreen, autofocus)",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Hard"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc1/images/!AIHYE-FSS_2_2R3G6F0K1TJN2A_SZ.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "metformin-1.jpg",
+    "expect": {
+      "substance": "Metformin",
+      "product": "METFORMIN 1000MG TAB",
+      "ndc11": "43547025010",
+      "labeler": "INDICUS PHARMA"
+    },
+    "look": {
+      "color": "WHITE",
+      "shape": "OVAL",
+      "imprint": "I;47",
+      "imprintType": "DEBOSSED",
+      "score": "2",
+      "sizeMm": 1550127
+    },
+    "photo": {
+      "background": "Paper 1 - white, laserjet paper 8.5\" x 11\"",
+      "camera": "Samsung Galaxy S [model SAMSUNG-SGH-I897]",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Soft"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc16/images/B0-9WSS9790211_4V_BP7A01!09M!6M.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "metformin-2.jpg",
+    "expect": {
+      "substance": "Metformin",
+      "product": "METFORMIN 1000MG TAB",
+      "ndc11": "57664047458",
+      "labeler": "CARACO PHARM"
+    },
+    "look": {
+      "color": "WHITE",
+      "shape": "OVAL",
+      "imprint": "C;474",
+      "imprintType": "DEBOSSED",
+      "score": "2",
+      "sizeMm": 4277052
+    },
+    "photo": {
+      "background": "WhiBal Gray Card",
+      "camera": "Canon PowerShot G10 [14.7 megapixel CCD]",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Soft"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc103/images/U4J0TQTJZV!97_V17VX0XLA1T13CZX.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "atorvastatin-1.jpg",
+    "expect": {
+      "substance": "Atorvastatin",
+      "product": "LIPITOR 20MG TABLET",
+      "ndc11": "00071015623",
+      "labeler": "PARK-DAVIS"
+    },
+    "look": {
+      "color": "WHITE",
+      "shape": "OVAL",
+      "imprint": "PD;156;20",
+      "imprintType": "DEBOSSED",
+      "score": "1",
+      "sizeMm": 632743
+    },
+    "photo": {
+      "background": "BPA2 Office Depot Copy Paper - standard white paper - item 420-283",
+      "camera": "Microsoft HD webcam (widescreen, autofocus)",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Hard"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc72/images/CO-34DQRE6RLEKUKCKCURJIIU7C32E9.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "torasemid-1.jpg",
+    "expect": {
+      "substance": "Torasemid",
+      "product": "TORSEMIDE 10MG TABLETS",
+      "ndc11": "31722053001",
+      "labeler": "CAMBER PHARMA"
+    },
+    "look": {
+      "color": "WHITE",
+      "shape": "OVAL",
+      "imprint": "H;5;7",
+      "imprintType": "DEBOSSED",
+      "score": "2",
+      "sizeMm": 752142
+    },
+    "photo": {
+      "background": "light laminate, speckled",
+      "camera": "Microsoft HD webcam (widescreen, autofocus)",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Soft"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc64/images/CH5OGF4MO3ZLPSS_A0I-!JX3P031ROT.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "torasemid-2.jpg",
+    "expect": {
+      "substance": "Torasemid",
+      "product": "TORSEMIDE 10 MG TAB",
+      "ndc11": "50111091601",
+      "labeler": "TEVA"
+    },
+    "look": {
+      "color": "WHITE",
+      "shape": "ROUND",
+      "imprint": "PA;916",
+      "imprintType": "DEBOSSED",
+      "score": "2",
+      "sizeMm": 451424
+    },
+    "photo": {
+      "background": "clipboard, small",
+      "camera": "RIM BlackBerry 9700",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Hard"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc16/images/B0FWGUD-!4KEY9QT3DS9Q0W3MIIOX5W.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "pantoprazol-1.jpg",
+    "expect": {
+      "substance": "Pantoprazol",
+      "product": "PANTOPRAZOLE 20MG TAB",
+      "ndc11": "00008060601",
+      "labeler": "WYETH-AYERST"
+    },
+    "look": {
+      "color": "YELLOW",
+      "shape": "OVAL",
+      "imprint": "P;20",
+      "imprintType": "PRINTED",
+      "score": "1",
+      "sizeMm": 2644515
+    },
+    "photo": {
+      "background": "surgical scrubs, Pink (Shock Trauma)",
+      "camera": "Kodak M590 Easyshare (14 megapixel)",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Hard"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc18/images/B2GFUCDIE90XNUJ85_!9SAMMNMK07_Z.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "pantoprazol-2.jpg",
+    "expect": {
+      "substance": "Pantoprazol",
+      "product": "PANTOPRAZOLE 20MG TAB",
+      "ndc11": "62175018046",
+      "labeler": "KREMERS-URBAN, INC"
+    },
+    "look": {
+      "color": "WHITE",
+      "shape": "OVAL",
+      "imprint": "KU;180",
+      "imprintType": "PRINTED",
+      "score": "1",
+      "sizeMm": 519535
+    },
+    "photo": {
+      "background": "BPA2 Office Depot Copy Paper - standard white paper - item 420-283",
+      "camera": "Microsoft HD webcam (widescreen, autofocus)",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Hard"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc80/images/CVNM4VHT845CE16C8L7REEI0LBNC5TG.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "methotrexat-1.jpg",
+    "expect": {
+      "substance": "Methotrexat",
+      "product": "METHOTREXATE 2.5MG TABS",
+      "ndc11": "00054455025",
+      "labeler": "ROXANE"
+    },
+    "look": {
+      "color": "YELLOW",
+      "shape": "ROUND",
+      "imprint": "54;323",
+      "imprintType": "DEBOSSED",
+      "score": "2",
+      "sizeMm": 4314859
+    },
+    "photo": {
+      "background": "WhiBal Gray Card",
+      "camera": "Canon PowerShot G10 [14.7 megapixel CCD]",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Soft"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc30/images/BDVGW9P3OA-HUXMHPUSUJ!-8LVTYH2C.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "methotrexat-2.jpg",
+    "expect": {
+      "substance": "Methotrexat",
+      "product": "METHOTREXATE 2.5MG TABS",
+      "ndc11": "00054455025",
+      "labeler": "ROXANE"
+    },
+    "look": {
+      "color": "YELLOW",
+      "shape": "ROUND",
+      "imprint": "54;323",
+      "imprintType": "DEBOSSED",
+      "score": "2",
+      "sizeMm": 1531752
+    },
+    "photo": {
+      "background": "Paper 1 - white, laserjet paper 8.5\" x 11\"",
+      "camera": "Samsung Galaxy S [model SAMSUNG-SGH-I897]",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Soft"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc6/images/3G43Z6G9_0G23!47WS218EOXQGB_8.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "ibuprofen-1.jpg",
+    "expect": {
+      "substance": "Ibuprofen",
+      "product": "IBUPROFEN 400MG TABS",
+      "ndc11": "53746046405",
+      "labeler": "AMNEAL PHARMA."
+    },
+    "look": {
+      "color": "WHITE",
+      "shape": "ROUND",
+      "imprint": "IP;464",
+      "imprintType": "DEBOSSED",
+      "score": "1",
+      "sizeMm": 749647
+    },
+    "photo": {
+      "background": "BPA2 Office Depot Copy Paper - standard white paper - item 420-283",
+      "camera": "Vivitar ViviCam 5022 (5.1 megapixel)",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Soft"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc104/images/V538A-R_VHOC34J4TZA!KGLIS0K87P.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "ibuprofen-2.jpg",
+    "expect": {
+      "substance": "Ibuprofen",
+      "product": "IBUPROFEN 400MG TABS",
+      "ndc11": "53746046405",
+      "labeler": "AMNEAL PHARMA."
+    },
+    "look": {
+      "color": "WHITE",
+      "shape": "ROUND",
+      "imprint": "IP;464",
+      "imprintType": "DEBOSSED",
+      "score": "1",
+      "sizeMm": 5678390
+    },
+    "photo": {
+      "background": "WhiBal Gray Card",
+      "camera": "Canon PowerShot G10 [14.7 megapixel CCD]",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Accurate",
+        "shadow": "Soft"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc19/images/B3F6HA0JDYS2H9CP3_Z46Z3VDS8WB5-.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "pregabalin-1.jpg",
+    "expect": {
+      "substance": "Pregabalin",
+      "product": "LYRICA 75MG",
+      "ndc11": "00071101468",
+      "labeler": "PARK-DAVIS"
+    },
+    "look": {
+      "color": "WHITE",
+      "shape": "CAPSULE",
+      "imprint": "Pfizer;PGN;75",
+      "imprintType": "PRINTED",
+      "score": "1",
+      "sizeMm": 4276113
+    },
+    "photo": {
+      "background": "WhiBal Gray Card",
+      "camera": "Canon PowerShot G10 [14.7 megapixel CCD]",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Soft"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc55/images/C04BH07H5S2PU58X6352XN82R5HH02-.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  },
+  {
+    "file": "allopurinol-1.jpg",
+    "expect": {
+      "substance": "Allopurinol",
+      "product": "ALLOPURINOL 300MG TABS",
+      "ndc11": "00591554405",
+      "labeler": "WATSON LABS"
+    },
+    "look": {
+      "color": "ORANGE",
+      "shape": "ROUND",
+      "imprint": "DAN;DAN;5544",
+      "imprintType": "DEBOSSED",
+      "score": "2",
+      "sizeMm": 280711
+    },
+    "photo": {
+      "background": "BPA2 Office Depot Copy Paper - standard white paper - item 420-283",
+      "camera": "Microsoft HD webcam (widescreen, autofocus)",
+      "ratings": {
+        "imprint": "Clear",
+        "shape": "Clear",
+        "color": "Somewhat",
+        "shadow": "Hard"
+      }
+    },
+    "source": {
+      "url": "https://data.lhncbc.nlm.nih.gov/public/Pills/PillProjectDisc76/images/CRZGJIKGL6U_WT542S6EV66BEAI8099.JPG",
+      "dataset": "NLM C3PI",
+      "license": "US public domain (National Library of Medicine)"
+    }
+  }
+]
