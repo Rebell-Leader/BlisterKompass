@@ -5,7 +5,6 @@
   /docs/landing.html  -> docs/landing.html wrapped in a full HTML document (same for impressum.html, datenschutz.html)
   /docs/screens/*     -> the screenshots the landing page shows
   /docs/fonts/*       -> self-hosted Atkinson Hyperlegible (no Google Fonts request, no IP sent to Google)
-  /docs/download/*    -> the Android APK (built by android/build-apk.sh, committed as a binary)
   /pwa/*              -> the PWA as it is, without tests, scripts and package files
 
 docs/landing.html stays an Artifact-style fragment (no doctype, head or charset), so the build adds them here.
@@ -71,8 +70,6 @@ def main() -> None:
         (docs / "screens").mkdir(exist_ok=True)
         shutil.copy2(ROOT / "docs" / "screens" / name, docs / "screens" / name)
     shutil.copytree(ROOT / "docs" / "fonts", docs / "fonts")
-    if (ROOT / "docs" / "download").exists():
-        shutil.copytree(ROOT / "docs" / "download", docs / "download")
     shutil.copytree(ROOT / "pwa", DIST / "pwa", ignore=lambda d, names: [n for n in names if n in PWA_SKIP])
     files = [p for p in DIST.rglob("*") if p.is_file()]
     print(f"{len(files)} files, {sum(p.stat().st_size for p in files) / 1e6:.1f} MB in {DIST}")
