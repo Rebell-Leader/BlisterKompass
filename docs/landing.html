@@ -1,460 +1,611 @@
-<title>BlisterKompass</title>
+<title>Blister-Kompass</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="BlisterKompass: Welche Tablette ist das, wofür ist sie und wann nehme ich sie? / Which pill is this, what is it for and when do I take it?">
+<meta name="description" content="Blister-Kompass: Welche Tablette ist das, wofür ist sie und wann nehme ich sie? / Which pill is this, what is it for and when do I take it?">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
-/* Layout: big type, one idea per band, the app's own colours. The page reads like the app:
-   a time-of-day board in the middle, real screenshots beside short sentences.
+/* Slim, light-only landing: hero, three steps, three answers, one trust row.
    Two languages: every text exists as <span lang="de"> and <span lang="en">; the root's data-lang picks one. */
 :root {
-  /* app colours, Theme.swift */
+  color-scheme: light;
   --teal: #0B6E8A;
-  --ok: #1E7A44;
-  --warn: #9A5B00;
-  --bad: #B3261E;
-  --morning: #B86A00;
-  --noon: #B35400;
-  --evening: #6A43A3;
-  --night: #34508C;
-
-  /* page, light */
-  --bg: #F2F2F7;
-  --card: #FFFFFF;
+  --teal-soft: #E6F2F5;
+  --bg: #FFFFFF;
+  --soft: #F5F6F8;
   --ink: #111114;
   --text: #2A2A30;
-  --muted: #5E5E66;
-  --line: #DCDCE2;
-  --accent: #0B6E8A;
-  --accent-soft: #E3F1F5;
-  --ok-text: #1E7A44; --ok-soft: #E4F3EA;
-  --warn-text: #8A5200; --warn-soft: #FBF0DE;
-  --bad-text: #B3261E; --bad-soft: #FBE6E4;
-  --frame: #111114;
-
+  --muted: #62626B;
+  --line: #E4E4EA;
+  --ok: #1E7A44; --ok-soft: #E6F4EC;
+  --warn: #8A5200; --warn-soft: #FBF1E0;
+  --bad: #B3261E; --bad-soft: #FCE8E6;
   --font: "Atkinson Hyperlegible", -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0B0B0D; --card: #1C1C1F; --ink: #F5F5F7; --text: #E3E3E8; --muted: #A3A3AC; --line: #2E2E33;
-    --accent: #5FB4CB; --accent-soft: #12303A;
-    --ok-text: #74C694; --ok-soft: #13291C; --warn-text: #E0A54E; --warn-soft: #2E2210; --bad-text: #F08A82; --bad-soft: #351715;
-    --frame: #2A2A2F;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0B0B0D; --card: #1C1C1F; --ink: #F5F5F7; --text: #E3E3E8; --muted: #A3A3AC; --line: #2E2E33;
-  --accent: #5FB4CB; --accent-soft: #12303A;
-  --ok-text: #74C694; --ok-soft: #13291C; --warn-text: #E0A54E; --warn-soft: #2E2210; --bad-text: #F08A82; --bad-soft: #351715;
-  --frame: #2A2A2F;
-  color-scheme: dark;
-}
-
-/* language switch: German until the script picks English */
 :root[data-lang="en"] [lang="de"], :root:not([data-lang="en"]) [lang="en"] { display: none !important; }
 
 * { box-sizing: border-box; }
 body { background: var(--bg); color: var(--text); font: 400 18px/1.55 var(--font); -webkit-font-smoothing: antialiased; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--teal); }
 h1, h2, h3 { margin: 0; font-weight: 700; line-height: 1.12; color: var(--ink); text-wrap: balance; }
 p { margin: 0; }
-a { color: var(--accent); text-underline-offset: 3px; }
-a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
-.wrap { max-width: 1140px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-.label { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
-.lead { font-size: 20px; color: var(--muted); max-width: 58ch; }
-section { padding-block: 80px; }
-.head { display: grid; gap: 14px; margin-bottom: 40px; max-width: 760px; }
-.head h2 { font-size: clamp(30px, 4.4vw, 46px); }
+a { color: var(--teal); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 8px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+section { padding-block: 64px; }
+.label { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--teal); }
+h2 { font-size: clamp(28px, 3.6vw, 38px); margin: 8px 0 32px; }
+
+/* top bar */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; color: var(--ink); }
+.brand img { width: 44px; height: 44px; margin: -6px 0; }
+.langs { display: inline-flex; background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.langs button { font: 700 14px/1 var(--font); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 8px 13px; cursor: pointer; min-width: 44px; }
+.langs button[aria-pressed="true"] { background: var(--teal); color: #fff; }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: center; padding-block: 32px 56px; }
+.hero h1 { font-size: clamp(40px, 6.4vw, 68px); letter-spacing: -.015em; }
+.hero .lead { font-size: 21px; color: var(--muted); margin-top: 18px; max-width: 34ch; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 28px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 24px; border-radius: 16px; background: var(--teal); color: #fff; font: 700 19px/1 var(--font); text-decoration: none; box-shadow: 0 10px 24px -12px rgba(11,110,138,.7); transition: transform .15s; }
+.btn:hover { transform: translateY(-1px); }
+.btn svg { width: 22px; height: 22px; flex: none; }
+.btn:not(.soon) .lbl-soon, .btn.soon .lbl-go { display: none; }
+.btn.soon { background: var(--soft); color: var(--muted); box-shadow: none; cursor: default; }
+.btn.soon:hover { transform: none; }
+.hint { font-size: 15px; color: var(--muted); max-width: 30ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 26px; padding: 0; list-style: none; font-size: 16px; font-weight: 700; color: var(--ink); }
+.facts li { display: inline-flex; align-items: center; gap: 7px; }
+.facts svg { width: 20px; height: 20px; color: var(--teal); }
+.shots { position: relative; height: 520px; }
+.shots .phone { position: absolute; }
+.shots .p1 { left: 4%; top: 0; }
+.shots .p2 { right: 0; top: 96px; width: 220px; }
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; padding-top: 16px; }
+  .shots { height: 440px; max-width: 420px; width: 100%; margin: 0 auto; }
+  .shots .phone { width: 210px; }
+  .shots .p2 { width: 185px; top: 80px; }
+}
+@media (max-width: 420px) { .shots { height: 380px; } .shots .phone { width: 175px; } .shots .p2 { width: 160px; } }
 
 /* phone frame around a real screenshot (302 × 656) */
-.phone { width: 270px; max-width: 100%; border-radius: 40px; padding: 9px; background: var(--frame); box-shadow: 0 24px 48px -18px rgba(0, 40, 60, .45); flex: none; }
-.phone img { display: block; width: 100%; height: auto; aspect-ratio: 302 / 656; border-radius: 32px; }
+.phone { width: 250px; max-width: 100%; border-radius: 38px; padding: 8px; background: #111114; box-shadow: 0 28px 50px -24px rgba(0, 40, 60, .45); flex: none; }
+.phone img { display: block; width: 100%; height: auto; aspect-ratio: 390 / 847; border-radius: 30px; }
 
-/* ── Hero ─────────────────────────────────────────────── */
-.hero { background: var(--teal); color: #fff; overflow: hidden; }
-.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 32px; align-items: center; padding-block: 40px 0; }
-.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 48px; }
-.brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 20px; }
-.brand svg { width: 36px; height: 36px; }
-.langs { display: inline-flex; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28); border-radius: 999px; padding: 3px; }
-.langs button { font: 700 15px/1 var(--font); color: #fff; background: transparent; border: 0; border-radius: 999px; padding: 9px 14px; cursor: pointer; min-width: 48px; }
-.langs button[aria-pressed="true"] { background: #fff; color: var(--teal); }
-.hero h1 { color: #fff; font-size: clamp(42px, 7vw, 76px); letter-spacing: -.01em; }
-.hero .lead { color: rgba(255,255,255,.9); margin-top: 22px; font-size: 21px; }
-.hero-copy { padding-bottom: 64px; }
-/* install button: opens the PWA, which offers its own install prompt */
-.install { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 30px; }
-.btn-install { display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 24px; border-radius: 16px; background: #fff; color: var(--teal); font: 700 19px/1 var(--font); text-decoration: none; box-shadow: 0 8px 20px -8px rgba(0,0,0,.35); transition: transform .15s; }
-.btn-install:hover { transform: translateY(-1px); }
-.btn-install svg { width: 24px; height: 24px; flex: none; }
-.btn-install:not(.soon) .lbl-soon, .btn-install.soon .lbl-go { display: none; }
-.btn-install.soon { background: rgba(255,255,255,.18); color: #fff; box-shadow: none; cursor: default; }
-.btn-install.soon:hover { transform: none; }
-.install-hint { font-size: 15px; color: rgba(255,255,255,.85); max-width: 32ch; }
-.promises { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-.promises > span { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; padding: 9px 14px; border-radius: 999px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25); }
-.promises svg { width: 18px; height: 18px; }
-.hero-shots { position: relative; height: 560px; }
-.hero-shots .phone { position: absolute; }
-.hero-shots .p1 { left: 0; top: 24px; transform: rotate(-4deg); }
-.hero-shots .p2 { right: 0; top: 120px; transform: rotate(5deg); width: 240px; }
-.hero-mascot { position: absolute; left: -12px; bottom: 0; width: 200px; height: auto; z-index: 3; filter: drop-shadow(0 10px 14px rgba(0, 30, 45, .35)); }
-.mascot { display: block; height: auto; }
-.head.has-mascot { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 32px; align-items: center; }
-.head.has-mascot > :not(.mascot) { grid-column: 1; }
-.head.has-mascot > .mascot { grid-column: 2; grid-row: 1 / span 4; width: 220px; }
-.panel .mascot { width: 150px; margin: 0 0 8px auto; }
-@media (max-width: 760px) {
-  .hero-mascot { width: 120px; left: 0; }
-  .head.has-mascot { display: block; }
-  .head.has-mascot > .mascot { width: 150px; margin: 0 0 12px; }
-}
-@media (max-width: 900px) {
-  .hero .wrap { grid-template-columns: 1fr; }
-  .hero-copy { padding-bottom: 8px; }
-  .topbar { margin-bottom: 28px; }
-  .hero-shots { height: 470px; max-width: 460px; width: 100%; margin: 0 auto; }
-  .hero-shots .phone { width: 220px; }
-  .hero-shots .p2 { width: 200px; top: 90px; }
-}
-@media (max-width: 460px) { .hero-shots { height: 400px; } .hero-shots .phone { width: 180px; } .hero-shots .p2 { width: 170px; } }
+/* on paper: print screen beside the printed sheet */
+.paper { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 36px; align-items: center; }
+.paper .phone { width: 220px; }
+.paper-copy { display: grid; gap: 14px; min-width: 0; }
+.paper .sheet { width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,.08), 0 22px 44px -22px rgba(0, 40, 60, .4); transform: rotate(-1deg); }
+.paper p { color: var(--muted); max-width: 62ch; }
+.paper small { font-size: 13.5px; color: var(--muted); }
+@media (max-width: 760px) { .paper { grid-template-columns: 1fr; justify-items: center; } }
 
-/* ── Why: the problem ─────────────────────────────────── */
-.why-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-@media (max-width: 860px) { .why-grid { grid-template-columns: 1fr; } }
-.why { background: var(--card); border-radius: 22px; padding: 26px; display: grid; gap: 12px; align-content: start; min-width: 0; }
-.why .big { font-size: 46px; font-weight: 700; color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums; }
-.why h3 { font-size: 22px; }
-.why p { color: var(--muted); }
-.quote { margin-top: 26px; font-size: clamp(22px, 3vw, 30px); font-weight: 700; color: var(--ink); max-width: 34ch; }
-.quote small { display: block; font-size: 16px; font-weight: 400; color: var(--muted); margin-top: 8px; }
+/* problem strip */
+.problem { background: var(--soft); border-radius: 24px; padding: 28px clamp(20px, 4vw, 40px); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 28px; align-items: center; }
+.problem .big { font-size: 64px; font-weight: 700; color: var(--teal); line-height: 1; }
+.problem b { color: var(--ink); font-size: 21px; display: block; margin-bottom: 4px; }
+.problem p { color: var(--muted); }
+.looks { display: flex; align-items: center; gap: 10px; }
+.looks svg { width: 76px; height: 46px; }
+.looks span { font-size: 24px; font-weight: 700; color: var(--muted); }
+@media (max-width: 760px) { .problem { grid-template-columns: 1fr; gap: 14px; } }
 
-/* look comparison drawn like the app's pill pictures */
-.looks { display: flex; align-items: center; gap: 14px; margin-top: 4px; flex-wrap: wrap; }
-.looks figure { margin: 0; display: grid; justify-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); text-align: center; }
-.looks svg { width: 92px; height: 54px; }
-.looks .op { font-size: 26px; font-weight: 700; color: var(--muted); }
-
-/* ── Why and when: the day board ──────────────────────── */
-.board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-@media (max-width: 980px) { .board { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 580px) { .board { grid-template-columns: 1fr; } }
-.slot { background: var(--card); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; transition: box-shadow .2s; }
-.slot-top { background: var(--c); color: #fff; padding: 14px 18px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 21px; }
-.slot-top svg { width: 26px; height: 26px; flex: none; }
-.slot-top .now { margin-left: auto; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; background: rgba(255,255,255,.22); border-radius: 999px; padding: 3px 9px; }
-.slot.is-now { box-shadow: 0 0 0 3px var(--c); }
-.slot ul { list-style: none; margin: 0; padding: 6px 0; }
-.slot li { padding: 12px 18px; display: grid; gap: 3px; }
-.slot li + li { border-top: 1px solid var(--line); }
-.slot li b { color: var(--ink); font-size: 18px; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
-.slot li b small { font-weight: 400; font-size: 14.5px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.for { display: inline-flex; align-items: center; gap: 7px; font-size: 16px; color: var(--text); }
-.for i { width: 10px; height: 10px; border-radius: 50%; background: var(--dot); flex: none; }
-.note { font-size: 14.5px; color: var(--muted); }
-.slot .empty { color: var(--muted); padding: 14px 18px; font-size: 16px; }
-.week { margin-top: 14px; background: var(--card); border-radius: 22px; padding: 16px 18px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
-.week .tag { font-weight: 700; color: #fff; background: var(--teal); border-radius: 10px; padding: 5px 12px; font-size: 16px; }
-.week b { color: var(--ink); }
-.board-foot { margin-top: 16px; font-size: 15px; color: var(--muted); }
-
-/* ── How: steps with screenshots ──────────────────────── */
+/* steps */
 .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; counter-reset: s; }
-@media (max-width: 900px) { .steps { grid-template-columns: 1fr; justify-items: center; } }
-.step { display: grid; gap: 20px; justify-items: center; align-content: start; min-width: 0; }
-.step .cap { display: grid; gap: 6px; max-width: 320px; width: 100%; }
-.step .cap h3 { font-size: 24px; display: flex; gap: 12px; align-items: center; }
-.step .cap h3::before { counter-increment: s; content: counter(s); width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 19px; flex: none; }
-.step .cap p { color: var(--muted); }
+@media (max-width: 860px) { .steps { grid-template-columns: 1fr; justify-items: center; } }
+.step { display: grid; gap: 18px; justify-items: center; align-content: start; min-width: 0; }
+.step .phone { width: 220px; }
+.step .cap { max-width: 290px; width: 100%; display: grid; gap: 4px; }
+.step h3 { font-size: 21px; display: flex; gap: 10px; align-items: center; }
+.step h3::before { counter-increment: s; content: counter(s); width: 32px; height: 32px; border-radius: 50%; background: var(--teal-soft); color: var(--teal); display: grid; place-items: center; font-size: 17px; flex: none; }
+.step p { color: var(--muted); font-size: 17px; }
 
-/* ── Answers: green / yellow / red ────────────────────── */
-.answers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
-@media (max-width: 900px) { .answers { grid-template-columns: 1fr; justify-items: center; } }
-.answer { display: grid; gap: 18px; justify-items: center; align-content: start; min-width: 0; }
-.answer .cap { border-radius: 18px; padding: 16px 18px; width: 100%; max-width: 320px; display: grid; gap: 4px; }
-.answer .cap b { font-size: 20px; }
-.answer .cap p { font-size: 16px; color: var(--text); }
-.a-ok { background: var(--ok-soft); } .a-ok b { color: var(--ok-text); }
-.a-warn { background: var(--warn-soft); } .a-warn b { color: var(--warn-text); }
-.a-bad { background: var(--bad-soft); } .a-bad b { color: var(--bad-text); }
-.shot-note { font-size: 14px; color: var(--muted); margin-top: 18px; }
-.pack { margin-top: 36px; background: var(--card); border-radius: 22px; padding: 22px 24px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; }
-.pack svg { width: 54px; height: 54px; color: var(--accent); }
-.pack b { color: var(--ink); font-size: 20px; display: block; }
-.pack p { color: var(--muted); }
+/* answers */
+.answers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .answers { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .answers { grid-template-columns: 1fr; } }
+.ans { border-radius: 20px; padding: 20px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.ans b { font-size: 19px; display: flex; align-items: center; gap: 8px; }
+.ans b i { width: 12px; height: 12px; border-radius: 50%; background: currentColor; flex: none; }
+.ans p { font-size: 16px; color: var(--text); }
+.a-ok { background: var(--ok-soft); } .a-ok b { color: var(--ok); }
+.a-warn { background: var(--warn-soft); } .a-warn b { color: var(--warn); }
+.a-bad { background: var(--bad-soft); } .a-bad b { color: var(--bad); }
+.a-pack { background: var(--teal-soft); } .a-pack b { color: var(--teal); }
 
-/* ── Private + limits ─────────────────────────────────── */
-.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
-@media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
-.panel { background: var(--card); border-radius: 22px; padding: 28px; display: grid; gap: 16px; align-content: start; min-width: 0; }
-.panel h2 { font-size: clamp(26px, 3.4vw, 34px); }
-.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.list li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: start; }
-.list svg { width: 22px; height: 22px; margin-top: 3px; }
-.list.ok svg { color: var(--ok-text); }
-.list.lim svg { color: var(--warn-text); }
+/* trust */
+.trust { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 40px; list-style: none; margin: 0; padding: 0; }
+@media (max-width: 760px) { .trust { grid-template-columns: 1fr; } }
+.trust li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; align-items: start; }
+.trust svg { width: 22px; height: 22px; margin-top: 3px; }
+.trust .y svg { color: var(--ok); }
+.trust .n svg { color: var(--warn); }
+.trust b { color: var(--ink); }
 
-/* ── Closing band ─────────────────────────────────────── */
-.band { background: var(--teal); color: #fff; border-radius: 32px; padding: 44px clamp(22px, 5vw, 56px); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 30px; align-items: center; }
-@media (max-width: 800px) { .band { grid-template-columns: 1fr; } }
-.band h2 { color: #fff; font-size: clamp(28px, 4vw, 40px); }
-.band p { color: rgba(255,255,255,.9); margin-top: 12px; }
-.band ol { margin: 0; padding: 18px 18px 18px 40px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 18px; display: grid; gap: 8px; font-size: 17px; }
+/* closing */
+.close { border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
+.close h2 { margin: 0; font-size: clamp(24px, 3vw, 32px); max-width: 22ch; }
 
-footer { padding-block: 44px 60px; color: var(--muted); font-size: 15px; display: grid; gap: 10px; }
+/* mascot: the blister pack from pwa/icons */
+.mascot { display: block; height: auto; }
+.shots .hero-mascot { position: absolute; left: -18px; bottom: -8px; width: 170px; z-index: 3; filter: drop-shadow(0 10px 14px rgba(0, 30, 45, .25)); }
+@media (max-width: 860px) { .shots .hero-mascot { width: 120px; left: 0; } }
+
+/* problem: four checked figures from the pitch */
+.why-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
+.why-head .mascot { width: 150px; }
+@media (max-width: 640px) { .why-head { grid-template-columns: 1fr; } .why-head .mascot { width: 110px; grid-row: 1; } }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .stats { grid-template-columns: 1fr; } }
+.stat { background: var(--soft); border-radius: 20px; padding: 22px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.stat .n { font-size: 40px; font-weight: 700; line-height: 1; color: var(--teal); font-variant-numeric: tabular-nums; }
+.stat p { font-size: 16.5px; color: var(--text); }
+.stat small { font-size: 13.5px; color: var(--muted); }
+
+/* Anna's week: the pitch storyline in four beats */
+.week { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; counter-reset: w; }
+@media (max-width: 900px) { .week { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .week { grid-template-columns: 1fr; } }
+.week li { border-top: 3px solid var(--teal); padding-top: 14px; display: grid; gap: 4px; align-content: start; }
+.week li::before { counter-increment: w; content: counter(w); font-size: 14px; font-weight: 700; color: var(--teal); }
+.week b { color: var(--ink); font-size: 19px; }
+.week p { font-size: 16.5px; color: var(--muted); }
+.trust-wrap { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px; align-items: center; }
+.trust-wrap .mascot { width: 140px; }
+@media (max-width: 640px) { .trust-wrap { grid-template-columns: 1fr; } .trust-wrap .mascot { width: 110px; } }
+footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+footer nav a { color: var(--muted); }
+
+/* partner band: when the look matters, how it's drawn, how it plugs into existing systems */
+.toplink { font-size: 15px; font-weight: 700; text-decoration: none; margin-left: auto; padding: 8px 4px; }
+.partner { background: var(--soft); border-radius: 28px; padding: clamp(32px, 5vw, 56px) clamp(18px, 4vw, 48px); margin-bottom: 48px; scroll-margin-top: 16px; }
+.partner > h2 { margin-bottom: 12px; }
+.partner .intro { color: var(--muted); font-size: 19px; max-width: 60ch; }
+.partner h3 { font-size: 23px; margin: 48px 0 18px; }
+.partner .sub { color: var(--muted); font-size: 17px; margin: -8px 0 20px; max-width: 62ch; }
+.card { background: var(--bg); border: 1px solid var(--line); border-radius: 20px; padding: 20px; min-width: 0; }
+
+.moments { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 960px) { .moments { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 540px) { .moments { grid-template-columns: 1fr; } }
+.moment { display: grid; gap: 8px; align-content: start; }
+.moment svg { width: 30px; height: 30px; color: var(--teal); }
+.moment b { color: var(--ink); font-size: 18px; line-height: 1.25; }
+.moment p { font-size: 16px; color: var(--muted); }
+
+.viz { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1.1fr); gap: 14px; align-items: stretch; }
+.viz .arrow { display: grid; place-items: center; color: var(--teal); }
+.viz .arrow svg { width: 32px; height: 32px; }
+@media (max-width: 760px) { .viz { grid-template-columns: 1fr; } .viz .arrow svg { transform: rotate(90deg); } }
+.viz { grid-template-columns: minmax(0, 1.15fr) 40px minmax(0, 1fr); }
+@media (max-width: 760px) { .viz { grid-template-columns: 1fr; } }
+.leaflet { background: #FFFEFA; border: 1px solid #E2DED2; border-radius: 6px; padding: 22px 24px; box-shadow: 0 1px 0 #E2DED2, 0 10px 22px -16px rgba(60, 50, 20, .35); font-family: Georgia, "Times New Roman", serif; color: #33302A; min-width: 0; }
+.leaflet .doc { font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: #8A8576; margin-bottom: 12px; }
+.leaflet h4 { font: 700 17px/1.3 Georgia, "Times New Roman", serif; margin: 0 0 10px; color: #1F1D18; }
+.leaflet p { font-size: 17px; line-height: 1.7; }
+.leaflet p + p { margin-top: 8px; }
+.leaflet .fade { color: #A39E90; }
+.leaflet mark { color: inherit; border-radius: 4px; padding: 1px 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.f1 { background: #DCEFF4; } .f2 { background: #DDF1E4; } .f3 { background: #FBEBCF; } .f4 { background: #F8DEDB; } .f5 { background: #E7E1F6; }
+.fields { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.fields li { font: 700 14px/1 var(--font); color: var(--ink); border-radius: 999px; padding: 7px 11px; }
+.fields li small { font-weight: 400; color: var(--muted); margin-right: 5px; font-size: 13px; }
+.drawing { display: grid; place-items: center; gap: 14px; text-align: center; }
+.vizlabel { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 12px; font-size: 17px; font-weight: 700; color: var(--ink); }
+.viz + .vizlabel { margin-top: 28px; }
+.tag { font: 700 12px/1 var(--font); letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 6px 9px; background: var(--ok-soft); color: var(--ok); }
+.tag.gap { background: var(--warn-soft); color: var(--warn); }
+.fields li.miss { background: var(--bg); color: var(--warn); outline: 1.5px dashed var(--warn); outline-offset: -1.5px; }
+.fill { margin-top: 14px; }
+.fill h4 { margin: 0 0 4px; font-size: 19px; color: var(--ink); }
+.fill > p { font-size: 15.5px; color: var(--muted); margin-bottom: 8px; max-width: 70ch; }
+.fill ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.fill li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.fill li:first-child { border-top: 0; }
+.fill li b { color: var(--ink); font-size: 16.5px; }
+.fill li .d { display: block; font-size: 14.5px; color: var(--muted); }
+.fill .best { font: 700 11px/1 var(--font); letter-spacing: .06em; text-transform: uppercase; color: #fff; background: var(--teal); border-radius: 999px; padding: 4px 7px; margin-left: 8px; vertical-align: 2px; white-space: nowrap; }
+.fills { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+.fills i { font: 700 13px/1 var(--font); font-style: normal; border-radius: 999px; padding: 6px 9px; background: var(--ok-soft); color: var(--ok); white-space: nowrap; }
+.fills i.part { background: var(--soft); color: var(--muted); }
+.fill .rule { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 15px; color: var(--text); }
+@media (max-width: 600px) { .fill li { grid-template-columns: 1fr; } .fills { justify-content: flex-start; } }
+.fields li.miss small { color: var(--warn); }
+.leaflet .silent { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #D8D2C2; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font: 400 14px/1.3 var(--font); color: var(--warn); }
+.leaflet .silent b { font-weight: 700; margin-right: 2px; }
+.leaflet .silent span.q { font-weight: 700; border-radius: 6px; padding: 3px 7px; outline: 1.5px dashed var(--warn); outline-offset: -1.5px; }
+.gapnote { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; text-align: left; background: var(--warn-soft); color: var(--text); border-radius: 12px; padding: 10px 12px; font-size: 15px; max-width: 40ch; }
+.gapnote svg { width: 22px; height: 22px; color: var(--warn); }
+.gapnote b { color: var(--warn); }
+.drawing .big-pill { width: min(100%, 300px); height: auto; }
+.drawing .ruler { width: min(100%, 300px); height: auto; color: var(--muted); }
+.drawing p { font-size: 15px; color: var(--muted); max-width: 36ch; }
+
+.levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+@media (max-width: 760px) { .levels { grid-template-columns: 1fr; } }
+.level { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 14px; align-items: center; }
+.level .pics { display: flex; align-items: center; justify-content: center; gap: 6px; height: 64px; color: #8C8C96; }
+.level .pics svg { height: 100%; width: auto; max-width: 84px; }
+.level b { color: var(--ink); display: block; font-size: 17px; }
+.level p { font-size: 15px; color: var(--muted); }
+
+.flow { display: grid; grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr) 32px minmax(0, 1fr); gap: 10px; align-items: stretch; }
+.flow .arrow { display: grid; place-items: center; color: var(--teal); }
+.flow .arrow svg { width: 28px; height: 28px; }
+@media (max-width: 900px) { .flow { grid-template-columns: 1fr; } .flow .arrow svg { transform: rotate(90deg); } }
+.col { display: grid; gap: 10px; align-content: start; }
+.col > .label { margin-bottom: 2px; }
+.node { background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; display: grid; gap: 3px; }
+.node b { color: var(--ink); font-size: 17px; line-height: 1.25; }
+.node span.d { font-size: 15px; color: var(--muted); }
+.col.core .node { background: var(--teal); border-color: var(--teal); }
+.col.core .node b { color: #fff; }
+.col.core .node span.d { color: rgba(255, 255, 255, .86); }
+
+.story { margin-top: 14px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; padding: 0; counter-reset: st; list-style: none; }
+@media (max-width: 900px) { .story { grid-template-columns: 1fr; } }
+.story li { padding: 18px 20px; display: grid; gap: 4px; align-content: start; border-left: 1px solid var(--line); }
+.story li:first-child { border-left: 0; }
+@media (max-width: 900px) { .story li { border-left: 0; border-top: 1px solid var(--line); } .story li:first-child { border-top: 0; } }
+.story li::before { counter-increment: st; content: counter(st); font-weight: 700; font-size: 15px; color: var(--teal); }
+.story b { color: var(--ink); font-size: 17px; }
+.story span.d { font-size: 15px; color: var(--muted); }
+.story .push { margin-top: 6px; background: var(--teal-soft); border-radius: 12px; padding: 10px 12px; font-size: 15px; color: var(--ink); display: flex; flex-direction: column; gap: 6px; align-items: flex-start; text-align: left; }
+.story .push svg { width: 46px; height: 26px; flex: none; }
+
+.offer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .offer { grid-template-columns: 1fr; } }
+.offer b { color: var(--ink); font-size: 18px; display: block; margin-bottom: 4px; }
+.offer p { font-size: 16px; color: var(--muted); }
+.partner .privacy { margin-top: 18px; font-size: 16px; color: var(--text); display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; }
+.partner .privacy svg { width: 22px; height: 22px; color: var(--ok); margin-top: 3px; }
+.partner .cta { margin-top: 32px; }
+
+footer { padding-block: 8px 48px; color: var(--muted); font-size: 14px; display: grid; gap: 8px; }
 footer p { max-width: 95ch; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-sunrise" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M3 19h18M7 19a5 5 0 0 1 10 0M12 4v5M9.5 6.5 12 4l2.5 2.5M4.5 13.5l1.4 1.2M19.5 13.5l-1.4 1.2"/></symbol>
-  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></symbol>
-  <symbol id="i-sunset" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M3 19h18M7 19a5 5 0 0 1 10 0M12 4v5M9.5 6.5 12 9l2.5-2.5M4.5 13.5l1.4 1.2M19.5 13.5l-1.4 1.2"/></symbol>
-  <symbol id="i-moon" viewBox="0 0 24 24"><path fill="currentColor" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/><path fill="currentColor" d="M18 3l.6 1.6L20 5l-1.4.4L18 7l-.6-1.6L16 5l1.4-.4z"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2.5" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2.2" d="M8 10V7.5a4 4 0 0 1 8 0V10"/></symbol>
   <symbol id="i-speaker" viewBox="0 0 24 24"><path fill="currentColor" d="M4 9h4l5-4v14l-5-4H4z"/><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/></symbol>
   <symbol id="i-text" viewBox="0 0 24 24"><path fill="currentColor" d="M3 19 8.5 5h2L16 19h-2.3l-1.4-3.8H6.7L5.3 19Zm4.4-6h4.2L9.5 7.6ZM17 19l2.4-7h1.8l2.4 7h-1.9l-.5-1.6h-1.8L19 19Zm2.5-3.2h1.2l-.6-2Z"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" opacity=".16"/><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m7.5 12.5 3 3 6-6.5"/></symbol>
   <symbol id="i-limit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" opacity=".16"/><path fill="currentColor" d="M11 6.5h2v7.5h-2zm0 9.5h2v2h-2z"/></symbol>
-  <symbol id="i-box" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z M3 7.5 12 12l9-4.5M12 12v9"/><path fill="currentColor" d="M5 14h1v3H5zm2 0h.6v3H7zm1.4 0h1v3h-1z"/></symbol>
   <symbol id="i-install" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 7v7m-3-3 3 3 3-3"/><path fill="currentColor" d="M10.5 18h3v1.5h-3z"/></symbol>
-  <symbol id="i-logo" viewBox="0 0 36 36"><rect x="1" y="1" width="34" height="34" rx="10" fill="#fff" opacity=".16"/><path d="M8 8h5M8 8v5M28 8h-5M28 8v5M8 28h5M8 28v-5M28 28h-5M28 28v-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/><rect x="12" y="14.5" width="12" height="7" rx="3.5" fill="#fff"/><path d="M18 14.5v7" stroke="#0B6E8A" stroke-width="1.6"/></symbol>
+  <symbol id="i-switch" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M4 8h13m0 0-3.5-3.5M17 8l-3.5 3.5M20 16H7m0 0 3.5-3.5M7 16l3.5 3.5"/></symbol>
+  <symbol id="i-house" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="17" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path fill="currentColor" d="M10.7 7.5h2.6v3.2h3.2v2.6h-3.2v3.2h-2.6v-3.2H7.5v-2.6h3.2z"/></symbol>
+  <symbol id="i-week" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path stroke="currentColor" stroke-width="1.6" d="M7.2 5v14M12 5v14M16.8 5v14M2.5 12h19"/></symbol>
+  <symbol id="i-loose" viewBox="0 0 24 24"><rect x="3" y="11" width="11" height="6" rx="3" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-25 8.5 14)"/><circle cx="17" cy="8" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="17.5" r="2.6" fill="currentColor"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m-5-5 5 5-5 5"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path fill="currentColor" opacity=".16" d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z"/><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-handshake" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" d="M2.5 9.5 6 6l4 1.5L13.5 6l8 3.5M2.5 9.5l7 7.5a1.6 1.6 0 0 0 2.3 0l.5-.5m-9.8-7L5 12m16.5-2.5L17 14m4.5-4.5-2 4.5M10 7.5 7.8 10a1.4 1.4 0 0 0 2 2l2.7-2.4 4.5 4.4a1.5 1.5 0 0 1-2.1 2.1l-1-1"/></symbol>
+  <radialGradient id="g-shine" cx="0.32" cy="0.28" r="0.8"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="0.55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></radialGradient>
+  <symbol id="i-logo" viewBox="0 0 36 36"><rect x="1" y="1" width="34" height="34" rx="10" fill="#0B6E8A"/><path d="M8 8h5M8 8v5M28 8h-5M28 8v5M8 28h5M8 28v-5M28 28h-5M28 28v-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/><rect x="12" y="14.5" width="12" height="7" rx="3.5" fill="#fff"/><path d="M18 14.5v7" stroke="#0B6E8A" stroke-width="1.6"/></symbol>
 </svg>
 
-<header class="hero">
-  <div class="wrap">
-    <div class="hero-copy">
-      <div class="topbar">
-        <div class="brand"><svg aria-hidden="true"><use href="#i-logo"/></svg>BlisterKompass</div>
-        <div class="langs" role="group" aria-label="Sprache / Language">
-          <button type="button" id="lang-de" data-lang="de" aria-pressed="true">DE</button>
-          <button type="button" id="lang-en" data-lang="en" aria-pressed="false">EN</button>
-        </div>
-      </div>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><img src="../pwa/icons/mascot-wave.png" alt="" width="44" height="44" decoding="async">Blister-Kompass</div>
+    <a class="toplink" href="#partner"><span lang="de">Für Partner</span><span lang="en">For partners</span></a>
+    <div class="langs" role="group" aria-label="Sprache / Language">
+      <button type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div>
       <h1><span lang="de">Welche Tablette ist das?</span><span lang="en">Which pill is this?</span></h1>
       <p class="lead">
-        <span lang="de">BlisterKompass sagt Ihnen, wofür jede Tablette ist und wann Sie sie nehmen. Einmal den Code auf dem Medikationsplan scannen. Danach zeigt das Handy, was jetzt dran ist, und erkennt lose Tabletten und Packungen.</span>
-        <span lang="en">BlisterKompass tells you what each pill is for and when to take it. Scan the code on the German medication plan (Medikationsplan) once. From then on the phone shows what is due now and recognises loose pills and packs.</span>
+        <span lang="de">Einmal den Medikationsplan scannen. Danach zeigt das Handy, wie jede Tablette aussieht, wofür sie ist und wann sie dran ist.</span>
+        <span lang="en">Scan the German medication plan once. From then on the phone shows what each pill looks like, what it's for and when it's due.</span>
       </p>
-      <div class="install">
-        <a class="btn-install" id="install-hero" href="../pwa/">
+      <div class="cta">
+        <a class="btn" href="../pwa/">
           <svg aria-hidden="true"><use href="#i-install"/></svg>
           <span class="lbl-go"><span lang="de">App installieren</span><span lang="en">Install the app</span></span>
           <span class="lbl-soon"><span lang="de">Web-App kommt bald</span><span lang="en">Web app coming soon</span></span>
         </a>
-        <span class="install-hint"><span lang="de">Kostenlos, ohne App Store. iPhone: Teilen → Zum Home-Bildschirm.</span><span lang="en">Free, no app store. iPhone: Share → Add to Home Screen.</span></span>
+        <span class="hint"><span lang="de">Kostenlos, ohne App Store.</span><span lang="en">Free, no app store.</span></span>
       </div>
-      <div class="promises">
-        <span><svg aria-hidden="true"><use href="#i-lock"/></svg><span lang="de">Offline, ohne Konto</span><span lang="en">Offline, no account</span></span>
-        <span><svg aria-hidden="true"><use href="#i-speaker"/></svg><span lang="de">Liest vor</span><span lang="en">Reads aloud</span></span>
-        <span><svg aria-hidden="true"><use href="#i-text"/></svg><span lang="de">Große Schrift, große Knöpfe</span><span lang="en">Big type, big buttons</span></span>
-      </div>
+      <ul class="facts">
+        <li><svg aria-hidden="true"><use href="#i-lock"/></svg><span lang="de">Offline, ohne Konto</span><span lang="en">Offline, no account</span></li>
+        <li><svg aria-hidden="true"><use href="#i-speaker"/></svg><span lang="de">Liest vor</span><span lang="en">Reads aloud</span></li>
+        <li><svg aria-hidden="true"><use href="#i-text"/></svg><span lang="de">Große Schrift</span><span lang="en">Big type</span></li>
+      </ul>
     </div>
-    <div class="hero-shots">
-      <img class="hero-mascot" src="../pwa/icons/mascot-wave.png" alt="" decoding="async">
-      <div class="phone p1"><img src="screens/0-home-day.png" data-alt-de="Startseite: Jetzt · Abends mit Metformin, Atorvastatin und Diclofenac, darunter Später · Nachts mit Pregabalin" data-alt-en="Home screen: Now · Evening with metformin, atorvastatin and diclofenac, then Later · Night with pregabalin" alt="Startseite: Jetzt · Abends mit Metformin, Atorvastatin und Diclofenac, darunter Später · Nachts mit Pregabalin"></div>
-      <div class="phone p2"><img src="screens/4-own-pill.png" data-alt-de="Ergebnis Ihre Tablette: Amlodipin 5 mg, wofür Blutdruck, morgens eine" data-alt-en="Result Your pill: amlodipine 5 mg, for blood pressure, one in the morning" alt="Ergebnis Ihre Tablette: Amlodipin 5 mg, wofür Blutdruck, morgens eine"></div>
+    <div class="shots">
+      <img class="mascot hero-mascot" src="../pwa/icons/mascot-wave.png" alt="" width="480" height="480" decoding="async">
+      <div class="phone p1"><img src="screens/0-home-day.png" data-alt-de="Startseite: was jetzt dran ist, mit großen Tablettenbildern" data-alt-en="Home screen: what is due now, with big pill pictures" alt="Startseite: was jetzt dran ist, mit großen Tablettenbildern"></div>
+      <div class="phone p2"><img src="screens/4-own-pill.png" data-alt-de="Tablette erkannt: Amlodipin 5 mg, Blutdruck, morgens eine" data-alt-en="Pill recognised: amlodipine 5 mg, blood pressure, one in the morning" alt="Tablette erkannt: Amlodipin 5 mg, Blutdruck, morgens eine"></div>
     </div>
-  </div>
-</header>
+  </header>
 
-<main class="wrap">
-
-  <section id="warum">
-    <div class="head has-mascot">
-      <img class="mascot" src="../pwa/icons/mascot-search.png" alt="" loading="lazy" decoding="async">
-      <span class="label"><span lang="de">Warum</span><span lang="en">Why</span></span>
-      <h2><span lang="de">Zwölf Medikamente, vier Ärzte, und die Tablette sieht plötzlich anders aus</span><span lang="en">Twelve medicines, four doctors, and suddenly the pill looks different</span></h2>
-      <p class="lead"><span lang="de">Ältere Menschen mit vielen Medikamenten erkennen ihre Tabletten am Aussehen. Genau das ändert sich ständig.</span><span lang="en">Older people on many medicines know their pills by how they look. That is exactly what keeps changing.</span></p>
+  <section style="padding-top: 24px">
+    <div class="why-head">
+      <div>
+        <span class="label"><span lang="de">Das Problem</span><span lang="en">The problem</span></span>
+        <h2><span lang="de">Wer viele Tabletten nimmt, erkennt sie am Aussehen. Und das ändert sich.</span><span lang="en">People on many pills know them by their look. And the look keeps changing.</span></h2>
+      </div>
+      <img class="mascot" src="../pwa/icons/mascot-search.png" alt="" width="480" height="480" loading="lazy" decoding="async">
     </div>
-    <div class="why-grid">
-      <div class="why">
-        <span class="big">3</span>
-        <h3><span lang="de">Herstellerwechsel in drei Monaten</span><span lang="en">brand switches in three months</span></h3>
-        <p><span lang="de">So viele hatte unsere Beispielpatientin. Grund sind Rabattverträge: Die Apotheke gibt den Hersteller ab, mit dem die Kasse einen Vertrag hat. Gleiches Medikament, andere Farbe, andere Form.</span><span lang="en">That is how many our example patient had. The reason is discount contracts (Rabattverträge): the pharmacy dispenses the maker the health insurer has a contract with. Same medicine, other colour, other shape.</span></p>
-      </div>
-      <div class="why">
-        <h3><span lang="de">Gleiches Medikament, anderes Aussehen</span><span lang="en">Same medicine, different look</span></h3>
-        <div class="looks">
-          <figure><svg viewBox="0 0 92 54" aria-hidden="true"><rect x="4" y="12" width="84" height="30" rx="15" fill="#F7F7F4" stroke="#B9B9C0" stroke-width="2"/><path d="M46 14v26" stroke="#A9A9B0" stroke-width="2"/></svg><span lang="de">Hersteller A<br>länglich</span><span lang="en">Maker A<br>oblong</span></figure>
-          <span class="op">=</span>
-          <figure><svg viewBox="0 0 92 54" aria-hidden="true"><ellipse cx="46" cy="27" rx="36" ry="19" fill="#F3F1EA" stroke="#B9B9C0" stroke-width="2"/><path d="M46 9v36" stroke="#A9A9B0" stroke-width="2"/></svg><span lang="de">Hersteller B<br>oval</span><span lang="en">Maker B<br>oval</span></figure>
-        </div>
-        <p><span lang="de">Metoprololsuccinat 47,5 mg von zwei Herstellern, laut Packungsbeilage. Wer das nicht weiß, nimmt leicht beide.</span><span lang="en">Metoprolol succinate 47.5 mg from two makers, as described in their package leaflets. If you don't know that, it is easy to take both.</span></p>
-      </div>
-      <div class="why">
-        <h3><span lang="de">Andere Dosis, gleiches Aussehen</span><span lang="en">Different dose, same look</span></h3>
-        <div class="looks">
-          <figure><svg viewBox="0 0 92 54" aria-hidden="true"><ellipse cx="46" cy="27" rx="36" ry="19" fill="#F7F7F4" stroke="#B9B9C0" stroke-width="2"/><path d="M46 9v36" stroke="#A9A9B0" stroke-width="2"/></svg>47,5 mg</figure>
-          <span class="op">≠</span>
-          <figure><svg viewBox="0 0 92 54" aria-hidden="true"><ellipse cx="46" cy="27" rx="36" ry="19" fill="#F7F7F4" stroke="#B9B9C0" stroke-width="2"/><path d="M46 9v36" stroke="#A9A9B0" stroke-width="2"/></svg>95 mg</figure>
-        </div>
-        <p><span lang="de">Bei manchen Herstellern beschreibt die Beilage beide Stärken gleich. Das Auge sieht die doppelte Dosis nicht, die PZN auf der Packung schon.</span><span lang="en">Some makers describe both strengths with the same words. The eye can't see the doubled dose, the PZN (German product number) on the pack can.</span></p>
-      </div>
+    <div class="stats">
+      <div class="stat"><span class="n">47 %</span><p><span lang="de">Nur bei knapp der Hälfte ihrer Medikamente wissen ältere Hausarztpatienten, wofür sie sind.</span><span lang="en">Older GP patients know what fewer than half of their medicines are for.</span></p><small><span lang="de">Greifswald, n = 637, DMW 2018</span><span lang="en">Greifswald, n = 637, DMW 2018</span></small></div>
+      <div class="stat"><span class="n"><span lang="de">0 von 288</span><span lang="en">0 of 288</span></span><p><span lang="de">Medikationsplänen waren bei einer Apothekenprüfung vollständig richtig.</span><span lang="en">medication plans were fully correct in a pharmacy review.</span></p><small>Eickhoff 2023</small></div>
+      <div class="stat"><span class="n"><span lang="de">1 von 4</span><span lang="en">1 in 4</span></span><p><span lang="de">austauschbaren Rabatt-Paaren unterscheidet sich in Farbe oder Form.</span><span lang="en">interchangeable rebate pairs differ in colour or shape.</span></p><small><span lang="de">Pruszydlo 2008, 258.412 Paare</span><span lang="en">Pruszydlo 2008, 258,412 pairs</span></small></div>
+      <div class="stat"><span class="n"><span lang="de">13,5 %</span><span lang="en">13.5 %</span></span><p><span lang="de">aller Arzneimittelprobleme am HV-Tisch: Unsicherheit nach einem Herstellerwechsel.</span><span lang="en">of all drug problems at the pharmacy counter: uncertainty after a maker switch.</span></p><small><span lang="de">ABDA, 143 Apotheken, 14.231 Patienten</span><span lang="en">ABDA, 143 pharmacies, 14,231 patients</span></small></div>
     </div>
-    <p class="quote"><span lang="de">„Ist das die fürs Herz oder die gelbe?"<small>So fragen Patientinnen am Telefon. Mit BlisterKompass haben sie den Namen, den Grund und die Uhrzeit vor sich.</small></span><span lang="en">"Is that the one for my heart or the yellow one?"<small>That's how patients ask on the phone. With BlisterKompass they have the name, the reason and the time in front of them.</small></span></p>
   </section>
 
-  <section id="wann">
-    <div class="head has-mascot">
-      <img class="mascot" src="../pwa/icons/mascot-hug.png" alt="" loading="lazy" decoding="async">
-      <span class="label"><span lang="de">Wofür und wann</span><span lang="en">What for and when</span></span>
-      <h2><span lang="de">Ein Tag mit dem Plan von Erika M.</span><span lang="en">A day on Erika M.'s plan</span></h2>
-      <p class="lead"><span lang="de">78 Jahre, Herzschwäche, Diabetes, zwölf Medikamente. So ordnet BlisterKompass ihren Medikationsplan: nach Tageszeit, jedes mit dem Grund, der auf dem Plan steht.</span><span lang="en">78, heart failure, diabetes, twelve medicines. This is how BlisterKompass sorts her medication plan: by time of day, each with the reason written on the plan.</span></p>
-    </div>
-
-    <div class="board" id="board">
-      <div class="slot" data-slot="morning" style="--c: var(--morning)">
-        <div class="slot-top"><svg aria-hidden="true"><use href="#i-sunrise"/></svg><span lang="de">Morgens</span><span lang="en">Morning</span></div>
-        <ul>
-          <li><b>Levothyroxin <small>50 µg</small></b><span class="for"><i style="--dot:#2E7BC4"></i><span lang="de">Schilddrüse</span><span lang="en">Thyroid</span></span><span class="note"><span lang="de">30 Minuten vor dem Frühstück</span><span lang="en">30 minutes before breakfast</span></span></li>
-          <li><b>Pantoprazol <small>20 mg</small></b><span class="for"><i style="--dot:#2E8B57"></i><span lang="de">Magenschutz</span><span lang="en">Stomach protection</span></span><span class="note"><span lang="de">vor dem Frühstück</span><span lang="en">before breakfast</span></span></li>
-          <li><b>Sacubitril/Valsartan <small>49/51 mg</small></b><span class="for"><i style="--dot:#C0392B"></i><span lang="de">Herzschwäche</span><span lang="en">Heart failure</span></span></li>
-          <li><b>Empagliflozin <small>10 mg</small></b><span class="for"><i style="--dot:#C0392B"></i><span lang="de">Herzschwäche, Zucker</span><span lang="en">Heart failure, diabetes</span></span></li>
-          <li><b>Metformin <small>500 mg</small></b><span class="for"><i style="--dot:#8A6D3B"></i><span lang="de">Zucker</span><span lang="en">Diabetes</span></span><span class="note"><span lang="de">zum Essen</span><span lang="en">with food</span></span></li>
-          <li><b>Furosemid <small>40 mg</small></b><span class="for"><i style="--dot:#2E7BC4"></i><span lang="de">Wassertablette</span><span lang="en">Water pill</span></span></li>
-          <li><b>Spironolacton <small>25 mg</small></b><span class="for"><i style="--dot:#C0392B"></i><span lang="de">Herzschwäche</span><span lang="en">Heart failure</span></span></li>
-          <li><b>Metoprololsuccinat <small>½ × 47,5 mg</small></b><span class="for"><i style="--dot:#C0392B"></i><span lang="de">Herzschwäche, Puls</span><span lang="en">Heart failure, pulse</span></span></li>
-          <li><b>Apixaban <small>5 mg</small></b><span class="for"><i style="--dot:#B3261E"></i><span lang="de">Blutverdünnung</span><span lang="en">Blood thinner</span></span></li>
-        </ul>
-      </div>
-      <div class="slot" data-slot="noon" style="--c: var(--noon)">
-        <div class="slot-top"><svg aria-hidden="true"><use href="#i-sun"/></svg><span lang="de">Mittags</span><span lang="en">Noon</span></div>
-        <ul>
-          <li><b>Furosemid <small>40 mg</small></b><span class="for"><i style="--dot:#2E7BC4"></i><span lang="de">Wassertablette</span><span lang="en">Water pill</span></span></li>
-        </ul>
-      </div>
-      <div class="slot" data-slot="evening" style="--c: var(--evening)">
-        <div class="slot-top"><svg aria-hidden="true"><use href="#i-sunset"/></svg><span lang="de">Abends</span><span lang="en">Evening</span></div>
-        <ul>
-          <li><b>Sacubitril/Valsartan <small>49/51 mg</small></b><span class="for"><i style="--dot:#C0392B"></i><span lang="de">Herzschwäche</span><span lang="en">Heart failure</span></span></li>
-          <li><b>Metformin <small>500 mg</small></b><span class="for"><i style="--dot:#8A6D3B"></i><span lang="de">Zucker</span><span lang="en">Diabetes</span></span><span class="note"><span lang="de">zum Essen</span><span lang="en">with food</span></span></li>
-          <li><b>Apixaban <small>5 mg</small></b><span class="for"><i style="--dot:#B3261E"></i><span lang="de">Blutverdünnung</span><span lang="en">Blood thinner</span></span></li>
-          <li><b>Allopurinol <small>100 mg</small></b><span class="for"><i style="--dot:#D46A00"></i><span lang="de">Gicht</span><span lang="en">Gout</span></span></li>
-          <li><b>Atorvastatin <small>40 mg</small></b><span class="for"><i style="--dot:#B8860B"></i><span lang="de">Cholesterin</span><span lang="en">Cholesterol</span></span></li>
-        </ul>
-      </div>
-      <div class="slot" data-slot="night" style="--c: var(--night)">
-        <div class="slot-top"><svg aria-hidden="true"><use href="#i-moon"/></svg><span lang="de">Nachts</span><span lang="en">Night</span></div>
-        <p class="empty"><span lang="de">Nichts. Gut schlafen.</span><span lang="en">Nothing. Sleep well.</span></p>
-      </div>
-    </div>
-    <div class="week"><span class="tag"><span lang="de">Mittwochs</span><span lang="en">Wednesdays</span></span><span><b>Colecalciferol 20.000 I.E.</b>, <span lang="de">Vitamin D, einmal pro Woche</span><span lang="en">vitamin D, once a week</span></span></div>
-    <p class="board-foot"><span lang="de">Erika M. ist erfunden, ihr Plan ist ein Beispiel und keine Therapieempfehlung. Die Hinweise kommen aus dem Medikationsplan, BlisterKompass erfindet keine eigenen.</span><span lang="en">Erika M. is fictional; her plan is an example, not a treatment recommendation. The notes come from the medication plan. BlisterKompass never adds its own.</span></p>
+  <section style="padding-top: 0">
+    <span class="label"><span lang="de">Ein Beispiel</span><span lang="en">An example</span></span>
+    <h2><span lang="de">Anna, 74. Zwölf Medikamente von vier Ärzten.</span><span lang="en">Anna, 74. Twelve medicines from four doctors.</span></h2>
+    <ol class="week">
+      <li><b><span lang="de">Beim Hausarzt</span><span lang="en">At the GP</span></b><p><span lang="de">„Was nehmen Sie?“ Anna rät nicht. Sie liest es ab, Tablette für Tablette, mit Bild.</span><span lang="en">“What are you taking?” Anna doesn't guess. She reads it out, pill by pill, with pictures.</span></p></li>
+      <li><b><span lang="de">Neuer Plan</span><span lang="en">New plan</span></b><p><span lang="de">Die Ärztin druckt den geänderten Plan. Anna scannt den Code einmal, der neue Plan ersetzt den alten.</span><span lang="en">The doctor prints the updated plan. Anna scans the code once and the new plan replaces the old one.</span></p></li>
+      <li><b><span lang="de">In der Apotheke</span><span lang="en">At the pharmacy</span></b><p><span lang="de">Sie legt ihren Plan mit Bildern vor, gedruckt aus der App. Die Apotheke sieht auf einen Blick, was sie nimmt.</span><span lang="en">She hands over her plan with pictures, printed from the app. The pharmacy sees at a glance what she takes.</span></p></li>
+      <li><b><span lang="de">Zuhause</span><span lang="en">At home</span></b><p><span lang="de">Die Schmerztablette ist plötzlich weiß. Tochter Lena scannt die Packung: auf dem Plan, wofür und wann.</span><span lang="en">The pain pill is suddenly white. Her daughter Lena scans the pack: on the plan, what for and when.</span></p></li>
+    </ol>
   </section>
 
-  <section id="so-gehts">
-    <div class="head has-mascot">
-      <img class="mascot" src="../pwa/icons/mascot-run.png" alt="" loading="lazy" decoding="async">
-      <span class="label"><span lang="de">So geht's</span><span lang="en">How it works</span></span>
-      <h2><span lang="de">Einmal scannen, dann nur noch fragen</span><span lang="en">Scan once, then just ask</span></h2>
-      <p class="shot-note"><span lang="de">Die App selbst ist auf Deutsch.</span><span lang="en">The app itself is in German.</span></p>
-    </div>
+  <section style="padding-top: 0">
+    <span class="label"><span lang="de">So geht's</span><span lang="en">How it works</span></span>
+    <h2><span lang="de">Einmal scannen, dann nur noch fragen</span><span lang="en">Scan once, then just ask</span></h2>
     <div class="steps">
       <div class="step">
-        <div class="phone"><img src="screens/1-welcome.png" data-alt-de="Willkommen: Scannen Sie zuerst den Code auf Ihrem Medikationsplan. Knopf Plan scannen." data-alt-en="Welcome: first scan the code on your medication plan. Button Scan plan." alt="Willkommen: Scannen Sie zuerst den Code auf Ihrem Medikationsplan. Knopf Plan scannen."></div>
-        <div class="cap"><h3><span lang="de">Plan scannen</span><span lang="en">Scan the plan</span></h3><p><span lang="de">Den Code oben rechts auf dem bundeseinheitlichen Medikationsplan ins Bild nehmen. BlisterKompass liest nur die Medikamente, nicht Name, Geburtsdatum oder Versichertennummer.</span><span lang="en">Point the camera at the code in the top right corner of the standard German medication plan. BlisterKompass reads only the medicines, not name, birth date or insurance number.</span></p></div>
+        <div class="phone"><img src="screens/1-welcome.png" data-alt-de="Willkommen: Knopf Plan scannen" data-alt-en="Welcome: button Scan plan" alt="Willkommen: Knopf Plan scannen"></div>
+        <div class="cap"><h3><span lang="de">Plan scannen</span><span lang="en">Scan the plan</span></h3><p><span lang="de">Den Code auf dem Medikationsplan. Nur die Medikamente werden gelesen, keine Personendaten.</span><span lang="en">The code on the medication plan. Only the medicines are read, no personal data.</span></p></div>
       </div>
       <div class="step">
-        <div class="phone"><img src="screens/0-home-day.png" data-alt-de="Startseite: was jetzt dran ist, mit großen Tablettenbildern, und was später kommt" data-alt-en="Home screen: what is due now, with big pill pictures, and what comes later" alt="Startseite: was jetzt dran ist, mit großen Tablettenbildern, und was später kommt"></div>
-        <div class="cap"><h3><span lang="de">Sehen, was jetzt dran ist</span><span lang="en">See what's due now</span></h3><p><span lang="de">Die Startseite ordnet den Plan nach der Uhr: zuerst Jetzt mit großen Bildern, dann Später und Morgen. Der Lautsprecher liest alles vor.</span><span lang="en">The home screen sorts the plan by the clock: Now first with big pictures, then Later and Tomorrow. The speaker button reads it all out.</span></p></div>
+        <div class="phone"><img src="screens/0-home-day.png" data-alt-de="Startseite: Jetzt, Später, Morgen" data-alt-en="Home screen: Now, Later, Tomorrow" alt="Startseite: Jetzt, Später, Morgen"></div>
+        <div class="cap"><h3><span lang="de">Sehen, was dran ist</span><span lang="en">See what's due</span></h3><p><span lang="de">Nach der Uhr sortiert: Jetzt, Später, Morgen. Auf Wunsch vorgelesen.</span><span lang="en">Sorted by the clock: Now, Later, Tomorrow. Read aloud on request.</span></p></div>
       </div>
       <div class="step">
-        <div class="phone"><img src="screens/4-own-pill.png" data-alt-de="Tablette erkannt: Amlodipin 5 mg, Blutdruck, morgens eine Tablette" data-alt-en="Pill recognised: amlodipine 5 mg, blood pressure, one tablet in the morning" alt="Tablette erkannt: Amlodipin 5 mg, Blutdruck, morgens eine Tablette"></div>
-        <div class="cap"><h3><span lang="de">Tablette fotografieren</span><span lang="en">Photograph a pill</span></h3><p><span lang="de">Eine Tablette auf dunklem Untergrund, von oben. BlisterKompass zeigt, welche Ihrer Tabletten es ist, wofür sie ist und wann Sie sie nehmen.</span><span lang="en">One pill on a dark surface, shot from above. BlisterKompass shows which of your pills it is, what it is for and when you take it.</span></p></div>
+        <div class="phone"><img src="screens/4-own-pill.png" data-alt-de="Tablette erkannt: Amlodipin 5 mg" data-alt-en="Pill recognised: amlodipine 5 mg" alt="Tablette erkannt: Amlodipin 5 mg"></div>
+        <div class="cap"><h3><span lang="de">Tablette fotografieren</span><span lang="en">Photograph a pill</span></h3><p><span lang="de">Zeigt, welche Ihrer Tabletten es ist, wofür und wann.</span><span lang="en">Shows which of your pills it is, what for and when.</span></p></div>
       </div>
     </div>
   </section>
 
-  <section id="antworten">
-    <div class="head">
-      <span class="label"><span lang="de">Klare Antworten</span><span lang="en">Clear answers</span></span>
-      <h2><span lang="de">Grün, Gelb oder Rot</span><span lang="en">Green, yellow or red</span></h2>
-      <p class="lead"><span lang="de">BlisterKompass vergleicht mit Ihrem Plan. Wenn etwas nicht passt, schickt es Sie in die Apotheke, statt zu raten.</span><span lang="en">BlisterKompass compares with your plan. When something doesn't match, it sends you to the pharmacy instead of guessing.</span></p>
-    </div>
+  <section style="padding-top: 0">
+    <span class="label"><span lang="de">Klare Antworten</span><span lang="en">Clear answers</span></span>
+    <h2><span lang="de">Im Zweifel in die Apotheke, nie raten</span><span lang="en">In doubt, the pharmacy. Never a guess</span></h2>
     <div class="answers">
-      <div class="answer">
-        <div class="phone"><img src="screens/4-own-pill.png" data-alt-de="Grün: Ihre Tablette, Amlodipin 5 mg" data-alt-en="Green: Your pill, amlodipine 5 mg" alt="Grün: Ihre Tablette, Amlodipin 5 mg"></div>
-        <div class="cap a-ok"><b><span lang="de">Ihre Tablette</span><span lang="en">Your pill</span></b><p><span lang="de">Name, Stärke, wofür, und Sonne oder Mond für die Tageszeit.</span><span lang="en">Name, strength, what it's for, and sun or moon for the time of day.</span></p></div>
-      </div>
-      <div class="answer">
-        <div class="phone"><img src="screens/5-other-maker.png" data-alt-de="Gelb: Anders als auf Ihrem Plan, wahrscheinlich Ramipril 5 mg von einem anderen Hersteller" data-alt-en="Yellow: Different from your plan, probably ramipril 5 mg from another maker" alt="Gelb: Anders als auf Ihrem Plan, wahrscheinlich Ramipril 5 mg von einem anderen Hersteller"></div>
-        <div class="cap a-warn"><b><span lang="de">Anders als auf Ihrem Plan</span><span lang="en">Different from your plan</span></b><p><span lang="de">Wahrscheinlich ein anderer Hersteller. In der Apotheke prüfen lassen und nicht doppelt einnehmen.</span><span lang="en">Probably another maker. Have the pharmacy check it, and don't take it twice.</span></p></div>
-      </div>
-      <div class="answer">
-        <div class="phone"><img src="screens/6-not-on-plan.png" data-alt-de="Rot: Nicht auf Ihrem Plan, sieht aus wie Amlodipin 5 mg" data-alt-en="Red: Not on your plan, looks like amlodipine 5 mg" alt="Rot: Nicht auf Ihrem Plan, sieht aus wie Amlodipin 5 mg"></div>
-        <div class="cap a-bad"><b><span lang="de">Nicht auf Ihrem Plan!</span><span lang="en">Not on your plan!</span></b><p><span lang="de">Nicht einnehmen, bevor Apotheke oder Arzt Bescheid wissen. Tablette mit Packung mitnehmen.</span><span lang="en">Don't take it before the pharmacy or doctor knows. Bring the pill and its pack.</span></p></div>
-      </div>
-    </div>
-    <div class="pack">
-      <svg aria-hidden="true"><use href="#i-box"/></svg>
-      <div><b><span lang="de">Packung scannen: dann ist es sicher</span><span lang="en">Scan the pack: then it's certain</span></b><p><span lang="de">Der Data-Matrix-Code auf rezeptpflichtigen Packungen oder der PZN-Strichcode sagt genau, welches Medikament es ist. BlisterKompass zeigt, ob es auf Ihrem Plan steht, ob es der gleiche Wirkstoff in neuer Packung ist und ob es abgelaufen ist.</span><span lang="en">The Data Matrix code on prescription packs, or the PZN barcode, says exactly which medicine it is. BlisterKompass shows whether it is on your plan, whether it is the same substance in a new pack, and whether it has expired.</span></p></div>
+      <div class="ans a-ok"><b><i></i><span lang="de">Ihre Tablette</span><span lang="en">Your pill</span></b><p><span lang="de">Name, Stärke, wofür, wann.</span><span lang="en">Name, strength, what for, when.</span></p></div>
+      <div class="ans a-warn"><b><i></i><span lang="de">Anders als im Plan</span><span lang="en">Differs from plan</span></b><p><span lang="de">Wohl ein anderer Hersteller. Prüfen lassen, nicht doppelt nehmen.</span><span lang="en">Probably another maker. Have it checked, don't take it twice.</span></p></div>
+      <div class="ans a-bad"><b><i></i><span lang="de">Nicht im Plan</span><span lang="en">Not on your plan</span></b><p><span lang="de">Nicht einnehmen. Mit Packung zur Apotheke.</span><span lang="en">Don't take it. Bring it and the pack to the pharmacy.</span></p></div>
+      <div class="ans a-pack"><b><i></i><span lang="de">Packung scannen</span><span lang="en">Scan the pack</span></b><p><span lang="de">Data-Matrix oder PZN: dann ist es sicher.</span><span lang="en">Data Matrix or PZN: then it's certain.</span></p></div>
     </div>
   </section>
 
-  <section id="privat">
-    <div class="two">
-      <div class="panel">
-        <img class="mascot" src="../pwa/icons/mascot-hug.png" alt="" loading="lazy" decoding="async">
-        <span class="label"><span lang="de">Privat</span><span lang="en">Private</span></span>
-        <h2><span lang="de">Alles bleibt auf dem Handy</span><span lang="en">Everything stays on the phone</span></h2>
-        <ul class="list ok">
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><span lang="de">Kein Server, kein Konto, kein Tracking, kein Internet nötig.</span><span lang="en">No server, no account, no tracking, no internet needed.</span></span></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><span lang="de">Vom Plan nur die Medikamente. Name, Geburtsdatum, Versichertennummer und Praxis werden ignoriert und nie gespeichert.</span><span lang="en">Only the medicines from the plan. Name, birth date, insurance number and practice are ignored and never stored.</span></span></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><span lang="de">Fotos werden nicht gespeichert.</span><span lang="en">Photos are not saved.</span></span></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><span lang="de">Keine Einstellungen, kein Scrollen bei normaler Schriftgröße, hell und dunkel.</span><span lang="en">No settings, no scrolling at normal text size, light and dark mode.</span></span></li>
-        </ul>
-      </div>
-      <div class="panel">
-        <span class="label"><span lang="de">Grenzen</span><span lang="en">Limits</span></span>
-        <h2><span lang="de">Was BlisterKompass nicht kann</span><span lang="en">What BlisterKompass can't do</span></h2>
-        <ul class="list lim">
-          <li><svg aria-hidden="true"><use href="#i-limit"/></svg><span><span lang="de">Das Aussehen ist nur ein Hinweis. Sicher ist nur die PZN vom Plan oder von der Packung, oder die Apotheke.</span><span lang="en">Looks are only a hint. Only the PZN from the plan or the pack, or the pharmacy, is certain.</span></span></li>
-          <li><svg aria-hidden="true"><use href="#i-limit"/></svg><span><span lang="de">Echte Fotos sind schwer: In 3 von 15 Testfotos traf es das richtige Medikament. Weiße Tabletten auf weißem Papier gehen nicht.</span><span lang="en">Real photos are hard: it found the right medicine in 3 of 15 test photos. White pills on white paper don't work.</span></span></li>
-          <li><svg aria-hidden="true"><use href="#i-limit"/></svg><span><span lang="de">Bilder gibt es für 93 Produkte. Andere Packungen kennt es mit Namen und Darreichungsform aus der amtlichen PZN-Liste.</span><span lang="en">Pictures exist for 93 products. Other packs are known by name and dosage form from the official PZN list.</span></span></li>
-          <li><svg aria-hidden="true"><use href="#i-limit"/></svg><span><span lang="de">Es ändert keine Therapie. Was Sie nehmen, entscheidet Ihre Ärztin oder Ihr Arzt.</span><span lang="en">It never changes treatment. What you take is your doctor's decision.</span></span></li>
-        </ul>
+  <section style="padding-top: 0">
+    <span class="label"><span lang="de">Auch auf Papier</span><span lang="en">On paper too</span></span>
+    <h2><span lang="de">Der Plan mit Bildern, zum Ausdrucken</span><span lang="en">The plan with pictures, ready to print</span></h2>
+    <div class="paper">
+      <div class="phone"><img src="screens/7-print.png" data-alt-de="App: Plan drucken, Vorschau „Meine Medikamente mit Bildern“" data-alt-en="App: print the plan, preview of “My medicines with pictures”" alt="App: Plan drucken, Vorschau „Meine Medikamente mit Bildern“" loading="lazy"></div>
+      <div class="paper-copy">
+        <img class="sheet" src="screens/paper-bilder.jpg" data-alt-de="Gedruckter Bogen: jede Tablette mit Zeichnung in Originalgröße, Einnahmezeiten und wofür" data-alt-en="Printed sheet: every pill drawn to size, with dosing times and what it's for" alt="Gedruckter Bogen: jede Tablette mit Zeichnung in Originalgröße, Einnahmezeiten und wofür" loading="lazy">
+        <p><span lang="de">Ein A4-Bogen neben dem Medikationsplan: jede Tablette mit Zeichnung in Originalgröße, Einnahmezeiten, wofür. Große Schrift, für Praxis, Apotheke und Angehörige. Die App druckt ohne Namen und Geburtsdatum.</span><span lang="en">An A4 sheet next to the medication plan: every pill drawn to size, dosing times, what it's for. Large print, for the practice, the pharmacy and family. The app prints without name or birth date.</span></p>
+        <small><span lang="de">Beispielbogen mit erfundenen Daten.</span><span lang="en">Example sheet with fictional data.</span></small>
       </div>
     </div>
   </section>
 
-  <div class="band">
-    <div>
-      <h2><span lang="de">Für alle, die viele Tabletten nehmen, und für die, die helfen.</span><span lang="en">For people who take many pills, and for those who help them.</span></h2>
-      <p><span lang="de">Für Patientinnen und Patienten, Angehörige und Pflegekräfte, die schnell sicher sein wollen.</span><span lang="en">For patients, relatives and carers who need to be sure, fast.</span></p>
-      <div class="install">
-        <a class="btn-install" id="install-band" href="../pwa/">
-          <svg aria-hidden="true"><use href="#i-install"/></svg>
-          <span class="lbl-go"><span lang="de">App installieren</span><span lang="en">Install the app</span></span>
-          <span class="lbl-soon"><span lang="de">Web-App kommt bald</span><span lang="en">Web app coming soon</span></span>
-        </a>
+  <section style="padding-top: 0" class="trust-wrap">
+    <img class="mascot" src="../pwa/icons/mascot-hug.png" alt="" width="480" height="480" loading="lazy" decoding="async">
+    <ul class="trust">
+      <li class="y"><svg aria-hidden="true"><use href="#i-check"/></svg><span><b><span lang="de">Bleibt auf dem Handy.</span><span lang="en">Stays on the phone.</span></b> <span lang="de">Kein Server, kein Konto, kein Tracking. Fotos werden nicht gespeichert.</span><span lang="en">No server, no account, no tracking. Photos are not saved.</span></span></li>
+      <li class="y"><svg aria-hidden="true"><use href="#i-check"/></svg><span><b><span lang="de">Nur die Medikamente.</span><span lang="en">Only the medicines.</span></b> <span lang="de">Name, Geburtsdatum und Versichertennummer werden nie gelesen.</span><span lang="en">Name, birth date and insurance number are never read.</span></span></li>
+      <li class="n"><svg aria-hidden="true"><use href="#i-limit"/></svg><span><b><span lang="de">Aussehen ist nur ein Hinweis.</span><span lang="en">Looks are only a hint.</span></b> <span lang="de">Sicher ist nur die PZN oder die Apotheke.</span><span lang="en">Only the PZN or the pharmacy is certain.</span></span></li>
+      <li class="n"><svg aria-hidden="true"><use href="#i-limit"/></svg><span><b><span lang="de">Ändert keine Therapie.</span><span lang="en">Never changes treatment.</span></b> <span lang="de">Was Sie nehmen, entscheidet Ihre Ärztin oder Ihr Arzt.</span><span lang="en">What you take is your doctor's call.</span></span></li>
+    </ul>
+  </section>
+
+  <section class="close">
+    <h2><span lang="de">Einmal den Plan scannen. Jede Tablette kennen.</span><span lang="en">Scan the plan once. Know every pill.</span></h2>
+    <a class="btn" href="../pwa/">
+      <svg aria-hidden="true"><use href="#i-install"/></svg>
+      <span class="lbl-go"><span lang="de">App installieren</span><span lang="en">Install the app</span></span>
+      <span class="lbl-soon"><span lang="de">Web-App kommt bald</span><span lang="en">Web app coming soon</span></span>
+    </a>
+  </section>
+
+  <section id="partner" class="partner" aria-labelledby="partner-h">
+    <span class="label"><span lang="de">Partner werden</span><span lang="en">Partner with us</span></span>
+    <h2 id="partner-h"><span lang="de">Das Aussehen jeder Tablette, dort wo Ihre Kunden schon sind</span><span lang="en">What every pill looks like, right where your users already are</span></h2>
+    <p class="intro"><span lang="de">Apotheken, Datenanbieter, App-Betreiber und Krankenkassen haben die Daten schon: welche PZN verordnet, welche abgegeben wurde. Uns fehlt nur das Bild dazu. Genau das bringen wir mit.</span><span lang="en">Pharmacies, data providers, app makers and health insurers already hold the data: which PZN was prescribed and which was dispensed. What's missing is the picture. That is what we bring.</span></p>
+
+    <h3><span lang="de">Wann das Aussehen gebraucht wird</span><span lang="en">When the look is needed</span></h3>
+    <div class="moments">
+      <div class="card moment"><svg aria-hidden="true"><use href="#i-switch"/></svg><b><span lang="de">Herstellerwechsel</span><span lang="en">Maker switch</span></b><p><span lang="de">Rabattvertrag, Lieferengpass: gleicher Wirkstoff, neue Farbe und Form. Doppelte Einnahme ist in Fallberichten der AkdÄ belegt.</span><span lang="en">Discount contract or shortage: same substance, new colour and shape. Double intake is documented in AkdÄ case reports.</span></p></div>
+      <div class="card moment"><svg aria-hidden="true"><use href="#i-house"/></svg><b><span lang="de">Nach Klinik oder Arztwechsel</span><span lang="en">After hospital or a new doctor</span></b><p><span lang="de">Neuer Plan, neue Packungen, alte Packungen noch im Schrank. Was gehört wozu?</span><span lang="en">New plan, new packs, old packs still in the cupboard. What belongs to what?</span></p></div>
+      <div class="card moment"><svg aria-hidden="true"><use href="#i-week"/></svg><b><span lang="de">Wochendosierer richten</span><span lang="en">Filling the pill organiser</span></b><p><span lang="de">Angehörige und Pflegedienste stellen Tabletten ohne Packung. Das Bild ist ihre Kontrolle.</span><span lang="en">Family and care services sort pills without the pack. The picture is their check.</span></p></div>
+      <div class="card moment"><svg aria-hidden="true"><use href="#i-loose"/></svg><b><span lang="de">Lose Tablette gefunden</span><span lang="en">A loose pill turns up</span></b><p><span lang="de">Ohne Packung zählt nur das Aussehen: Farbe, Form, Prägung, Kerbe.</span><span lang="en">Without the pack, only the look counts: colour, shape, imprint, score line.</span></p></div>
+    </div>
+
+    <h3><span lang="de">Vom Beipackzettel zur Form</span><span lang="en">From package leaflet to shape</span></h3>
+    <p class="sub"><span lang="de">Jeder Beipackzettel beschreibt in Abschnitt 6 in Worten, wie die Tablette aussieht. Wir lesen genau diesen Satz, machen Felder daraus und zeichnen die Tablette in Originalgröße. Was dort nicht steht, raten wir nicht.</span><span lang="en">Every package leaflet describes in section 6, in words, what the tablet looks like. We read exactly that sentence, turn it into fields and draw the tablet true to size. What isn't written there, we don't guess.</span></p>
+    <div class="vizlabel"><span class="tag"><span lang="de">Vollständig</span><span lang="en">Complete</span></span><span lang="de">Beispiel 1: Der Beipackzettel sagt alles</span><span lang="en">Example 1: the leaflet says it all</span></div>
+    <div class="viz">
+      <div class="leaflet">
+        <div class="doc"><span lang="de">Gebrauchsinformation (Beispiel)</span><span lang="en">Package leaflet (example)</span></div>
+        <h4><span lang="de">6. Wie Amlodipin Beispiel 5 mg aussieht und Inhalt der Packung</span><span lang="en">6. What Example amlodipine 5 mg looks like and contents of the pack</span></h4>
+        <p lang="de">Amlodipin Beispiel 5 mg sind <mark class="f1">weiße</mark>, <mark class="f2">längliche</mark> Tabletten <mark class="f3">(ca. 14 × 6 mm)</mark> mit einer <mark class="f4">Bruchkerbe</mark> und der Prägung <mark class="f5">„AM“ und „5“</mark> auf einer Seite. Die Bruchkerbe <mark class="f4">dient nicht zum Teilen</mark> der Tablette.</p>
+        <p lang="en">Example amlodipine 5 mg are <mark class="f1">white</mark>, <mark class="f2">oblong</mark> tablets <mark class="f3">(approx. 14 × 6 mm)</mark> with a <mark class="f4">score line</mark> and the imprint <mark class="f5">“AM” and “5”</mark> on one side. The score line <mark class="f4">is not for splitting</mark> the tablet.</p>
+        <p class="fade"><span lang="de">Packungen mit 20, 50 und 100 Tabletten.</span><span lang="en">Packs of 20, 50 and 100 tablets.</span></p>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg><use href="#i-arrow"/></svg></div>
+      <div class="card drawing">
+        <ul class="fields" data-alt-de="Gelesene Felder" data-alt-en="Fields read" aria-label="Gelesene Felder">
+          <li class="f1"><small><span lang="de">Farbe</span><span lang="en">Colour</span></small><span lang="de">weiß</span><span lang="en">white</span></li>
+          <li class="f2"><small><span lang="de">Form</span><span lang="en">Shape</span></small><span lang="de">länglich</span><span lang="en">oblong</span></li>
+          <li class="f3"><small><span lang="de">Größe</span><span lang="en">Size</span></small>14 × 6 mm</li>
+          <li class="f4"><small><span lang="de">Kerbe</span><span lang="en">Score</span></small><span lang="de">ja, nicht zum Teilen</span><span lang="en">yes, not for splitting</span></li>
+          <li class="f5"><small><span lang="de">Prägung</span><span lang="en">Imprint</span></small>AM | 5</li>
+        </ul>
+        <svg class="big-pill" viewBox="-4 -4 106 50" role="img" data-alt-de="Zeichnung: weiße längliche Tablette mit Kerbe und Prägung AM 5" data-alt-en="Drawing: white oblong tablet with score line and imprint AM 5" aria-label="Zeichnung: weiße längliche Tablette mit Kerbe und Prägung AM 5">
+          <rect width="98" height="42" rx="21" fill="#F7F7F4"/><rect width="98" height="42" rx="21" fill="url(#g-shine)"/>
+          <rect width="98" height="42" rx="21" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1.4"/>
+          <line x1="49" y1="5" x2="49" y2="37" stroke="rgba(0,0,0,.3)" stroke-width="2.1" stroke-linecap="round"/>
+          <text x="27" y="21" font-size="14" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="rgba(0,0,0,.35)" font-family="system-ui, sans-serif">AM</text>
+          <text x="71" y="21" font-size="14" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="rgba(0,0,0,.35)" font-family="system-ui, sans-serif">5</text>
+        </svg>
+        <svg class="ruler" viewBox="-4 0 106 22" aria-hidden="true">
+          <path d="M0 4h98M0 1v7M49 1v7M98 1v7" stroke="currentColor" stroke-width="1.2" fill="none"/>
+          <path d="M7 3v2M14 3v2M21 3v2M28 3v2M35 3v2M42 3v2M56 3v2M63 3v2M70 3v2M77 3v2M84 3v2M91 3v2" stroke="currentColor" stroke-width=".8"/>
+          <text x="49" y="18" font-size="8" text-anchor="middle" fill="currentColor" font-family="system-ui, sans-serif">14 mm</text>
+        </svg>
+        <p><span lang="de">Dieselbe Zeichnung in App, Plan-Ausdruck und Vorlesetext: „weiße, längliche Tablette mit Kerbe“. Die Quelle bleibt an jedem Feld hängen.</span><span lang="en">The same drawing in the app, the printed plan and the read-aloud text: “white oblong tablet with a score line”. The source stays attached to every field.</span></p>
       </div>
     </div>
-    <ol>
-      <li><span lang="de">Plan scannen.</span><span lang="en">Scan the plan.</span></li>
-      <li><span lang="de">Auf der Startseite sehen, was jetzt dran ist.</span><span lang="en">See on the home screen what is due now.</span></li>
-      <li><span lang="de">Bei Zweifeln: Tablette oder Packung scannen.</span><span lang="en">In doubt: scan the pill or the pack.</span></li>
+    <div class="vizlabel"><span class="tag gap"><span lang="de">Lückenhaft</span><span lang="en">Gaps</span></span><span lang="de">Beispiel 2: Der Beipackzettel sagt zu wenig</span><span lang="en">Example 2: the leaflet says too little</span></div>
+    <div class="viz">
+      <div class="leaflet">
+        <div class="doc"><span lang="de">Gebrauchsinformation (Beispiel)</span><span lang="en">Package leaflet (example)</span></div>
+        <h4><span lang="de">6. Wie Ramipril Beispiel 5 mg aussieht und Inhalt der Packung</span><span lang="en">6. What Example ramipril 5 mg looks like and contents of the pack</span></h4>
+        <p lang="de">Ramipril Beispiel 5 mg sind <mark class="f1">hellrosa</mark>, <mark class="f2">längliche</mark> Tabletten.</p>
+        <p lang="en">Example ramipril 5 mg are <mark class="f1">light pink</mark>, <mark class="f2">oblong</mark> tablets.</p>
+        <p class="fade"><span lang="de">Packungen mit 20, 50 und 100 Tabletten.</span><span lang="en">Packs of 20, 50 and 100 tablets.</span></p>
+        <div class="silent"><b><span lang="de">Nicht erwähnt:</span><span lang="en">Not mentioned:</span></b><span class="q"><span lang="de">Größe</span><span lang="en">Size</span></span><span class="q"><span lang="de">Kerbe</span><span lang="en">Score</span></span><span class="q"><span lang="de">Prägung</span><span lang="en">Imprint</span></span></div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg><use href="#i-arrow"/></svg></div>
+      <div class="card drawing">
+        <ul class="fields" data-alt-de="Gelesene und fehlende Felder" data-alt-en="Fields read and missing" aria-label="Gelesene und fehlende Felder">
+          <li class="f1"><small><span lang="de">Farbe</span><span lang="en">Colour</span></small><span lang="de">hellrosa</span><span lang="en">light pink</span></li>
+          <li class="f2"><small><span lang="de">Form</span><span lang="en">Shape</span></small><span lang="de">länglich</span><span lang="en">oblong</span></li>
+          <li class="miss"><small><span lang="de">Größe</span><span lang="en">Size</span></small><span lang="de">fehlt</span><span lang="en">missing</span></li>
+          <li class="miss"><small><span lang="de">Kerbe</span><span lang="en">Score</span></small><span lang="de">unbekannt</span><span lang="en">unknown</span></li>
+          <li class="miss"><small><span lang="de">Prägung</span><span lang="en">Imprint</span></small><span lang="de">fehlt</span><span lang="en">missing</span></li>
+        </ul>
+        <svg class="big-pill" viewBox="-4 -4 106 50" role="img" data-alt-de="Zeichnung mit Lücken: hellrosa längliche Tablette, gestrichelter Rand, ohne Kerbe und Prägung, nicht maßstabsgetreu" data-alt-en="Drawing with gaps: light pink oblong tablet, dashed edge, no score line or imprint, not to scale" aria-label="Zeichnung mit Lücken: hellrosa längliche Tablette, gestrichelter Rand, ohne Kerbe und Prägung, nicht maßstabsgetreu">
+          <rect width="98" height="42" rx="21" fill="#F4CDD3"/><rect width="98" height="42" rx="21" fill="url(#g-shine)"/>
+          <rect x=".8" y=".8" width="96.4" height="40.4" rx="20.2" fill="none" stroke="#8A5200" stroke-width="1.6" stroke-dasharray="5 3.5"/>
+        </svg>
+        <svg class="ruler" viewBox="-4 0 106 22" aria-hidden="true">
+          <path d="M0 4h98M0 1v7M98 1v7" stroke="#8A5200" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+          <text lang="de" x="49" y="18" font-size="8" text-anchor="middle" fill="#8A5200" font-family="system-ui, sans-serif">Größe unbekannt</text>
+          <text lang="en" x="49" y="18" font-size="8" text-anchor="middle" fill="#8A5200" font-family="system-ui, sans-serif">size unknown</text>
+        </svg>
+        <div class="gapnote"><svg aria-hidden="true"><use href="#i-limit"/></svg><span><b><span lang="de">Unvollständig markiert.</span><span lang="en">Marked as incomplete.</span></b> <span lang="de">Gestrichelt, nicht maßstabsgetreu, keine erfundene Prägung. Ein Foto bleibt hier ein Hinweis, sicher macht nur der Packungscode.</span><span lang="en">Dashed, not to scale, no made-up imprint. A photo stays a hint here; only the pack code makes it certain.</span></span></div>
+      </div>
+    </div>
+    <div class="card fill">
+      <h4><span lang="de">Lücken füllen, mit Quelle</span><span lang="en">Filling the gaps, with a source</span></h4>
+      <p><span lang="de">Fehlende Felder lassen sich aus Daten füllen, die es schon gibt.</span><span lang="en">Missing fields can be filled from data that already exists.</span></p>
+      <ul>
+        <li><div><b><span lang="de">Apotheke am HV-Tisch</span><span lang="en">Pharmacy at the counter</span></b><span class="best"><span lang="de">Stärkste Quelle</span><span lang="en">Strongest</span></span><span class="d"><span lang="de">Einmal je PZN: Foto, Prägung ablesen, Kerbe prüfen, Größe am Lineal. Von Fachpersonal bestätigt, für alle Apotheken nutzbar.</span><span lang="en">Once per PZN: photo, read the imprint, check the score, size against a ruler. Confirmed by a professional, usable by every pharmacy.</span></span></div><div class="fills"><i><span lang="de">Größe</span><span lang="en">Size</span></i><i><span lang="de">Kerbe</span><span lang="en">Score</span></i><i><span lang="de">Prägung</span><span lang="en">Imprint</span></i></div></li>
+        <li><div><b><span lang="de">Gleiche Tablette, andere PZN</span><span lang="en">Same tablet, another PZN</span></b><span class="d"><span lang="de">Mitvertrieb, Re- und Parallelimport, andere Packungsgröße: dieselbe Tablette, die Felder werden übernommen.</span><span lang="en">Co-marketing, re- and parallel import, another pack size: the same tablet, so the fields carry over.</span></span></div><div class="fills"><i><span lang="de">alle Felder</span><span lang="en">all fields</span></i></div></li>
+        <li><div><b><span lang="de">Fachinformation, Abschnitt 3</span><span lang="en">Prescribing information, section 3</span></b><span class="d"><span lang="de">Oft genauer als der Beipackzettel: Prägung und Kerbe, manchmal die Größe.</span><span lang="en">Often more detailed than the leaflet: imprint and score, sometimes size.</span></span></div><div class="fills"><i><span lang="de">Prägung</span><span lang="en">Imprint</span></i><i><span lang="de">Kerbe</span><span lang="en">Score</span></i><i class="part"><span lang="de">Größe, teils</span><span lang="en">Size, partly</span></i></div></li>
+        <li><div><b><span lang="de">ABDATA-Artikelstamm</span><span lang="en">ABDATA drug master data</span></b><span class="d"><span lang="de">Identifikationsmerkmale, soweit gepflegt. Abdeckung mit ABDATA zu klären.</span><span lang="en">Identification features where maintained. Coverage to be checked with ABDATA.</span></span></div><div class="fills"><i class="part"><span lang="de">je nach Pflege</span><span lang="en">where maintained</span></i></div></li>
+        <li><div><b><span lang="de">Foto mit Größenbezug</span><span lang="en">Photo with a size reference</span></b><span class="d"><span lang="de">Tablette neben Blisternapf oder Lineal fotografiert. Noch nicht gebaut.</span><span lang="en">Tablet photographed next to the blister pocket or a ruler. Not built yet.</span></span></div><div class="fills"><i class="part"><span lang="de">Größe, geschätzt</span><span lang="en">Size, estimated</span></i></div></li>
+      </ul>
+      <p class="rule"><b><span lang="de">Regel:</span><span lang="en">Rule:</span></b> <span lang="de">Jedes nachgefüllte Feld trägt seine Quelle. Die Markierung verschwindet nur für das Feld, das wirklich gefüllt ist.</span><span lang="en">Every filled field carries its source. The marker disappears only for the field that is actually filled.</span></p>
+    </div>
+    <div class="levels">
+      <div class="card level">
+        <div class="pics" aria-hidden="true">
+          <svg viewBox="-2 -2 60 60"><circle cx="28" cy="28" r="27" fill="#F6D86B"/><circle cx="28" cy="28" r="27" fill="url(#g-shine)"/><circle cx="28" cy="28" r="27" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1.4"/><line x1="8" y1="31" x2="48" y2="31" stroke="rgba(0,0,0,.3)" stroke-width="2" stroke-linecap="round"/><text x="28" y="19" font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="rgba(0,0,0,.35)" font-family="system-ui, sans-serif">R5</text></svg>
+        </div>
+        <div><b><span lang="de">Aussehen bekannt</span><span lang="en">Look known</span></b><p><span lang="de">Aus dem Beipackzettel gelesen: farbige Zeichnung, maßstabsgetreu.</span><span lang="en">Read from the leaflet: coloured drawing, to scale.</span></p></div>
+      </div>
+      <div class="card level">
+        <div class="pics" aria-hidden="true">
+          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-dasharray="5 3.5"/></svg>
+        </div>
+        <div><b><span lang="de">Nur Darreichungsform</span><span lang="en">Dosage form only</span></b><p><span lang="de">Beipackzettel schweigt: grauer Umriss „Filmtablette, Aussehen unbekannt“. Nie eine geratene weiße Tablette.</span><span lang="en">Leaflet is silent: grey outline “film-coated tablet, look unknown”. Never a guessed white pill.</span></p></div>
+      </div>
+      <div class="card level">
+        <div class="pics" aria-hidden="true">
+          <svg viewBox="0 0 40 60"><path d="M14 6h12v12H14z M10 18h20v34a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M15 32h10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 40 60"><path d="M20 8c6 10 12 18 12 27a12 12 0 0 1-24 0c0-9 6-17 12-27z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg>
+        </div>
+        <div><b><span lang="de">Keine Tablette</span><span lang="en">Not a tablet</span></b><p><span lang="de">Spray, Tropfen, Pflaster: ein klares Symbol aus dem KBV- und IFA-Formcode.</span><span lang="en">Spray, drops, patch: a clear symbol from the KBV and IFA form code.</span></p></div>
+      </div>
+    </div>
+
+    <h3><span lang="de">Angebunden an die Daten, die es schon gibt</span><span lang="en">Connected to the data that already exists</span></h3>
+    <p class="sub"><span lang="de">Die PZN ist der Schlüssel. Sie steht im Artikelstamm, in der Warenwirtschaft, auf dem Plan und auf dem E-Rezept. Wir hängen das Bild daran.</span><span lang="en">The PZN is the key. It is in the drug master data, the pharmacy system, the medication plan and the e-prescription. We attach the picture to it.</span></p>
+    <div class="flow">
+      <div class="col">
+        <span class="label"><span lang="de">Schon in den Systemen</span><span lang="en">Already in the systems</span></span>
+        <div class="node"><b><span lang="de">Beipackzettel</span><span lang="en">Package leaflets</span></b><span class="d"><span lang="de">Abschnitt 6 beschreibt jede Tablette in Worten, für jede PZN</span><span lang="en">Section 6 describes every tablet in words, for every PZN</span></span></div>
+        <div class="node"><b><span lang="de">ABDATA-Artikelstamm</span><span lang="en">ABDATA drug master data</span></b><span class="d"><span lang="de">PZN, Hersteller, Stärke, Darreichungsform, gepflegte Identifikationsmerkmale</span><span lang="en">PZN, maker, strength, dosage form, maintained identification features</span></span></div>
+        <div class="node"><b><span lang="de">Warenwirtschaft der Apotheke</span><span lang="en">Pharmacy management system</span></b><span class="d"><span lang="de">Welche PZN heute über den HV-Tisch ging</span><span lang="en">Which PZN went over the counter today</span></span></div>
+        <div class="node"><b><span lang="de">Medikationsplan und E-Rezept</span><span lang="en">Medication plan and e-prescription</span></b><span class="d"><span lang="de">BMP-Code, künftig eMP in der ePA, verordnete PZN</span><span lang="en">BMP code, later the eMP in the ePA, prescribed PZN</span></span></div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg><use href="#i-arrow"/></svg></div>
+      <div class="col core">
+        <span class="label"><span lang="de">Unser Wissen</span><span lang="en">Our know-how</span></span>
+        <div class="node"><b><span lang="de">Aussehen je PZN</span><span lang="en">Look per PZN</span></b><span class="d"><span lang="de">Aus dem Beipackzettel gelesen: Farbe, Form, mm, Kerbe, Prägung</span><span lang="en">Read from the leaflet: colour, shape, mm, score, imprint</span></span></div>
+        <div class="node"><b><span lang="de">Zeichnung und Text</span><span lang="en">Drawing and text</span></b><span class="d"><span lang="de">SVG in Originalgröße, vorlesbarer Satz, nie geraten</span><span lang="en">True-size SVG, a sentence to read aloud, never guessed</span></span></div>
+        <div class="node"><b><span lang="de">Abgleich</span><span lang="en">Matching</span></b><span class="d"><span lang="de">Foto oder Prägung gegen den Plan, Herstellerwechsel erkennen</span><span lang="en">Photo or imprint against the plan, spot a maker switch</span></span></div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg><use href="#i-arrow"/></svg></div>
+      <div class="col">
+        <span class="label"><span lang="de">Dort, wo Menschen schauen</span><span lang="en">Where people look</span></span>
+        <div class="node"><b><span lang="de">Apotheken-Apps wie ia.de und gesund.de</span><span lang="en">Pharmacy apps like ia.de and gesund.de</span></b><span class="d"><span lang="de">Bild bei Vorbestellung und Abholung</span><span lang="en">Picture at pre-order and pick-up</span></span></div>
+        <div class="node"><b><span lang="de">Krankenkassen- und ePA-Apps</span><span lang="en">Health insurer and ePA apps</span></b><span class="d"><span lang="de">Medikationsplan mit Bildern statt Tabelle</span><span lang="en">Medication plan with pictures, not a table</span></span></div>
+        <div class="node"><b><span lang="de">Pflege- und Gesundheits-Apps, HV-Tisch</span><span lang="en">Care and health apps, the counter</span></b><span class="d"><span lang="de">Wochendosierer-Ansicht, Plan mit Bildern zum Ausdrucken</span><span lang="en">Pill organiser view, printable plan with pictures</span></span></div>
+      </div>
+    </div>
+
+    <ol class="story card" data-alt-de="Beispiel: Abholung mit Herstellerwechsel" data-alt-en="Example: pick-up after a maker switch" aria-label="Beispiel: Abholung mit Herstellerwechsel">
+      <li><b><span lang="de">Abgabe</span><span lang="en">Dispensing</span></b><span class="d"><span lang="de">Die Warenwirtschaft bucht Ramipril 5 mg von einem neuen Hersteller.</span><span lang="en">The pharmacy system books ramipril 5 mg from a new maker.</span></span></li>
+      <li><b><span lang="de">Aussehen</span><span lang="en">Look</span></b><span class="d"><span lang="de">Der Beipackzettel der neuen PZN liefert Farbe, Form und Prägung.</span><span lang="en">The new PZN's leaflet gives colour, shape and imprint.</span></span></li>
+      <li><b><span lang="de">Vergleich</span><span lang="en">Compare</span></b><span class="d"><span lang="de">Wir vergleichen mit der letzten Abgabe: anderes Aussehen, gleicher Wirkstoff.</span><span lang="en">We compare with the last dispense: different look, same substance.</span></span></li>
+      <li><b><span lang="de">Hinweis in der App</span><span lang="en">Notice in the app</span></b><span class="push">
+        <svg viewBox="0 0 46 26" aria-hidden="true"><rect x="1" y="5" width="22" height="12" rx="6" fill="#F7F7F4" stroke="#B9B9C0" stroke-width="1.4"/><path d="M27 11h6m0 0-2.5-2.5M33 11l-2.5 2.5" stroke="#0B6E8A" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="40" cy="11" r="5.5" fill="#F6D86B" stroke="#C9B58A" stroke-width="1.4"/></svg>
+        <span><span lang="de">„Ihr Ramipril sieht ab heute anders aus. Von Ihrer Apotheke bestätigt.“</span><span lang="en">“Your ramipril looks different from today. Confirmed by your pharmacy.”</span></span></span></li>
     </ol>
-  </div>
+    <div class="privacy"><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b><span lang="de">Nur PZN und Einnahmezeiten.</span><span lang="en">Only PZN and dosing times.</span></b> <span lang="de">Keine Namen, keine Versichertennummer. Freigabe durch die Person selbst, Abgleich auf Wunsch auf dem Gerät.</span><span lang="en">No names, no insurance number. Released by the person, matching on the device if wanted.</span></span></div>
+
+    <h3><span lang="de">Wie wir zusammenarbeiten</span><span lang="en">How we work together</span></h3>
+    <div class="offer">
+      <div class="card"><b><span lang="de">Web-Komponente</span><span lang="en">Web component</span></b><p><span lang="de">Tablettenbild und „Welche Tablette ist das?“ direkt in Ihre App oder Website.</span><span lang="en">Pill picture and “Which pill is this?” right inside your app or website.</span></p></div>
+      <div class="card"><b><span lang="de">Schnittstelle</span><span lang="en">API</span></b><p><span lang="de">PZN rein, Zeichnung, Beschreibung und Darreichungsform raus.</span><span lang="en">PZN in, drawing, description and dosage form out.</span></p></div>
+      <div class="card"><b><span lang="de">Plan mit Bildern</span><span lang="en">Plan with pictures</span></b><p><span lang="de">Druckbogen zum Medikationsplan, für HV-Tisch, Pflege und Entlassung.</span><span lang="en">Printable sheet next to the medication plan, for the counter, care and discharge.</span></p></div>
+    </div>
+
+    <div class="cta">
+      <a class="btn partner-btn" href="#partner">
+        <svg aria-hidden="true"><use href="#i-handshake"/></svg>
+        <span class="lbl-go"><span lang="de">Gespräch vereinbaren</span><span lang="en">Book a call</span></span>
+        <span class="lbl-soon"><span lang="de">Sprechen Sie uns an</span><span lang="en">Talk to us</span></span>
+      </a>
+      <span class="hint"><span lang="de">Apotheken, Datenanbieter, App-Betreiber, Krankenkassen.</span><span lang="en">Pharmacies, data providers, app makers, health insurers.</span></span>
+    </div>
+  </section>
 
   <footer>
-    <p><span lang="de">Hackathon-Prototyp, Healthcare Hackathon Bayern 2026, Erlangen. Alle Patientendaten sind erfunden. Kein Medizinprodukt, keine Beratung.</span><span lang="en">Hackathon prototype, Healthcare Hackathon Bayern 2026, Erlangen. All patient data is fictional. Not a medical device, not advice.</span></p>
-    <p><span lang="de">Aussehen deutscher Produkte aus den Packungsbeilagen (Quelle je Produkt in der App), EU-Produkte nach EMA-Produktinformation, US-Produkte nach FDA/NLM DailyMed. PZN-Namen aus der BfArM-Festbetragsliste, Stand 01.11.2026. Beispielplan nach KBV-Spezifikation des Medikationsplans.</span><span lang="en">Looks of German products from their package leaflets (source per product in the app), EU products from EMA product information, US products from FDA/NLM DailyMed. PZN names from the BfArM reference-price list, as of 1 Nov 2026. Example plan per the KBV medication plan specification.</span></p>
+    <nav aria-label="Rechtliches / Legal"><span>© 2026 Blister-Kompass</span><a href="impressum.html">Impressum</a><a href="datenschutz.html"><span lang="de">Datenschutz</span><span lang="en">Privacy</span></a></nav>
+    <p><span lang="de">Hackathon-Prototyp, Healthcare Hackathon Bayern 2026, Erlangen. Anna und alle Patientendaten sind erfunden. Kein Medizinprodukt, keine Beratung.</span><span lang="en">Hackathon prototype, Healthcare Hackathon Bayern 2026, Erlangen. Anna and all patient data are fictional. Not a medical device, not advice.</span></p>
+    <p><span lang="de">Aussehen aus Packungsbeilagen, EMA und DailyMed. PZN-Namen aus der BfArM-Festbetragsliste, Stand 01.11.2026. Plan nach KBV-Spezifikation.</span><span lang="en">Looks from package leaflets, EMA and DailyMed. PZN names from the BfArM reference-price list, as of 1 Nov 2026. Plan per the KBV specification.</span></p>
   </footer>
-</main>
+</div>
 
 <script>
 // Where the installable web app lives. Empty = next to this page at ../pwa/ when the page is served
 // from the repo folder (docs/landing.html); set a full https:// URL once the PWA is hosted.
 var PWA_URL = '';
+// Where "Book a call" in the partner section goes (mailto: or https://). Empty = a plain "Talk to us" label.
+var PARTNER_URL = '';
 
 (function () {
   var url = PWA_URL || (/\/docs\/landing\.html$/.test(location.pathname) ? '../pwa/' : '');
-  document.querySelectorAll('.btn-install').forEach(function (a) {
+  function wire(a, url) {
+    if (url) { a.href = url; return; }
+    a.classList.add('soon');
+    a.removeAttribute('href');
+    a.setAttribute('aria-disabled', 'true');
+  }
+  document.querySelectorAll('.partner-btn').forEach(function (a) { wire(a, PARTNER_URL); });
+  document.querySelectorAll('.btn:not(.partner-btn)').forEach(function (a) {
     if (url) { a.href = url; return; }
     a.classList.add('soon');
     a.removeAttribute('href');
@@ -465,32 +616,16 @@ var PWA_URL = '';
 (function () {
   var root = document.documentElement;
   var buttons = document.querySelectorAll('.langs button');
-  var nowLabel = { de: 'Jetzt', en: 'Now' };
-  var tag = null;
-
   function setLang(lang, fromUser) {
     root.setAttribute('data-lang', lang);
     root.setAttribute('lang', lang);
     buttons.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false'); });
-    document.querySelectorAll('img[data-alt-' + lang + ']').forEach(function (img) { img.alt = img.getAttribute('data-alt-' + lang); });
-    if (tag) tag.textContent = nowLabel[lang];
-    if (fromUser) {
-      try { history.replaceState(null, '', '#' + lang); } catch (e) { location.hash = lang; }
-    }
+    document.querySelectorAll('[data-alt-' + lang + ']').forEach(function (el) {
+      var t = el.getAttribute('data-alt-' + lang);
+      if (el.tagName === 'IMG') el.alt = t; else el.setAttribute('aria-label', t);
+    });
+    if (fromUser) { try { history.replaceState(null, '', '#' + lang); } catch (e) { location.hash = lang; } }
   }
-
-  // Mark the slot that is due now, like the app's "Jetzt" heading.
-  var h = new Date().getHours();
-  var id = h >= 5 && h < 11 ? 'morning' : h >= 11 && h < 15 ? 'noon' : h >= 15 && h < 21 ? 'evening' : 'night';
-  var el = document.querySelector('.slot[data-slot="' + id + '"]');
-  if (el) {
-    el.classList.add('is-now');
-    tag = document.createElement('span');
-    tag.className = 'now';
-    el.querySelector('.slot-top').appendChild(tag);
-  }
-
-  // #en or #de in the link wins; otherwise the browser's language.
   function initial() {
     var hash = location.hash.replace('#', '');
     if (hash === 'en' || hash === 'de') return hash;
