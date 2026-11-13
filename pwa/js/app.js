@@ -2,7 +2,7 @@
 // Port of RootView, ResultViews, PackViews, PlanInput, OtherViews and ExamplesView (ios/PillSnap).
 
 import { Store } from "./store.js";
-import { h, set, bigButton, tile, backBar, statusBanner, infoRow, tip, chip, purposeRow, scheduleBlock, photo, pillTile, doseFormTile, medPic, medForm, sheet } from "./ui.js";
+import { h, set, bigButton, tile, backBar, statusBanner, mascot, infoRow, tip, chip, purposeRow, scheduleBlock, photo, pillTile, doseFormTile, medPic, medForm, sheet } from "./ui.js";
 import { icon } from "./icons.js";
 import { SLOTS, SHAPES, sections, title, sourceText, dayName, countText, spoken, spokenLines, capitalizedFirst, adding, nextText } from "./model.js";
 import { doseForm } from "./dose-form.js";
@@ -92,7 +92,7 @@ function onboarding() {
     h("div.hero-icon", null, h("img.mascot", { src: "icons/mascot-wave.png", alt: "", width: 480, height: 480, decoding: "async" })),
     h("h1", null, "Willkommen!"),
     h("p.lead", null, "Lesen Sie zuerst Ihren ", h("strong", null, "Medikationsplan"), " ein – per Kamera, aus den Beispielen oder selbst eingeben."),
-    bigButton({ icon: "qr", title: "Plan einlesen", height: 190, onClick: planSourceSheet }),
+    bigButton({ icon: "qr", mascot: "scan-plan", title: "Plan einlesen", height: 230, onClick: planSourceSheet }),
     tip({ text: [h("strong", null, "Den Code oben rechts"), " auf dem Plan ganz ins Bild nehmen."] }));
 }
 
@@ -164,7 +164,7 @@ function dayPlanList() {
 // A plan or pack photo never falls through to pill recognition, and a pill photo with a code on it is not read as a pill.
 
 function Analyzing({ photo: blob, mode }) {
-  const status = h("div.analyzing-status", null, h("span.spinner", { "aria-hidden": "true" }), h("span", null, "Ich schaue mir das Foto an …"));
+  const status = h("div.analyzing-status", null, mascot("scanning", "scanning"), h("span", null, "Ich schaue mir das Foto an …"));
   const below = h("div.stack");
   const el = h("main.screen", null,
     backBar({ title: "Erkennen", onBack: home }),
@@ -267,7 +267,7 @@ function planLookup(plan) {
   const skip = h("button.link", { type: "button", onclick: () => { alive = false; showResult(); } }, "Überspringen");
   const list = h("div.stack.tight");
   el.append(backBar({ title: "Medikationsplan", onBack: home }),
-    statusBanner({ icon: "seal", text: "Plan erkannt", color: "ok" }),
+    statusBanner({ icon: "seal", text: "Plan erkannt", color: "ok", mascot: "found" }),
     h("h2.with-icon", null, icon("doc"), "Aussehen wird nachgeschlagen"), list, skip);
   let alive = true;
   cleanup.push(() => { alive = false; });
@@ -296,8 +296,8 @@ function notesBlock(notes) {
 function bmpResult(plan) {
   return [
     backBar({ title: "Medikationsplan", onBack: home }),
-    statusBanner({ icon: "seal", text: "Plan erkannt", color: "ok" }),
-    plan.incomplete?.length ? statusBanner({ icon: "question", text: `Unvollständig: Seite ${plan.incomplete.join(" und ")} fehlt`, color: "warn" }) : null,
+    statusBanner({ icon: "seal", text: "Plan erkannt", color: "ok", mascot: "found" }),
+    plan.incomplete?.length ? statusBanner({ icon: "question", text: `Unvollständig: Seite ${plan.incomplete.join(" und ")} fehlt`, color: "warn", mascot: "check" }) : null,
     h("h2", null, plan.meds.length === 1 ? "1 Medikament" : `${plan.meds.length} Medikamente`),
     plan.unknown.length ? h("p.tone-warn.with-icon", null, icon("question"), `${plan.unknown.length} ohne Bilddaten: ${plan.unknown.join(", ")}`) : null,
     h("div.grid3", null, plan.meds.map((m) => h("div.card.mini", null, medPic(m, 50), h("strong", null, m.substance)))),
@@ -356,9 +356,9 @@ function Result({ answer, photo: blob }) {
 }
 
 const BANNER = {
-  sure: { text: "Ihre Tablette", icon: "seal", color: "ok" },
-  likely: { text: "Wahrscheinlich – bitte prüfen", icon: "question", color: "warn" },
-  confirmed: { text: "Auf Ihrem Plan", icon: "seal", color: "ok" }, // opened from the list: a plan entry, not a photo match
+  sure: { text: "Ihre Tablette", icon: "seal", color: "ok", mascot: "found" },
+  likely: { text: "Wahrscheinlich – bitte prüfen", icon: "question", color: "warn", mascot: "check" },
+  confirmed: { text: "Auf Ihrem Plan", icon: "seal", color: "ok", mascot: "found" }, // opened from the list: a plan entry, not a photo match
 };
 
 /** One of my medications, big and clear. */
@@ -390,7 +390,7 @@ function otherMaker(mine, other, blob) {
   say(text);
   return h("main.screen", null,
     backBar({ onBack: home, onSpeak: () => say(text) }),
-    statusBanner({ icon: "alert", text: "Anders als auf Ihrem Plan", color: "warn" }),
+    statusBanner({ icon: "alert", text: "Anders als auf Ihrem Plan", color: "warn", mascot: "other-maker" }),
     h("div.compare", null,
       h("div.side", null, h("div.muted.strong", null, "Ihr Foto"), blob ? photo(blob, "photo-sq") : pillTile(other.look, 120), h("strong.small", null, other.manufacturer ?? "")),
       h("span.muted.arrows", null, icon("arrowsLR")),
@@ -435,7 +435,7 @@ function notOnPlan(med, blob) {
   say("Achtung. Diese Tablette steht nicht auf Ihrem Plan.");
   return h("main.screen", null,
     backBar({ onBack: home, onSpeak: () => say(text) }),
-    statusBanner({ icon: "octagon", text: "Nicht auf Ihrem Plan!", color: "bad" }),
+    statusBanner({ icon: "octagon", text: "Nicht auf Ihrem Plan!", color: "bad", mascot: "not-on-plan" }),
     h("div.card.row-start", null, blob ? photo(blob, "photo-sq") : null,
       med ? h("div", null, h("div.muted.small", null, "Sieht aus wie"), h("h2", null, title(med)), med.indication ? h("div.muted.small", null, med.indication.de) : null) : null),
     infoRow({ icon: "noEntry", title: "Bitte", value: "Nicht einnehmen, bevor Apotheke oder Arzt Bescheid wissen.", tone: "bad" }),
@@ -460,7 +460,7 @@ function notRecognized(answer, blob) {
   const hint = HINTS[answer.problem ?? answer.state] ?? "Keine Tablette Ihres Plans passt.";
   return h("main.screen", null,
     backBar({ onBack: home }),
-    statusBanner({ icon: "eyeSlash", text: answer.state === "need_plan" ? "Noch kein Plan" : "Nicht erkannt", color: "warn" }),
+    statusBanner({ icon: "eyeSlash", text: answer.state === "need_plan" ? "Noch kein Plan" : "Nicht erkannt", color: "warn", mascot: "not-recognized" }),
     blob ? photo(blob, "photo-wide") : null,
     infoRow({ icon: "info", title: "Grund", value: hint, tone: "warn" }),
     h("div.row.bottom", null,
@@ -604,11 +604,11 @@ function ManualPlan({ adding: addingMed }) {
 // Scanned pack → what it means for my plan (exact, via PZN) -------------------------
 
 const PACK_BANNER = {
-  onPlan: ["Auf Ihrem Plan", "seal", "ok"], onPlanNoLook: ["Auf Ihrem Plan", "seal", "ok"],
-  otherMaker: ["Gleicher Wirkstoff, andere Packung", "refresh", "warn"],
-  sameSubstance: ["Gleicher Wirkstoff wie auf Ihrem Plan", "alert", "warn"],
-  notOnPlan: ["Nicht auf Ihrem Plan!", "octagon", "bad"],
-  unknown: ["Packung nicht in der Datenbank", "box", "gray"],
+  onPlan: ["Auf Ihrem Plan", "seal", "ok", "found"], onPlanNoLook: ["Auf Ihrem Plan", "seal", "ok", "found"],
+  otherMaker: ["Gleicher Wirkstoff, andere Packung", "refresh", "warn", "other-maker"],
+  sameSubstance: ["Gleicher Wirkstoff wie auf Ihrem Plan", "alert", "warn", "check"],
+  notOnPlan: ["Nicht auf Ihrem Plan!", "octagon", "bad", "not-in-list"],
+  unknown: ["Packung nicht in der Datenbank", "box", "gray", "not-recognized"],
 };
 
 function packSpoken(r) {
@@ -627,7 +627,7 @@ function packSpoken(r) {
 }
 
 function PackResult({ result: r }) {
-  const [bText, bIcon, bColor] = PACK_BANNER[r.kind];
+  const [bText, bIcon, bColor, bMascot] = PACK_BANNER[r.kind];
   const text = packSpoken(r);
   say(text);
   const shownMed = r.product ?? r.mine;
@@ -636,7 +636,7 @@ function PackResult({ result: r }) {
   const middle = h("div.stack");
   const el = h("main.screen", null,
     backBar({ onBack: home, onSpeak: () => say(text) }),
-    statusBanner({ icon: bIcon, text: bText, color: bColor }),
+    statusBanner({ icon: bIcon, text: bText, color: bColor, mascot: bMascot }),
     Pack.expired(r) && exp ? statusBanner({ icon: "calendarAlert", text: `Abgelaufen seit ${exp}`, color: "bad" }) : null,
     middle,
     r.kind === "sameSubstance" && r.mine ? infoRow({ icon: "alert", title: "Gleicher Wirkstoff wie auf Ihrem Plan", value: `${title(r.mine)} – ${r.difference ?? "anderes Präparat"}. Bitte in der Apotheke fragen.`, tone: "warn" }) : null,

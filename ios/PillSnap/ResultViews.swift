@@ -11,6 +11,7 @@ enum Banner {
         }
     }
     var icon: String { self == .likely ? "questionmark.circle.fill" : "checkmark.seal.fill" }
+    var mascot: String { self == .likely ? "check" : "found" }
     var color: Color { self == .likely ? Theme.warnFill : Theme.okFill }
 }
 
@@ -53,7 +54,7 @@ struct MedCardScreen: View {
         FitOrScroll {
             VStack(spacing: 12) {
                 BackBar(title: "", speak: { Speaker.shared.say(med.spoken) }) { go(.home) }
-                StatusBanner(icon: banner.icon, text: banner.text, color: banner.color)
+                StatusBanner(icon: banner.icon, text: banner.text, color: banner.color, mascot: banner.mascot)
 
                 HStack(spacing: 14) {
                     if let photo {
@@ -105,13 +106,37 @@ struct StatusBanner: View {
     let icon: String
     let text: String
     let color: Color
+    /// Mascot state (Assets: mascot-<state>) shown instead of the symbol.
+    var mascot: String? = nil
 
     var body: some View {
-        Label(text, systemImage: icon)
-            .font(.title2.weight(.bold)).foregroundStyle(.white)
-            .lineLimit(1).minimumScaleFactor(0.7)
-            .frame(maxWidth: .infinity).padding(.vertical, 14)
-            .background(color, in: RoundedRectangle(cornerRadius: Theme.corner))
+        Group {
+            if let mascot {
+                HStack(spacing: 8) {
+                    Mascot(state: mascot, size: 64).padding(.vertical, -14)
+                    Text(text).frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.leading, 6).padding(.trailing, 12)
+            } else {
+                Label(text, systemImage: icon)
+            }
+        }
+        .font(.title2.weight(.bold)).foregroundStyle(.white)
+        .lineLimit(1).minimumScaleFactor(0.7)
+        .frame(maxWidth: .infinity).padding(.vertical, 14)
+        .background(color, in: RoundedRectangle(cornerRadius: Theme.corner))
+    }
+}
+
+/// The BlisterKompass mascot in one of its states. Decorative: the text next to it says what it means.
+struct Mascot: View {
+    let state: String
+    var size: CGFloat = 120
+
+    var body: some View {
+        Image("mascot-\(state)").resizable().interpolation(.high).scaledToFit()
+            .frame(width: size, height: size)
+            .accessibilityHidden(true)
     }
 }
 
@@ -199,7 +224,7 @@ struct OtherMakerView: View {
         FitOrScroll {
             VStack(spacing: 14) {
                 BackBar(title: "", speak: { Speaker.shared.say(spoken) }) { go(.home) }
-                StatusBanner(icon: "exclamationmark.triangle.fill", text: "Anders als auf Ihrem Plan", color: Theme.warnFill)
+                StatusBanner(icon: "exclamationmark.triangle.fill", text: "Anders als auf Ihrem Plan", color: Theme.warnFill, mascot: "other-maker")
 
                 HStack(alignment: .top, spacing: 10) {
                     compare(title: "Ihr Foto", subtitle: other.manufacturer ?? "") {
@@ -323,7 +348,7 @@ struct NotOnPlanView: View {
         FitOrScroll {
             VStack(spacing: 14) {
                 BackBar(title: "", speak: { Speaker.shared.say("Achtung. Diese Tablette steht nicht auf Ihrem Plan. Bitte in der Apotheke oder beim Arzt nachfragen.") }) { go(.home) }
-                StatusBanner(icon: "exclamationmark.octagon.fill", text: "Nicht auf Ihrem Plan!", color: Theme.badFill)
+                StatusBanner(icon: "exclamationmark.octagon.fill", text: "Nicht auf Ihrem Plan!", color: Theme.badFill, mascot: "not-on-plan")
                 HStack(spacing: 14) {
                     if let photo { Image(uiImage: photo).resizable().scaledToFill().frame(width: 120, height: 120).clipShape(RoundedRectangle(cornerRadius: 16)) }
                     if let med {
@@ -377,7 +402,7 @@ struct NotRecognizedView: View {
         FitOrScroll {
             VStack(spacing: 14) {
                 BackBar(title: "") { go(.home) }
-                StatusBanner(icon: "eye.slash.fill", text: answer.state == "need_plan" ? "Noch kein Plan" : "Nicht erkannt", color: Theme.warnFill)
+                StatusBanner(icon: "eye.slash.fill", text: answer.state == "need_plan" ? "Noch kein Plan" : "Nicht erkannt", color: Theme.warnFill, mascot: "not-recognized")
                 if let photo { Image(uiImage: photo).resizable().scaledToFill().frame(maxWidth: .infinity).frame(height: 220).clipShape(RoundedRectangle(cornerRadius: Theme.corner)) }
                 InfoRow(icon: "info.circle.fill", tint: Theme.warn, title: "Grund", value: hint)
                 Spacer(minLength: 0)

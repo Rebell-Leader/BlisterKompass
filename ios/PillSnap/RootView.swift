@@ -205,12 +205,10 @@ struct HomeView: View {
 
     private var onboarding: some View {
         VStack(spacing: 18) {
-            Image(systemName: "doc.text.viewfinder").font(.system(size: 72, weight: .semibold)).foregroundStyle(Theme.accent)
-                .padding(.top, 8)
             Text("Willkommen!").font(.system(.largeTitle, design: .rounded, weight: .bold))
             Text("Lesen Sie zuerst Ihren **Medikationsplan** ein – per Kamera, aus den Beispielen oder selbst eingeben.")
                 .font(.title3).multilineTextAlignment(.center)
-            BigButton(icon: "qrcode.viewfinder", title: "Plan einlesen", height: 190) { showPlanSource = true }
+            BigButton(icon: "qrcode.viewfinder", title: "Plan einlesen", height: 230, mascot: "scan-plan") { showPlanSource = true }
             Tip(icon: "lightbulb.fill", text: "Den **Code oben rechts** auf dem Plan ganz ins Bild nehmen.")
         }
     }
@@ -263,7 +261,8 @@ struct AnalyzingView: View {
                 }
                 .clipShape(RoundedRectangle(cornerRadius: Theme.corner))
             HStack(spacing: 14) {
-                ProgressView().controlSize(.large)
+                Mascot(state: "scanning", size: 76).padding(.vertical, -16)
+                    .scaleEffect(scan ? 1.06 : 1)
                 Text("Ich schaue mir das Foto an …").font(.title3.weight(.semibold))
             }
             if let seen, seen.found { SeenChips(cues: seen) }
@@ -377,7 +376,7 @@ struct BmpImportView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     BackBar(title: "Medikationsplan") { go(.home) }
-                    StatusBanner(icon: "checkmark.seal.fill", text: "Plan erkannt", color: Theme.okFill)
+                    StatusBanner(icon: "checkmark.seal.fill", text: "Plan erkannt", color: Theme.okFill, mascot: "found")
                     Label("Aussehen wird nachgeschlagen", systemImage: "doc.text.magnifyingglass")
                         .font(.title3.weight(.bold))
                     if needsConsent {
@@ -409,7 +408,7 @@ struct BmpImportView: View {
         FitOrScroll {
             VStack(spacing: 14) {
                 BackBar(title: "Medikationsplan") { go(.home) }
-                StatusBanner(icon: "checkmark.seal.fill", text: "Plan erkannt", color: Theme.okFill)
+                StatusBanner(icon: "checkmark.seal.fill", text: "Plan erkannt", color: Theme.okFill, mascot: "found")
                 Text(shown.meds.count == 1 ? "1 Medikament" : "\(shown.meds.count) Medikamente").font(.title3.weight(.semibold)).frame(maxWidth: .infinity, alignment: .leading)
                 if !shown.unknown.isEmpty {
                     // Entries the bundled catalog has no look for stay unknown – listed, never guessed.
@@ -453,10 +452,15 @@ struct BigButtonLabel: View {
     var color: Color = Theme.accentFill
     /// Big icon, no text (the title stays as the accessibility label).
     var iconOnly = false
+    /// Mascot state shown instead of the icon.
+    var mascot: String? = nil
 
     var body: some View {
         VStack(spacing: 10) {
-            if iconOnly {
+            if let mascot {
+                Mascot(state: mascot, size: height * 0.68).padding(.top, -14).padding(.bottom, -8)
+                Text(title).font(.system(.title, design: .rounded, weight: .bold)).minimumScaleFactor(0.7).lineLimit(1)
+            } else if iconOnly {
                 Image(systemName: icon).font(.system(size: min(72, height * 0.55), weight: .bold))
             } else {
                 Image(systemName: icon).font(.system(size: min(64, height * 0.32), weight: .semibold))
@@ -476,10 +480,11 @@ struct BigButton: View {
     var height: CGFloat = 120
     var color: Color = Theme.accentFill
     var iconOnly = false
+    var mascot: String? = nil
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) { BigButtonLabel(icon: icon, title: title, height: height, color: color, iconOnly: iconOnly) }
+        Button(action: action) { BigButtonLabel(icon: icon, title: title, height: height, color: color, iconOnly: iconOnly, mascot: mascot) }
             .buttonStyle(.plain)
             .accessibilityLabel(title)
     }

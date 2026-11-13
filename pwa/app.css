@@ -65,6 +65,7 @@ button:disabled { cursor: default; }
   font: 700 26px/1.1 var(--round); text-align: center;
 }
 .big .icon { width: clamp(30px, calc(var(--h, 120px) * .32), 64px); height: clamp(30px, calc(var(--h, 120px) * .32), 64px); }
+.big .mascot { width: calc(var(--h) * .68); height: calc(var(--h) * .68); margin: -14px 0 -8px; }
 .big .icon.big-only { width: clamp(40px, calc(var(--h) * .55), 72px); height: clamp(40px, calc(var(--h) * .55), 72px); }
 .big:active:not(:disabled), .tile:active, .day-row:active, .card:is(button):active { transform: scale(.98); }
 .fill-accent { background: var(--accent-fill); } .fill-ok { background: var(--ok-fill); } .fill-warn { background: var(--warn-fill); }
@@ -95,6 +96,8 @@ button:disabled { cursor: default; }
   color: #fff; font: 700 23px/1.15 var(--round); text-align: center;
 }
 .banner .icon { width: 28px; height: 28px; }
+.banner.with-mascot { justify-content: flex-start; padding-left: 8px; text-align: left; }
+.banner .mascot { width: 64px; height: 64px; margin: -14px 0; flex: none; }
 
 .card { background: var(--card); border-radius: var(--r); padding: 12px; border: 0; color: var(--text); text-align: left; }
 .card.mini { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; border-radius: 14px; min-width: 0; }
@@ -185,6 +188,8 @@ div.info { display: flex; align-items: center; gap: 14px; padding: 14px; border-
 .analyzing-status { display: flex; align-items: center; justify-content: center; gap: 14px; font: 600 21px var(--font); }
 .analyzing-status.asking { justify-content: flex-start; font: 700 23px var(--round); }
 .analyzing-status .icon { width: 28px; height: 28px; color: var(--accent); }
+.analyzing-status .mascot.scanning { width: 76px; height: 76px; margin: -16px 0; flex: none; animation: scanpulse 1.1s ease-in-out infinite; }
+@keyframes scanpulse { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.06); filter: brightness(1.2); } }
 .spinner {
   width: 30px; height: 30px; border-radius: 50%; flex: none;
   border: 4px solid color-mix(in srgb, var(--accent) 25%, transparent); border-top-color: var(--accent);
