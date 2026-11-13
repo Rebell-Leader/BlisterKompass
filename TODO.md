@@ -70,7 +70,6 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 | T-41 | P2 | Print text extraction splits ligatures ("Wirksto ff") | accessibility |
 | T-42 | P2 | iOS checks and PWA tests are not paired one to one | skilled user, deploy |
 | T-43 | P2 | Xcode project, target and folder still named `PillSnap` | deploy |
-| T-44 | P2 | No iOS app icon: asset catalog from the mascot | skilled user |
 | T-45 | P1 | Verify Vercel deploys teammates' commits on the public repo | deploy |
 | T-46 | P2 | Screenshots in `docs/screens` predate the rename and the mascot | skilled user |
 
@@ -671,16 +670,6 @@ keep the old name. Renaming them by editing `project.pbxproj` without Xcode risk
 update every `ios/PillSnap/` path (`pwa/scripts/sync.sh`, `pwa/tests/*.js`, `tools/*.py`, `ios/checks/run.sh`, docs) in the same PR.
 
 **Test.** `xcodebuild … build` succeeds; `cd pwa && npm run sync && npm test` passes; `ios/checks/run.sh` passes.
-
-### T-44 No iOS app icon (skilled user, verified)
-
-**Problem.** The iPhone app has no asset catalog, so it shows the default blank icon. The web app's icons come from the mascot
-(`pwa/scripts/make-icons.py`).
-
-**Fix.** In Xcode, add `Assets.xcassets` with an `AppIcon` (1024 × 1024, no transparency) made from `pwa/icons/mascot-wave.png` on the
-light background used for `pwa/icons/apple-touch-icon.png`; set `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon`.
-
-**Test.** Build to a simulator; the home screen shows the mascot icon.
 
 ### T-45 Verify Vercel deploys teammates' commits on the public repo (deploy, suspected)
 
