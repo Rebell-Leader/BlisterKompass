@@ -54,6 +54,7 @@ small type (8.5 pt), its own 2D code, or licensed product images.
 |---|---|---|
 | PS-01 | Printed from the app ("Plan drucken"), A4 landscape, laid out in mm, through the system print dialog (PDF or printer). | Now (web); iOS T-30 |
 | PS-02 | Title "Meine Medikamente mit Bildern" (20 pt), "Seite x von n". The word "Medikationsplan" appears only in "Gehört zu Ihrem Medikationsplan". | Now (web); iOS T-30 |
+| PS-02a | The waving mascot (`pwa/icons/mascot-wave.png`, about 17 mm) left of the title; decorative, no text in it. Not on the BMP page, which keeps the KBV layout. | Now (web, demo prints); iOS T-30 |
 | PS-03 | "für:" line left blank to fill in by hand; the app never stores a name or birth date. | Now |
 | PS-04 | "Gehört zu Ihrem Medikationsplan. Maßgeblich ist der Plan Ihrer Praxis." plus the date the list was printed. The plan's own date needs D-10. | Now; plan date D-10 |
 | PS-05 | "Fragen? Sagen Sie am Telefon die Nummer aus der ersten Spalte." Optional contact lines (practice, care service, pharmacy). | Text now; contacts future |
@@ -115,7 +116,7 @@ small type (8.5 pt), its own 2D code, or licensed product images.
 - No text tells anyone to take out, add, replace or re-sort a tablet (INV-16).
 - Fonts measured in the printed PDF meet PS-20 (pdf.js check, as done for the review); the 5 cm bar measures 5 cm on paper.
 - A black-and-white test print is legible.
-- The demo generator's BMP page and picture sheet carry the identical, XSD-valid code (`tools/test_make_bmp_sheet.py`; T-47).
+- The demo generator's BMP page and picture sheet carry the identical, XSD-valid code (`tools/test_make_bmp_sheet.py`; the schema is `tools/bmp/bmp_V2.8.xsd`).
 
 ## 6. Accessibility
 

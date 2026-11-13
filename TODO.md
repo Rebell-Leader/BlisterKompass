@@ -70,12 +70,12 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 | T-41 | P2 | Print text extraction splits ligatures ("Wirksto ff") | accessibility |
 | T-42 | P2 | iOS checks and PWA tests are not paired one to one | skilled user, deploy |
 | T-43 | P2 | Xcode project, target and folder still named `PillSnap` | deploy |
-| T-44 | P2 | No iOS app icon: asset catalog from the mascot | skilled user |
 | T-45 | P1 | Verify Vercel deploys teammates' commits on the public repo | deploy |
 | T-46 | P2 | Screenshots in `docs/screens` predate the rename and the mascot | skilled user |
-| T-47 | P2 | PWA: tap a pill picture → popup with the pill large (iOS has `PillPopup`) | patient |
-| T-48 | P2 | PWA precaches pdf.js (~1.8 MB) for an optional feature | skilled user |
-| T-49 | P2 | Leaflet link points to a commercial pharmacy CDN: check its terms | pharmacist |
+| T-48 | P2 | PWA: tap a pill picture → popup with the pill large (iOS has `PillPopup`) | patient |
+| T-49 | P2 | PWA precaches pdf.js (~1.8 MB) for an optional feature | skilled user |
+| T-50 | P2 | Leaflet link points to a commercial pharmacy CDN: check its terms | pharmacist |
+| T-47 | P1 | Impressum and Datenschutz still have placeholder name, address and e-mail | site |
 
 ---
 
@@ -675,16 +675,6 @@ update every `ios/PillSnap/` path (`pwa/scripts/sync.sh`, `pwa/tests/*.js`, `too
 
 **Test.** `xcodebuild … build` succeeds; `cd pwa && npm run sync && npm test` passes; `ios/checks/run.sh` passes.
 
-### T-44 No iOS app icon (skilled user, verified)
-
-**Problem.** The iPhone app has no asset catalog, so it shows the default blank icon. The web app's icons come from the mascot
-(`pwa/scripts/make-icons.py`).
-
-**Fix.** In Xcode, add `Assets.xcassets` with an `AppIcon` (1024 × 1024, no transparency) made from `pwa/icons/mascot-wave.png` on the
-light background used for `pwa/icons/apple-touch-icon.png`; set `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon`.
-
-**Test.** Build to a simulator; the home screen shows the mascot icon.
-
 ### T-45 Verify Vercel deploys teammates' commits on the public repo (deploy, suspected)
 
 **Problem.** In the private hackathon repo, Vercel's Hobby plan blocked every deployment whose commit author wasn't on the Vercel team,
@@ -707,7 +697,7 @@ landing page's screen section.
 
 **Test.** Visual check of README and `docs/landing.html`.
 
-### T-47 PWA: tap a pill picture → popup with the pill large (patient, iOS done)
+### T-48 PWA: tap a pill picture → popup with the pill large (patient, iOS done)
 
 **Problem.** On iPhone, tapping a `PillTile` opens `PillPopup` (`ios/PillSnap/PillView.swift`): the pill at 260 pt with colour, shape,
 size, score line, imprint, source and leaflet quote; unknown fields say "nicht angegeben". The PWA's `pillTile` (`pwa/js/ui.js`) has
@@ -718,7 +708,7 @@ places as iOS.
 
 **Test.** A PWA test that the popup lists "nicht angegeben" for a look without size and imprint; iOS check of the same name.
 
-### T-48 PWA precaches pdf.js (~1.8 MB) for an optional feature (skilled user, verified)
+### T-49 PWA precaches pdf.js (~1.8 MB) for an optional feature (skilled user, verified)
 
 **Problem.** `vendor/pdfjs/pdf.min.mjs` and `pdf.worker.min.mjs` are in `PRECACHE` (`pwa/sw.js`): every first visit downloads about
 1.8 MB extra, although only people who pick a leaflet PDF need it.
@@ -728,7 +718,7 @@ places as iOS.
 
 **Test.** The first load transfers no `vendor/pdfjs/*`; picking a PDF once online, then in flight mode, still works.
 
-### T-49 Leaflet link points to a commercial pharmacy CDN: check its terms (pharmacist, open)
+### T-50 Leaflet link points to a commercial pharmacy CDN: check its terms (pharmacist, open)
 
 **Problem.** "Beipackzettel öffnen" opens `cdn.shop-apotheke.com/PDF/…` (`pwa/js/leaflet-parser.js`); the iPhone app downloads from the
 same host. Fine for the demo, but it's a commercial shop's CDN.
@@ -738,3 +728,11 @@ link on both clients.
 
 **Test.** Both clients open the chosen host; the PWA host test lists exactly that host.
 
+### T-47 Impressum and Datenschutz have placeholders (site, verified)
+
+**Problem.** `docs/impressum.html` and `docs/datenschutz.html` mark the provider's name, address and e-mail as `.todo` placeholders
+("Vorname Nachname", "kontakt@example.de"). A public German site needs them filled (§ 5 DDG, Art. 13 DSGVO).
+
+**Fix.** Fill in the responsible person or organisation in both pages (the `.todo` spans), then remove the `.todo` style.
+
+**Test.** `grep -n 'class="todo"' docs/*.html` finds nothing; both pages load from the landing page footer.

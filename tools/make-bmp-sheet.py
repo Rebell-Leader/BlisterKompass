@@ -22,7 +22,7 @@ renders every page and decodes the code again from the rendered pages (print →
 
     python3 -m venv .venv && .venv/bin/pip install zxing-cpp==3.1.1 pillow pypdfium2 xmlschema
     .venv/bin/python -I tools/make-bmp-sheet.py                     # plan-a and plan-kbv-beispiel
-    .venv/bin/python -I tools/make-bmp-sheet.py plan-a plan-b       # any plan in ios/PillSnap/Examples/plans/
+    .venv/bin/python -I tools/make-bmp-sheet.py plan-a plan-b       # any plan in ios/BlisterKompass/Examples/plans/
 
 Synthetic demo data only. Not a validated BMP print: KBV conformance of the layout is not claimed (AGENTS.md, export service).
 """
@@ -51,6 +51,8 @@ PLANS = APP / "Examples" / "plans"
 OUT = ROOT / "print"
 XSD = ROOT / "tools" / "bmp" / "bmp_V2.8.xsd"   # KBV BMP 2.8 schema (tools/bmp/README.md)
 FORMS_CSV = ROOT / "tools" / "bmp" / "kbv_darreichungsform.csv"
+# Blister mascot on the picture sheet (not on the BMP page, which stays as the KBV layout).
+MASCOT_PNG = base64.b64encode((ROOT / "pwa" / "icons" / "mascot-wave.png").read_bytes()).decode()
 MAX_BYTES = 1400
 SHORT_NAMES = {"plan-kbv-beispiel": "kbv"}   # output file stem per plan, default: the plan's own name
 
@@ -511,7 +513,9 @@ SHEET_CSS = """
 body { margin: 0; font-family: Arial, "Liberation Sans", Helvetica, "Ubuntu Sans", sans-serif; color: #000; background: #fff; font-size: 12pt; }
 .page { width: 280mm; height: 192mm; position: relative; page-break-after: always; overflow: hidden; }
 .page:last-child { page-break-after: auto; }
-.head { display: grid; grid-template-columns: 70mm 1fr 58mm; column-gap: 4mm; height: 36mm; border-bottom: .4mm solid #000; }
+.head { display: grid; grid-template-columns: 90mm 1fr 58mm; column-gap: 4mm; height: 36mm; border-bottom: .4mm solid #000; }
+.mk { display: flex; gap: 3mm; align-items: flex-start; }
+.mk img { width: 18mm; height: 18mm; flex: none; }
 .head h1 { font-size: 20pt; margin: 0 0 2mm; line-height: 1.1; }
 .head .pg { font-size: 14pt; }
 .who { font-size: 16pt; font-weight: 700; margin-bottom: 1mm; }
@@ -658,7 +662,7 @@ def picture_sheet(header, rows, code_png):
     for i, body in enumerate(pages, 1):
         out.append(f"""<section class="page">
 <div class="head">
-  <div><h1>Meine Medikamente<br>mit Bildern</h1><div class="pg">Seite {i} von {len(pages)}</div></div>
+  <div class="mk"><img src="data:image/png;base64,{MASCOT_PNG}" alt=""><div><h1>Meine Medikamente<br>mit Bildern</h1><div class="pg">Seite {i} von {len(pages)}</div></div></div>
   <div><div class="who">{html.escape(name)} <span>geb. {html.escape(h['born'])}</span></div>
        <div class="belongs">{html.escape(belongs)}</div>
        <div class="ask">{html.escape(ask)}<br>Sagen Sie am Telefon die Nummer aus der ersten Spalte.</div></div>

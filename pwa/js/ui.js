@@ -45,9 +45,10 @@ export function svg(tag, attrs = {}, ...children) {
 // Buttons ------------------------------------------------------------------
 
 /** Big coloured button: icon over word (or icon only, with the word as its label). */
-export function bigButton({ icon: ic, title, onClick, color = "accent", height = 120, iconOnly = false, disabled = false }) {
+/** `mascot` (a state name) replaces the icon with the mascot in that state. */
+export function bigButton({ icon: ic, title, onClick, color = "accent", height = 120, iconOnly = false, disabled = false, mascot: m }) {
   return h(`button.big.fill-${color}`, { type: "button", onclick: onClick, disabled, "aria-label": title, style: { "--h": `${height}px` } },
-    icon(ic, { cls: iconOnly ? "icon big-only" : "icon" }), iconOnly ? null : h("span", null, title));
+    m ? mascot(m) : icon(ic, { cls: iconOnly ? "icon big-only" : "icon" }), iconOnly ? null : h("span", null, title));
 }
 
 /** Light tile: icon over (multi-line) word. */
@@ -63,8 +64,13 @@ export function backBar({ title = "", onBack, onSpeak }) {
       : h("span.bar-title", null, title));
 }
 
-export function statusBanner({ icon: ic, text, color }) {
-  return h(`div.banner.fill-${color}`, { role: "status" }, icon(ic), h("span", null, text));
+/** The BlisterKompass mascot in one of its states (img/mascot/*.png). Decorative: the text next to it says it. */
+export function mascot(state, cls = "") {
+  return h(`img.mascot${cls ? "." + cls : ""}`, { src: `img/mascot/${state}.png`, alt: "", "aria-hidden": "true", draggable: "false" });
+}
+
+export function statusBanner({ icon: ic, text, color, mascot: m }) {
+  return h(`div.banner.fill-${color}${m ? ".with-mascot" : ""}`, { role: "status" }, m ? mascot(m) : icon(ic), h("span", null, text));
 }
 
 export function infoRow({ icon: ic, tint, title, value, tone }) {

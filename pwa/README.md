@@ -50,6 +50,7 @@ codes decoded through zxing-wasm (`codes.test.js`), the print sheet, the code wr
 | `vendor/zxing-wasm/` | zxing-wasm 3.1.6 reader and writer (MIT, zxing-cpp compiled to WebAssembly), loaded from here, never from a CDN |
 | `scripts/sync.sh`, `scripts/make-icons.py` | Refresh copies and the vendored decoder; make the app icons from the mascot (`icons/mascot-wave.png`, art by Anna P.) |
 | `icons/` | App icons and the mascot pictures shown on the welcome screen and the landing page |
+| `img/mascot/` | The pill mascot in one state per screen (scanning, found, check, other maker, not on plan, not recognised, not in list, scan plan); decorative, the banner text says it. Same pictures as `ios/PillSnap/Assets.xcassets/mascot-*`, made by `docs/brand/pill-mascot/` |
 
 ## Differences from the guide and the iPhone app
 

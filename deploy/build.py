@@ -2,7 +2,7 @@
 """Assemble the static site for Vercel (or any static host) in deploy/dist/.
 
   /                   -> redirect to /docs/landing.html (vercel.json)
-  /docs/landing.html  -> docs/landing.html wrapped in a full HTML document
+  /docs/landing.html  -> docs/landing.html wrapped in a full HTML document (same for impressum.html, datenschutz.html)
   /docs/screens/*     -> the screenshots the landing page shows
   /docs/fonts/*       -> self-hosted Atkinson Hyperlegible (no Google Fonts request, no IP sent to Google)
   /pwa/*              -> the PWA as it is, without tests, scripts and package files
@@ -41,18 +41,18 @@ img { max-width: 100%; }
 """
 
 PWA_SKIP = {"tests", "scripts", "node_modules", "package.json", "package-lock.json", "README.md", ".gitignore"}
+PAGES = ("landing.html", "impressum.html", "datenschutz.html")
 
 
-
-def landing() -> str:
-    src = (ROOT / "docs" / "landing.html").read_text(encoding="utf-8")
+def page(name: str) -> str:
+    src = (ROOT / "docs" / name).read_text(encoding="utf-8")
     # Google Fonts would send every visitor's IP to Google; the font is self-hosted instead.
     src = re.sub(r'<link rel="(preconnect|stylesheet)" href="https://fonts\.(googleapis|gstatic)\.com[^>]*>\n?', "", src)
     if "fonts.googleapis.com" in src or "fonts.gstatic.com" in src:
-        raise SystemExit("landing.html still references Google Fonts")
+        raise SystemExit(f"{name} still references Google Fonts")
     head, sep, body = src.partition("</style>")
     if not sep:
-        raise SystemExit("landing.html: no </style> found")
+        raise SystemExit(f"{name}: no </style> found")
     return HEAD + head + sep + "\n</head>\n<body>\n" + body.lstrip("\n") + "\n</body>\n</html>\n"
 
 
@@ -61,9 +61,12 @@ def main() -> None:
         shutil.rmtree(DIST)
     docs = DIST / "docs"
     docs.mkdir(parents=True)
-    html = landing()
-    (docs / "landing.html").write_text(html, encoding="utf-8")
-    for name in sorted(set(re.findall(r'src="screens/([^"]+)"', html))):
+    shots = set()
+    for name in PAGES:
+        html = page(name)
+        (docs / name).write_text(html, encoding="utf-8")
+        shots |= set(re.findall(r'src="screens/([^"]+)"', html))
+    for name in sorted(shots):
         (docs / "screens").mkdir(exist_ok=True)
         shutil.copy2(ROOT / "docs" / "screens" / name, docs / "screens" / name)
     shutil.copytree(ROOT / "docs" / "fonts", docs / "fonts")

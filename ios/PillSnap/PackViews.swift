@@ -17,13 +17,13 @@ struct PackResultView: View {
     /// The take-over button only appears once the user says the pharmacy confirmed the switch.
     @State private var pharmacyConfirmed = false
 
-    private var banner: (text: String, icon: String, color: Color) {
+    private var banner: (text: String, icon: String, color: Color, mascot: String) {
         switch result.kind {
-        case .onPlan, .onPlanNoLook: ("Auf Ihrem Plan", "checkmark.seal.fill", Theme.okFill)
-        case .otherMaker: ("Gleicher Wirkstoff, andere Packung", "arrow.triangle.2.circlepath", Theme.warnFill)
-        case .sameSubstance: ("Gleicher Wirkstoff wie auf Ihrem Plan", "exclamationmark.triangle.fill", Theme.warnFill)
-        case .notOnPlan: ("Nicht auf Ihrem Plan!", "exclamationmark.octagon.fill", Theme.badFill)
-        case .unknown: ("Packung nicht in der Datenbank", "questionmark.square.dashed", Color(.systemGray))
+        case .onPlan, .onPlanNoLook: ("Auf Ihrem Plan", "checkmark.seal.fill", Theme.okFill, "found")
+        case .otherMaker: ("Gleicher Wirkstoff, andere Packung", "arrow.triangle.2.circlepath", Theme.warnFill, "other-maker")
+        case .sameSubstance: ("Gleicher Wirkstoff wie auf Ihrem Plan", "exclamationmark.triangle.fill", Theme.warnFill, "check")
+        case .notOnPlan: ("Nicht auf Ihrem Plan!", "exclamationmark.octagon.fill", Theme.badFill, "not-in-list")
+        case .unknown: ("Packung nicht in der Datenbank", "questionmark.square.dashed", Color(.systemGray), "not-recognized")
         }
     }
 
@@ -44,7 +44,7 @@ struct PackResultView: View {
         FitOrScroll {
             VStack(spacing: 12) {
                 BackBar(title: "", speak: { Speaker.shared.say(spoken) }) { go(.home) }
-                StatusBanner(icon: banner.icon, text: banner.text, color: banner.color)
+                StatusBanner(icon: banner.icon, text: banner.text, color: banner.color, mascot: banner.mascot)
                 if result.expired, let e = result.code.expiryText {
                     StatusBanner(icon: "calendar.badge.exclamationmark", text: "Abgelaufen seit \(e)", color: Theme.badFill)
                 }
