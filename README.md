@@ -14,8 +14,8 @@ physician app. Scan the 2D code on the paper Medikationsplan once. From then on 
 Live: <https://blisterkompass.vercel.app> (landing page, German and English) · app: <https://blisterkompass.vercel.app/pwa/>
 
 Built at the Healthcare Hackathon Bayern 2026 in Erlangen (Challenge 1, "Medication adjustment with polypharmacy patients",
-BioMedical Design / Novo Nordisk Foundation). **Not a medical device. Synthetic demo data only.** Identity comes from the plan's PZN, a
-scanned pack or a pharmacist; a photo only suggests.
+BioMedical Design / Novo Nordisk Foundation). **Synthetic hackathon prototype: not for clinical use; medical-device qualification not
+yet assessed. Synthetic demo data only.** Identity comes from the plan's PZN, a scanned pack or a pharmacist; a photo only suggests.
 
 ## The app: one product, two clients
 

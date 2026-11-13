@@ -48,9 +48,10 @@ footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line);
   <ul>
     <li>Plan-Code, Tabletten-Fotos und Packungs-Codes werden ausschließlich auf Ihrem Gerät ausgewertet. Nichts davon wird an uns oder Dritte übertragen.</li>
     <li>Vom Medikationsplan werden nur die Medikamente übernommen. Name, Geburtsdatum, Versichertennummer und Praxis werden nicht gespeichert.</li>
-    <li>Fotos werden nicht gespeichert. Die Kamera wird nur genutzt, wenn Sie sie in der App öffnen und im Browser erlauben.</li>
-    <li>Im Speicher Ihres Browsers (localStorage) liegen nur Ihre Medikamentenliste und unbekannte PZN. Sie löschen beides, indem Sie die App entfernen oder die Website-Daten im Browser löschen.</li>
-    <li>Nach dem ersten Laden stellt die Web-App keine Verbindung zum Internet mehr her.</li>
+    <li>Fotos werden nicht in der Medikamentenliste gespeichert. Die Kamera wird nur genutzt, wenn Sie sie in der App öffnen und im Browser erlauben. In der Android-App liegt ein Kamerafoto kurz im Cache der App auf dem Gerät: bis zum nächsten Foto oder bis die App geschlossen wird; ein abgebrochenes Foto wird sofort gelöscht.</li>
+    <li>Der Plan-Code wird beim Einlesen kurz im Arbeitsspeicher verarbeitet; übernommen werden nur die Medikamente, Name und andere Angaben zur Person nicht. Eigene Hinweise und Freitext auf dem Plan können trotzdem persönliche Angaben enthalten.</li>
+    <li>Im Speicher Ihres Browsers (localStorage) liegen drei Einträge: Ihre Medikamentenliste, unbekannte PZN und Produkte, deren Aussehen aus einer von Ihnen gewählten Packungsbeilage gelesen wurde (nur Produktdaten). Sie löschen alles, indem Sie die App entfernen oder die Website-Daten im Browser löschen.</li>
+    <li>Ihre Medikamente verlassen das Gerät nicht. Verbindungen gibt es nur zum Laden und Aktualisieren der App selbst (von Vercel, siehe unten) und wenn Sie einen Link zur Packungsbeilage antippen: Diese Seite öffnet sich im Browser beim jeweiligen Anbieter, die App selbst lädt dabei nichts.</li>
   </ul>
 
   <h2>Hosting und Server-Logs</h2>
