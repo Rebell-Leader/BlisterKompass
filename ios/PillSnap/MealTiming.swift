@@ -3,9 +3,10 @@ import Foundation
 /// When to take a medicine relative to a meal, read from the plan's free-text "Hinweise".
 ///
 /// The BMP (2.8) has no coded field for this: "nüchtern", "vor dem Essen", "zu den Mahlzeiten" are free text in `M/@i`
-/// (or in the free-text dosing `t`). This reads only clear, common wordings. Anything else, a negation ("nicht nüchtern")
-/// or "unabhängig von den Mahlzeiten" gives nil: no tag rather than a guessed one (INV-05). The full Hinweise text is
-/// always shown next to the tag.
+/// (or in the free-text dosing `t`). This reads only clear, common wordings. Anything else gives nil: no tag rather than a
+/// guessed one (INV-05). A negation or alternative ("nicht", "kein", "Abstand", "oder", "unabhängig", "egal") gives nil too,
+/// as in the web app's meal() – "nicht zu den Mahlzeiten" is never "zum Essen" (T-31). The full Hinweise text is always
+/// shown next to the tag.
 enum MealTiming: String, CaseIterable {
     case fasting, before, with, after
 
@@ -40,7 +41,8 @@ enum MealTiming: String, CaseIterable {
     /// First clear wording wins in the order fasting, before, after, with ("nüchtern, 30 min vor dem Frühstück" → fasting).
     static func from(_ texts: String?...) -> MealTiming? {
         let t = texts.compactMap { $0 }.joined(separator: " ").lowercased()
-        guard !t.isEmpty, !t.contains("unabhängig"), !t.contains("nicht nüchtern"), !t.contains("egal") else { return nil }
+        let negation = #"\b(nicht|kein|keine|keinesfalls|abstand|oder|unabhängig|egal)\b"#
+        guard !t.isEmpty, t.range(of: negation, options: .regularExpression) == nil else { return nil }
         return wordings.first { _, words in words.contains { t.contains($0) } }?.0
     }
 }

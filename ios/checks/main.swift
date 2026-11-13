@@ -22,8 +22,8 @@ check("plan A: printed with Ramipril Nordapharm", planA.meds.first { $0.substanc
 let kbvItems = PlanReader.items(in: AppData.plan("plan-kbv-beispiel"))!
 let kbv = PlanReader.resolve(kbvItems, catalog: all)
 check("KBV sample: 7 entries read", kbvItems.count == 7)
-check("KBV sample: substance line <W w=Ramipril s=5 mg> resolves", kbv.meds.contains { $0.substance == "Ramipril" && $0.strength == "5 mg" })
-check("KBV sample: unknown PZNs stay unknown (not guessed)", kbv.unknown.count == 4 && kbv.unknown.allSatisfy { $0.hasPrefix("PZN ") })
+// Changed with the review fix (as in the web app): a line without PZN no longer borrows a catalog product's picture by substance (INV-05/15).
+check("KBV sample: lines without a catalog look stay unknown (not guessed)", kbv.unknown.count == 5 && kbv.unknown.filter { $0.hasPrefix("PZN ") }.count == 4 && kbv.unknown.contains("Ramipril 5 mg") && !kbv.meds.contains { $0.substance == "Ramipril" })
 check("KBV sample: PZNs zero-padded to 8", kbvItems.compactMap(\.pzn).allSatisfy { $0.count == 8 })
 check("KBV sample: no person data read", !"\(kbvItems)".contains("Musterhausen") && !"\(kbvItems)".contains("B987563276"))
 check("not a plan → nil", PlanReader.items(in: "hello") == nil)
@@ -129,7 +129,8 @@ func at(_ h: Int, weekday: Int = 3) -> Date {   // 2026-11-10 is a Tuesday; week
 }
 let evening = Day.sections(planA.meds, at: at(18), calendar: cal)
 check("18:30 → first section is evening, marked now", evening.first?.kind == .slot("evening") && evening.first?.now == true)
-check("18:30 → night later today, morning tomorrow", evening.first { $0.kind == .slot("night") }?.tomorrow == false && evening.first { $0.kind == .slot("morning") }?.tomorrow == true)
+// Changed with T-06: at 18:30 the morning slot is today's, already past – never "tomorrow" (a patient could skip it at 11:05).
+check("18:30 → night later today, morning earlier today (past, never tomorrow)", evening.first { $0.kind == .slot("night") }?.past == false && evening.first { $0.kind == .slot("morning") }?.past == true && evening.allSatisfy { !$0.tomorrow })
 check("18:30 → Metformin due now with 1", evening.first?.entries.first { $0.med.substance == "Metformin" }?.amount == 1)
 check("as-needed last, never now", evening.last?.kind == .prn && evening.last?.now == false && evening.last?.entries.contains { $0.med.substance == "Ibuprofen" } == true)
 let monday = Day.sections(planA.meds, at: at(8, weekday: 2), calendar: cal)
@@ -172,7 +173,46 @@ check("meal: plan A – Levothyroxin nüchtern, Pantoprazol before, Metformin wi
 check("meal: 'nüchtern, 30 min vor dem Frühstück' is fasting, not before", MealTiming.from("nüchtern, 30 min vor dem Frühstück") == .fasting)
 check("meal: 'während der Mahlzeit' (KBV sample) is with", MealTiming.from("während der Mahlzeit") == .with)
 check("meal: negation or 'unabhängig' gives no tag", MealTiming.from("nicht nüchtern einnehmen") == nil && MealTiming.from("unabhängig von den Mahlzeiten") == nil)
+// T-31: negations and alternatives never turn into the opposite tag (same rule as the web app's meal()).
+check("meal: 'nicht zu den Mahlzeiten', 'Abstand zum Essen', '1 Std. vor oder 2 Std. nach dem Essen' give no tag",
+      [MealTiming.from("nicht zu den Mahlzeiten"), MealTiming.from("nicht mit dem Essen"), MealTiming.from("Abstand zum Essen 2 h"),
+       MealTiming.from("nicht auf nüchternen Magen"), MealTiming.from("1 Std. vor oder 2 Std. nach dem Essen"), MealTiming.from("kein Essen dazu")].allSatisfy { $0 == nil })
 check("meal: other notes give no tag", MealTiming.from("bei Knieschmerzen") == nil && MealTiming.from(nil) == nil)
+
+// Submission review 13 Nov 2026: same names as pwa/tests/checks.test.js. (whenText and the read-aloud live in Theme.swift,
+// which these macOS checks don't compile: their checks are web-app only for now.)
+check("combination product: all <W> kept", PlanReader.items(in: #"<MP v="028" U="0" l="de-DE"><S><M p="1"><W w="Valsartan" s="160 mg"/><W w="Hydrochlorothiazid" s="25 mg"/></M></S></MP>"#)?.first.map { $0.substance == "Valsartan / Hydrochlorothiazid" && $0.strength == "160 mg / 25 mg" } == true)
+let outside = PlanReader.resolve(PlanReader.items(in: #"<MP v="028" U="0" l="de-DE"><S><M p="99999999" m="1"><W w="Ramipril" s="5 mg"/></M></S></MP>"#)!, catalog: all)
+check("a plan PZN outside the catalog keeps its PZN, never another product's (no substance fallback)", outside.meds.isEmpty && outside.unknownPZNs == ["99999999"])
+check("KBV: weekly MTX (wo=1, m=1) keeps its dose and Monday", kbv.meds.first { $0.pzn == "03159468" }?.schedule.map { $0.kind == "weekly" && $0.days == ["mon"] && $0.amounts == ["morning": 1] } == true)
+
+// T-04: a look-alike in another strength is never "another maker" of the plan entry.
+let pregabalin300 = all.first { $0.substance == "Pregabalin" && $0.strength == "300 mg" && $0.market != "US" }!
+let p300 = Matcher.answer(myMeds: planA.meds, catalog: all, cues: cues(pregabalin300.look, imprint: pregabalin300.look.imprint))
+check("Pregabalin 300 mg look on plan A (75 mg) → other_strength, shown with its own title", p300.state == "other_strength" && p300.candidates?.first?.strength == "75 mg" && p300.notOnPlan?.strength == "300 mg")
+check("no catalog look of another strength of a plan A drug gives other_maker", all
+    .filter { m in planA.meds.contains { $0.substance == m.substance && $0.strength != m.strength } }
+    .allSatisfy { Matcher.answer(myMeds: planA.meds, catalog: all, cues: cues($0.look, imprint: $0.look.imprint)).state != "other_maker" })
+// T-05: without a read imprint and a size, every colour-fitting plan pill stays a candidate.
+let offwhiteOval = Matcher.answer(myMeds: planA.meds, catalog: all, cues: PillCues(found: true, colors: ["offwhite"], shape: "oval"))
+check("off-white oval, no imprint, size unknown → choose, Metformin among the candidates", offwhiteOval.state == "choose" && (offwhiteOval.candidates ?? []).contains { $0.substance == "Metformin" } && (offwhiteOval.candidates?.count ?? 0) >= 3)
+check("score-line question says nothing about splitting (INV-14)", Matcher.question(planA.meds, PillCues(found: true, colors: ["white"], shape: "round"))?.question.contains("Teilen") != true)
+// T-06: 11:05 and 00:30
+let elevenOFive = Day.sections(planA.meds, at: cal.date(from: DateComponents(year: 2026, month: 11, day: 13, hour: 11, minute: 5))!, calendar: cal)
+check("11:05 → morning drugs are today's, past – not tomorrow", elevenOFive.first { $0.kind == .slot("morning") }.map { $0.past && $0.entries.count == 7 } == true && elevenOFive.allSatisfy { !$0.tomorrow })
+let halfPastMidnight = Day.sections(planA.meds, at: cal.date(from: DateComponents(year: 2026, month: 11, day: 14, hour: 0, minute: 30))!, calendar: cal)
+check("00:30 → night slot is last night's, never 'now' again", halfPastMidnight.first { $0.kind == .slot("night") }.map { $0.lastNight && !$0.now } == true && !halfPastMidnight.contains { $0.now })
+// BMP 2.8 contract: refused, never read half-way (the iPhone app returns nil; the web app also names the reason).
+func bmp(_ attrs: String, _ m: String) -> [PlanReader.Item]? { PlanReader.items(in: "<MP \(attrs)><S>\(m)</S></MP>") }
+check("plan code of another version (v=999) → refused: version", bmp(#"v="999" U="0" l="de-DE""#, #"<M p="1" m="1"/>"#) == nil)
+check("plan code with a 13-digit PZN → refused: pzn", bmp(#"v="028" U="0" l="de-DE""#, #"<M p="1234567890123" m="1"/>"#) == nil)
+check("plan code with a dose that is no number (m=wrong) → refused: dose, never 0", bmp(#"v="028" U="0" l="de-DE""#, #"<M p="1" m="wrong"/>"#) == nil && !PlanReader.validDose("wrong") && PlanReader.validDose(""))
+check("plan code with weekday 9 or page 3 of 2 → refused", bmp(#"v="028" U="0" l="de-DE""#, #"<M p="1" m="1" wo="9"/>"#) == nil && bmp(#"v="028" U="0" l="de-DE" a="3" z="2""#, #"<M p="1" m="1"/>"#) == nil)
+check("the review's sample <MP v=999><M p=1234567890123 m=wrong> is refused", PlanReader.items(in: #"<MP v="999"><S><M p="1234567890123" m="wrong"/></S></MP>"#) == nil)
+check("all example plans still read (v=028, valid PZNs and doses)", ["plan-a", "plan-b", "plan-c", "plan-kbv-beispiel"].allSatisfy { (PlanReader.items(in: AppData.plan($0))?.count ?? 0) > 0 })
+// iOS only: multi-page plans are refused until the iPhone app can merge pages (the web app merges them, pwa/tests/checks.test.js).
+check("multi-page plan page (a=1, z=2) → refused on iPhone, never taken for the whole plan", bmp(#"v="028" U="ABC" l="de-DE" a="1" z="2""#, #"<M p="1" m="1"/>"#) == nil)
+check("leaflet: finish only when the text states it; a film coating alone gives none", leaf("Weiße, runde Filmtabletten.", nil).map { $0.finish == nil } == true && leaf("Weiße, runde, glänzende Filmtabletten.", nil)?.finish == "glossy" && LeafletParser.finish(in: "matte, weiße Tabletten") == "matte")
 
 print("\n\(passed) passed, \(failed) failed")
 exit(failed == 0 ? 0 : 1)

@@ -5,9 +5,9 @@ enum Banner {
 
     var text: String {
         switch self {
-        case .sure: "Ihre Tablette"
+        case .sure: "Passt zu Ihrem Plan – bitte prüfen"   // a look, never proof (INV-15)
         case .likely: "Wahrscheinlich – bitte prüfen"
-        case .confirmed: "Ihre Tablette"
+        case .confirmed: "Auf Ihrem Plan"
         }
     }
     var icon: String { self == .likely ? "questionmark.circle.fill" : "checkmark.seal.fill" }
@@ -32,6 +32,10 @@ struct ResultView: View {
         case "other_maker":
             if let mine = answer.candidates?.first, let other = answer.notOnPlan {
                 OtherMakerView(mine: mine, other: other, photo: photo, go: go)
+            }
+        case "other_strength":
+            if let mine = answer.candidates?.first, let other = answer.notOnPlan {
+                OtherStrengthView(mine: mine, other: other, photo: photo, go: go)
             }
         case "not_on_plan":
             NotOnPlanView(med: answer.notOnPlan, photo: photo, go: go)
@@ -175,14 +179,17 @@ struct ScheduleBlock: View {
                 HStack(spacing: 8) {
                     ForEach(Slot.all) { slot in
                         let amount = s.amounts[slot.id]
+                        // A slot on the plan without an amount shows "?": the amount stays unknown, never a default (INV-05).
+                        let on = amount != nil || s.slots.contains(slot.id)
+                        let shown: String = amount.map { $0 == 0.5 ? "½" : String(format: "%g", $0) } ?? (on ? "?" : "–")
                         VStack(spacing: 4) {
                             Image(systemName: slot.icon).font(.system(size: 28))
                             Text(slot.label).font(.callout.weight(.semibold)).minimumScaleFactor(0.7).lineLimit(1)
-                            Text(amount.map { $0 == 0.5 ? "½" : String(format: "%g", $0) } ?? "–").font(.title.bold())
+                            Text(shown).font(.title.bold())
                         }
-                        .foregroundStyle(amount == nil ? Color.secondary.opacity(0.5) : .white)
+                        .foregroundStyle(on ? Color.white : Color.secondary.opacity(0.5))
                         .frame(maxWidth: .infinity).padding(.vertical, 10)
-                        .background(amount == nil ? Theme.card : slot.fill, in: RoundedRectangle(cornerRadius: 16))
+                        .background(on ? slot.fill : Theme.card, in: RoundedRectangle(cornerRadius: 16))
                         .accessibilityElement(children: .combine)
                     }
                 }
@@ -200,7 +207,7 @@ struct ChangedLook: View {
             if let old = change.previousLook { PillTile(look: old, box: 54).opacity(0.6) }
             Image(systemName: "arrow.right").font(.title3.bold())
             PillTile(look: look, box: 54)
-            Text("Sieht neu aus – gleiches Medikament").font(.callout.weight(.bold)).foregroundStyle(Theme.warn)
+            Text("Sieht neu aus – bitte Apotheke fragen").font(.callout.weight(.bold)).foregroundStyle(Theme.warn)
         }
         .padding(12)
         .frame(maxWidth: .infinity)
@@ -217,7 +224,7 @@ struct OtherMakerView: View {
     let go: (Route) -> Void
 
     private var spoken: String {
-        "Achtung. Diese Tablette sieht anders aus als auf Ihrem Plan. Wahrscheinlich ist es \(mine.substance) von einem anderen Hersteller. Bitte in der Apotheke prüfen und nicht doppelt einnehmen."
+        "Achtung. Diese Tablette sieht anders aus als auf Ihrem Plan. Sie sieht aus wie \(mine.substance) von einem anderen Hersteller. Bitte mit Apotheke oder Praxis klären, bevor Sie etwas ändern."
     }
 
     var body: some View {
@@ -238,8 +245,8 @@ struct OtherMakerView: View {
                     }
                 }
 
-                InfoRow(icon: "questionmark.circle.fill", tint: Theme.warn, title: "Wahrscheinlich", value: "\(mine.title) – anderer Hersteller")
-                InfoRow(icon: "cross.case.fill", tint: Theme.bad, title: "Bitte", value: "In der Apotheke prüfen lassen. Nicht doppelt einnehmen.")
+                InfoRow(icon: "questionmark.circle.fill", tint: Theme.warn, title: "Sieht aus wie", value: "\(mine.title) – anderer Hersteller")
+                InfoRow(icon: "cross.case.fill", tint: Theme.bad, title: "Bitte", value: "Mit Apotheke oder Praxis klären, bevor Sie etwas ändern.")
 
                 Spacer(minLength: 0)
                 HStack(spacing: 14) {
@@ -259,6 +266,58 @@ struct OtherMakerView: View {
             Text(subtitle).font(.callout.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.6)
         }
         .frame(maxWidth: .infinity)
+    }
+}
+
+// MARK: - Looks like the same substance in another strength → its own title next to the plan's, never the plan entry (T-04)
+
+struct OtherStrengthView: View {
+    let mine: Med
+    let other: Med
+    let photo: UIImage?
+    let go: (Route) -> Void
+
+    private var spoken: String {
+        "Achtung. Diese Tablette sieht aus wie \(other.title). Auf Ihrem Plan steht \(mine.title). Bitte mit Apotheke oder Praxis klären, bevor Sie etwas ändern."
+    }
+
+    var body: some View {
+        FitOrScroll {
+            VStack(spacing: 14) {
+                BackBar(title: "", speak: { Speaker.shared.say(spoken) }) { go(.home) }
+                StatusBanner(icon: "exclamationmark.triangle.fill", text: "Andere Stärke als auf Ihrem Plan?", color: Theme.warnFill, mascot: "other-maker")
+
+                HStack(alignment: .top, spacing: 10) {
+                    VStack(spacing: 6) {
+                        Text("Ihr Foto").font(.headline).foregroundStyle(.secondary)
+                        if let photo {
+                            Image(uiImage: photo).resizable().scaledToFill().frame(width: 120, height: 120).clipShape(RoundedRectangle(cornerRadius: 16))
+                        } else {
+                            PillTile(look: other.look, box: 120)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    Image(systemName: "arrow.left.arrow.right").font(.title2.bold()).foregroundStyle(.secondary).padding(.top, 70)
+                    VStack(spacing: 6) {
+                        Text("Auf Ihrem Plan").font(.headline).foregroundStyle(.secondary)
+                        PillTile(look: mine.look, box: 120).background(Theme.card, in: RoundedRectangle(cornerRadius: 16))
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+
+                InfoRow(icon: "questionmark.circle.fill", tint: Theme.warn, title: "Sieht aus wie", value: other.title)
+                InfoRow(icon: "doc.text.fill", tint: Theme.accent, title: "Auf Ihrem Plan", value: mine.title)
+                InfoRow(icon: "cross.case.fill", tint: Theme.bad, title: "Bitte", value: "Mit Apotheke oder Praxis klären, bevor Sie etwas ändern.")
+
+                Spacer(minLength: 0)
+                HStack(spacing: 14) {
+                    BigButton(icon: "camera.fill", title: "Nochmal", height: 92, color: Color(.systemGray)) { go(.home) }
+                    BigButton(icon: "checkmark", title: "Verstanden", height: 92, color: Theme.warnFill) { go(.home) }
+                }
+            }
+            .padding(16)
+        }
+        .onAppear { Speaker.shared.say(spoken) }
     }
 }
 
@@ -361,7 +420,7 @@ struct NotOnPlanView: View {
                     }
                 }
                 .padding(12).background(Theme.card, in: RoundedRectangle(cornerRadius: Theme.corner))
-                InfoRow(icon: "hand.raised.slash.fill", tint: Theme.bad, title: "Bitte", value: "Nicht einnehmen, bevor Apotheke oder Arzt Bescheid wissen.")
+                InfoRow(icon: "hand.raised.slash.fill", tint: Theme.bad, title: "Bitte", value: "Mit Apotheke oder Praxis klären, bevor Sie etwas ändern.")
                 InfoRow(icon: "cross.case.fill", tint: Theme.accent, title: "Tipp", value: "Tablette mit Packung in die Apotheke mitnehmen.")
                 Spacer(minLength: 0)
                 HStack(spacing: 14) {

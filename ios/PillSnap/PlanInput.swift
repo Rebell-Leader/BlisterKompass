@@ -176,8 +176,9 @@ struct ManualPlanView: View {
         case "prn": m.schedule = Schedule(kind: "prn", slots: [], amounts: [:], days: [], note: nil, text: "bei Bedarf")
         case "weekly": m.schedule = Schedule(kind: "weekly", slots: [], amounts: [:], days: [], note: nil, text: "einmal pro Woche")
         default:
+            // The time of day is what the person chose; the amount wasn't asked, so it stays unknown (INV-05, T-13).
             let ordered = Slot.all.map(\.id).filter { slots.contains($0) }
-            m.schedule = Schedule(kind: "daily", slots: ordered, amounts: Dictionary(uniqueKeysWithValues: ordered.map { ($0, 1.0) }), days: [], note: nil, text: nil)
+            m.schedule = Schedule(kind: "daily", slots: ordered, amounts: [:], days: [], note: nil, text: nil)
         }
         if adding != nil {
             store.add(m)

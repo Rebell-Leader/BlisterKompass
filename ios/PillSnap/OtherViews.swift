@@ -113,6 +113,7 @@ struct DayPlanList: View {
                     }
                     .accessibilityLabel("Vorlesen")
                 }
+                Label(Day.notRecorded, systemImage: "info.circle").font(.footnote).foregroundStyle(.secondary)
                 ForEach(sections) { section($0) }
                 if !store.unknownPZNs.isEmpty {
                     Text("Ohne Bild").font(.headline).foregroundStyle(.secondary).padding(.top, 4)
@@ -137,8 +138,11 @@ struct DayPlanList: View {
     private func header(_ s: Day.Section) -> (title: String, icon: String, fill: Color) {
         switch s.kind {
         case .slot(let id):
+            // Past slots of today say so – never "Morgen" (T-06); after midnight the night slot is last night's.
             let slot = Slot.all.first { $0.id == id }!
-            let when = s.now ? "Jetzt" : s.tomorrow ? "Morgen" : "Später"
+            if s.lastNight { return ("\(slot.label) · seit gestern Abend", slot.icon, Color(.systemGray)) }
+            if s.past { return ("Heute vorbei · \(slot.label)", slot.icon, Color(.systemGray)) }
+            let when = s.now ? "Jetzt" : "Später"
             return ("\(when) · \(slot.label)", slot.icon, slot.fill)
         case .weeklyToday: return ("Heute · 1× pro Woche", "calendar.badge.exclamationmark", Theme.badFill)
         case .weeklyLater: return ("Diese Woche · 1× pro Woche", "calendar", Theme.badFill)
@@ -170,7 +174,11 @@ struct DayPlanList: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(e.med.substance).font(big ? .title.weight(.bold) : .title3.weight(.bold)).lineLimit(1).minimumScaleFactor(0.6)
                 if let st = e.med.strength { Text(st).font(big ? .title3 : .callout).foregroundStyle(.secondary) }
-                if let a = e.amount { Text(Self.count(a, e.med.look)).font(big ? .title3.weight(.semibold) : .callout.weight(.semibold)) }
+                if let a = e.amount {
+                    Text(Self.count(a, e.med.look)).font(big ? .title3.weight(.semibold) : .callout.weight(.semibold))
+                } else if e.med.schedule?.kind == "daily" {
+                    Text("Menge nicht angegeben").font(big ? .title3.weight(.semibold) : .callout.weight(.semibold)).foregroundStyle(Theme.warn)
+                }
                 if let meal = e.med.schedule?.meal {
                     // Read from the plan's Hinweise ("nüchtern", "nach dem Essen" …).
                     Label(meal.label, systemImage: meal.symbol)

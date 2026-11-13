@@ -3,6 +3,7 @@ import Foundation
 /// Ranks pills by look against the user's plan – entirely on the phone.
 /// Deterministic scorer (weights and similarity tables from the earlier Pill Lens
 /// prototype, see git history), reduced to what a photo can show.
+/// A look never proves identity (INV-15): every state is a candidate to check, and the score is a heuristic, not a probability.
 enum Matcher {
     struct Scored {
         let med: Med
@@ -24,6 +25,30 @@ enum Matcher {
     /// 1 = same, table value = similar, -1 = clearly different.
     private static func sim(_ table: [String: Double], _ a: String, _ b: String) -> Double {
         a == b ? 1 : table["\(a)|\(b)"] ?? table["\(b)|\(a)"] ?? -1
+    }
+
+    /// How well the photo's colours fit a look: 1 = same, table value = similar, -1 = clearly different.
+    static func colorFit(_ look: Look, _ cues: PillCues) -> Double {
+        guard !cues.colors.isEmpty else { return 1 }
+        let halves = [look.color, look.color2].compactMap { $0 }
+        let fits: [Double] = cues.colors.map { c in halves.map { sim(colorPairs, c, $0) }.max() ?? -1 }
+        return fits.reduce(0, +) / Double(cues.colors.count)
+    }
+
+    /// Same strength, as far as both state one ("7,5 mg" = "7.5mg"). Unknown is never the same.
+    static func sameStrength(_ a: Med, _ b: Med) -> Bool {
+        guard let x = a.strength, let y = b.strength else { return false }
+        return PackResult.norm(x) == PackResult.norm(y)
+    }
+
+    /// The choose screen shows at most this many candidates.
+    static let maxCandidates = 6
+
+    /// A plan pill that stays a candidate when the imprint wasn't read: its colour fits and its shape isn't clearly different.
+    private static func lookAlike(_ s: Scored, _ cues: PillCues) -> Bool {
+        guard s.score > 0, colorFit(s.med.look, cues) >= 0.7 else { return false }
+        guard let shape = cues.shape else { return true }
+        return sim(shapePairs, shape, s.med.look.shape) > 0
     }
 
     static func sizeClass(_ look: Look) -> String {
@@ -52,11 +77,7 @@ enum Matcher {
             let hit = !own.isEmpty && ocrVariants(read).contains(own)
             add(weight.imprint, hit ? 1 : -0.5)
         }
-        if !cues.colors.isEmpty {
-            let halves = [look.color, look.color2].compactMap { $0 }
-            let v = cues.colors.map { c in halves.map { sim(colorPairs, c, $0) }.max() ?? -1 }.reduce(0, +) / Double(cues.colors.count)
-            add(weight.color, v)
-        }
+        if !cues.colors.isEmpty { add(weight.color, colorFit(look, cues)) }
         if let s = cues.shape { add(weight.shape, sim(shapePairs, s, look.shape)) }
         if let size = cues.size {
             let order = ["small", "medium", "large"]
@@ -78,45 +99,62 @@ enum Matcher {
     /// catalog is used to warn when a pill fits something NOT on the plan.
     static func answer(myMeds: [Med], catalog: [Med], cues: PillCues) -> Answer {
         let own = rank(myMeds, cues)
+        // Without a read imprint and without a measured size, colour and shape can't tell look-alikes apart (four white pills on
+        // plan A). Every plan pill whose colour fits and whose shape isn't clearly different stays a candidate, so the person
+        // chooses instead of the app picking one (T-05).
+        let unreadNoSize = (cues.imprint ?? "").isEmpty && cues.size == nil
+        let closeIDs = Set(own.close.map(\.med.pzn))
+        let close: [Scored] = unreadNoSize ? own.results.filter { closeIDs.contains($0.med.pzn) || lookAlike($0, cues) } : own.close
         var state: String
         var candidates: [Med]
-        switch own.close.count {
+        switch close.count {
         case 0: state = "unknown"; candidates = []
         case 1:
             // Colour and shape alone never make it "sure" when the pill carries an imprint nobody read.
-            let unread = !(own.close[0].med.look.imprint ?? "").isEmpty && (cues.imprint ?? "").isEmpty
-            state = own.close[0].match >= 0.75 && !unread ? "sure" : "likely"; candidates = [own.close[0].med]
-        default: state = "choose"; candidates = own.close.map(\.med)
+            let unread = !(close[0].med.look.imprint ?? "").isEmpty && (cues.imprint ?? "").isEmpty
+            state = close[0].match >= 0.75 && !unread ? "sure" : "likely"; candidates = [close[0].med]
+        default: state = "choose"; candidates = close.map(\.med)
         }
         var notOnPlan: Med?
 
-        // Something not on the plan fits clearly better → warn. Near-ties: a different maker of a
-        // plan drug (pharmacy switch) first, German-market products before US reference data.
+        // Something not on the plan fits clearly better → warn. Near-ties: a different maker of a plan drug with the plan's
+        // strength (pharmacy switch) first, German-market products before US reference data.
         let onPlan = Set(myMeds.map(\.pzn))
         let other = rank(catalog.filter { m in !onPlan.contains(m.pzn) && !(m.pzns ?? []).contains(where: onPlan.contains) }, cues).results
         let ownTop = state == "unknown" ? 0 : own.results[0].match
         if let top = other.first {
             let ties = other.filter { $0.score > 0 && $0.match >= top.match - 0.05 }
-            let mine = { (s: Scored) in myMeds.contains { $0.substance == s.med.substance } }
-            let german = { (s: Scored) in s.med.market != "US" }
-            let best = ties.first { mine($0) && german($0) } ?? ties.first(where: mine) ?? ties.first(where: german) ?? top
+            let mine: (Scored) -> Bool = { s in myMeds.contains { $0.substance == s.med.substance } }
+            let mineSame: (Scored) -> Bool = { s in myMeds.contains { $0.substance == s.med.substance && sameStrength($0, s.med) } }
+            let german: (Scored) -> Bool = { s in s.med.market != "US" }
+            let picks: [(Scored) -> Bool] = [{ mineSame($0) && german($0) }, mineSame, { mine($0) && german($0) }, mine, german]
+            var best = top
+            for pick in picks {
+                if let s = ties.first(where: pick) { best = s; break }
+            }
             if best.score > 0, best.match >= 0.7, best.match > ownTop + 0.1 {
                 notOnPlan = best.med
-                if let m = myMeds.first(where: { $0.substance == best.med.substance }) ?? myMeds.first(where: { $0.atc == best.med.atc }) {
+                // Only the same substance with the same strength can be a switch of maker (T-04). A different or unknown
+                // strength, or a shared ATC code alone, stays unresolved: "other_strength" shows the look-alike's own title.
+                let same = myMeds.first { $0.substance == best.med.substance && sameStrength($0, best.med) }
+                let related = myMeds.first { $0.substance == best.med.substance } ?? myMeds.first { !$0.atc.isEmpty && $0.atc == best.med.atc }
+                if let m = same {
                     state = "other_maker"; candidates = [m]
+                } else if let m = related {
+                    state = "other_strength"; candidates = [m]
                 } else {
                     state = "not_on_plan"; candidates = []
                 }
             }
         }
-        return Answer(source: "phone", state: state, candidates: Array(candidates.prefix(4)), notOnPlan: notOnPlan,
-                      question: state == "choose" ? question(own.close.map(\.med), cues) : nil, problem: nil, vision: nil)
+        return Answer(source: "phone", state: state, candidates: Array(candidates.prefix(maxCandidates)), notOnPlan: notOnPlan,
+                      question: state == "choose" ? question(close.map(\.med), cues) : nil, problem: nil, vision: nil)
     }
 
     // MARK: - The one question that best splits the remaining candidates
 
     private static let questions: [(key: String, text: String, value: (Med) -> String)] = [
-        ("score", "Hat die Tablette einen Strich in der Mitte (zum Teilen)?", { $0.look.hasScore ? "ja" : "nein" }),
+        ("score", "Hat die Tablette eine Kerbe oder einen Strich?", { $0.look.hasScore ? "ja" : "nein" }),
         ("time", "Wann nehmen Sie sie – morgens, mittags, abends oder zur Nacht?", { m in
             guard let s = m.schedule else { return "—" }
             if s.kind == "prn" { return "bei Bedarf" }

@@ -94,13 +94,22 @@ enum LeafletParser {
         return found.sorted { $0.0 < $1.0 }.map(\.1)
     }
 
+    /// Finish only when the leaflet says it ("glänzend", "matt"). A film or gelatin coating alone doesn't say how the surface
+    /// looks, so it gives nil: unknown stays unknown (INV-05).
+    static func finish(in text: String) -> String? {
+        let low = text.lowercased()
+        if low.contains("glänzend") { return "glossy" }
+        if low.range(of: #"(?<!\p{L})matt(?:e|en|er|es)?(?!\p{L})"#, options: .regularExpression) != nil { return "matte" }
+        return nil
+    }
+
     static func parse(section6 s6: String, strength: String?, source: String, subject: [String] = []) -> (Look, String)? {
         if let (body, cap) = capsuleHalves(s6) {
             let c1 = palette[body]!, c2 = palette[cap]!
             let quote = matches(#"((?:Kapsel)?[Oo]berteil[^.]*\.?\s*(?:Kapsel)?[Uu]nterteil[^.]*)"#, in: s6).first
                 ?? matches(#"((?:Kapsel)?[Uu]nterteil[^.]*\.?\s*(?:Kapsel)?[Oo]berteil[^.]*)"#, in: s6).first ?? s6
             let look = Look(shape: "capsule", color: body, color2: cap == body ? nil : cap, lengthMm: nil, widthMm: nil, score: nil, imprint: nil,
-                            finish: "glossy", colorHex: c1.hex, color2Hex: cap == body ? nil : c2.hex,
+                            finish: finish(in: quote), colorHex: c1.hex, color2Hex: cap == body ? nil : c2.hex,
                             colorName: LocalName(de: c1.de, en: c1.en), color2Name: cap == body ? nil : LocalName(de: c2.de, en: c2.en),
                             source: source, leaflet: quote)
             return (look, quote)
@@ -137,10 +146,9 @@ enum LeafletParser {
         else if let d = matches(#"[Dd]urchmesser (?:von )?(?:ca\. )?(\d+(?:,\d+)?)\s*mm"#, in: first).first {
             length = Double(d.replacingOccurrences(of: ",", with: ".")); width = length
         }
-        let coating = capsule ? "gelatin" : (low.contains("magensaftresistent") ? "enteric" : (low.contains("film") ? "film" : "uncoated"))
         let c1 = palette[color]!, c2 = color2.flatMap { palette[$0] }
         let look = Look(shape: shape, color: color, color2: color2, lengthMm: length, widthMm: width, score: score, imprint: imprint,
-                        finish: coating == "uncoated" ? "matte" : "glossy", colorHex: c1.hex, color2Hex: c2?.hex,
+                        finish: finish(in: first), colorHex: c1.hex, color2Hex: c2?.hex,
                         colorName: LocalName(de: c1.de, en: c1.en), color2Name: c2.map { LocalName(de: $0.de, en: $0.en) },
                         source: source, leaflet: trimmed(first, subject: subject) + ".")
         return (look, trimmed(first, subject: subject) + ".")

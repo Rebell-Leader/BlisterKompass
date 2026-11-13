@@ -159,8 +159,8 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     }
 }
 
-/// The day plan read aloud in plain sentences (fixed templates over plan data, INV-12):
-/// "Jetzt, heute Abend. Zwei Medikamente." · "Ramipril, eine Tablette, weiß und rund." · "Morgen früh. …"
+/// The day plan read aloud in plain sentences (fixed templates over plan data, INV-12), ending with the line that the app
+/// records no intake: "Jetzt, heute Abend. Zwei Medikamente." · "Ramipril, eine Tablette, weiß und rund." · "Heute früh, schon vorbei. …"
 extension Day {
     static func spokenLines(_ sections: [Section]) -> [String] {
         guard !sections.isEmpty else { return ["Auf Ihrem Plan steht noch nichts."] }
@@ -168,11 +168,13 @@ extension Day {
         for s in sections {
             switch s.kind {
             case .slot(let id):
-                let when = spokenWhen(id, tomorrow: s.tomorrow)
+                let when = spokenWhen(id, past: s.past, lastNight: s.lastNight)
                 lines.append((s.now ? "Jetzt, \(when.prefix(1).lowercased() + when.dropFirst())" : when) + ". " + medCount(s.entries.count) + ".")
-                lines += s.entries.map { e in
-                    [e.med.substance, e.amount.map { Med.spokenCount($0, e.med.look) }, e.med.look.spokenLook]
-                        .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ") + "."
+                lines += s.entries.map { (e: Entry) -> String in
+                    // An amount nobody gave stays unknown: said as such, never "eine" (INV-05, T-13).
+                    let count: String? = e.amount.map { Med.spokenCount($0, e.med.look) } ?? (e.med.schedule?.kind == "daily" ? "Menge nicht angegeben" : nil)
+                    let parts: [String?] = [e.med.substance, count, e.med.look.spokenLook]
+                    return parts.compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ") + "."
                 }
             case .weeklyToday:
                 lines.append("Heute außerdem, nur einmal pro Woche.")
@@ -188,18 +190,21 @@ extension Day {
                 lines += s.entries.map { "\($0.med.substance), \($0.med.look.spokenLook)." }
             }
         }
+        lines.append(notRecorded)
         return lines
     }
 
-    /// "Heute Abend", "Morgen früh", "Heute zur Nacht".
-    static func spokenWhen(_ slot: String, tomorrow: Bool) -> String {
-        let day = tomorrow ? "Morgen" : "Heute"
+    /// "Heute Abend", "Heute früh, schon vorbei", "Zur Nacht, seit gestern Abend" – never "Morgen" for a slot of today (T-06).
+    static func spokenWhen(_ slot: String, past: Bool = false, lastNight: Bool = false) -> String {
+        if lastNight { return "Zur Nacht, seit gestern Abend" }
+        let when: String
         switch slot {
-        case "morning": return "\(day) früh"
-        case "noon": return "\(day) Mittag"
-        case "evening": return "\(day) Abend"
-        default: return "\(day) zur Nacht"
+        case "morning": when = "Heute früh"
+        case "noon": when = "Heute Mittag"
+        case "evening": when = "Heute Abend"
+        default: when = "Heute zur Nacht"
         }
+        return past ? "\(when), schon vorbei" : when
     }
 
     static func medCount(_ n: Int) -> String {
@@ -236,8 +241,12 @@ extension Med {
         case "prn": return "nur bei Bedarf"
         case "weekly": return "nur einmal pro Woche" + (s.days.first.map { ", am \(Med.dayName($0))" } ?? "")
         default:
+            // An amount the plan (or the person) didn't give stays unknown: never "eine" by default (INV-05, T-13).
             return Slot.all.filter { s.slots.contains($0.id) }
-                .map { "\($0.label.lowercased()) \(Med.amountText(s.amounts[$0.id] ?? 1))" }
+                .map { (slot: Slot) -> String in
+                    let amount: String = s.amounts[slot.id].map { Med.amountText($0) } ?? "(Menge nicht angegeben)"
+                    return "\(slot.label.lowercased()) \(amount)"
+                }
                 .joined(separator: ", ")
         }
     }
@@ -247,7 +256,6 @@ extension Med {
         if let i = indication { parts.append("Wofür: \(i.de).") }
         if !whenText.isEmpty { parts.append("Einnehmen: \(whenText).") }
         if let note = schedule?.note { parts.append("Hinweis: \(note).") }
-        if change != nil { parts.append("Die Tablette sieht neu aus, es ist aber dasselbe Medikament.") }
         return parts.joined(separator: " ")
     }
 
