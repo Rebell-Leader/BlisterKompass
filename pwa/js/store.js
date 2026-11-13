@@ -45,10 +45,11 @@ export class Store {
 
   get hasPlan() { return this.myMeds.length > 0 || this.unknownPZNs.length > 0; }
 
-  /** Medication lines of a plan code → meds with known looks (null if it isn't a plan). */
+  /** Medication lines of a plan code → meds with known looks; null if it isn't a plan; { invalid } if it breaks BMP 2.8. */
   readPlan(xml) {
     const code = PlanReader.read(xml);
-    return code ? this.resolvePlan(code) : null;
+    if (!code) return null;
+    return code.invalid ? { invalid: code.invalid } : this.resolvePlan(code);
   }
 
   /** A read (or merged multi-page) plan code → { meds, unknown, unknownPZNs, notes, id, page, pages, missing }. */
@@ -57,8 +58,13 @@ export class Store {
   }
 
   /** A new plan replaces the old list. Its lines without picture data are in plan.meds too (look null, with their schedule);
-   *  unknownPZNs is kept for packs added by name only ("Ohne Bild"). */
-  adopt(plan) { this.myMeds = plan.meds; this.unknownPZNs = []; this.save(); }
+   *  unknownPZNs is kept for packs added by name only ("Ohne Bild"). A plan with missing pages is refused (false): the
+   *  saved list has no place to say it is incomplete, so it would look complete in the day view, read-aloud and print. */
+  adopt(plan) {
+    if (plan.missing?.length || plan.incomplete?.length) return false;
+    this.myMeds = plan.meds; this.unknownPZNs = []; this.save();
+    return true;
+  }
 
   /** A scanned pack (or typed entry) with its schedule, added to the plan on the phone. */
   add(med) { this.myMeds = adding(this.myMeds, med); this.unknownPZNs = this.unknownPZNs.filter((p) => p !== med.pzn); this.save(); }
@@ -73,13 +79,7 @@ export class Store {
   /** A scanned pack compared with the plan (exact, by PZN). */
   check(code) { return Pack.evaluate(code, { myMeds: this.myMeds, unknownPZNs: this.unknownPZNs, catalog: this.products, names: this.names }); }
 
-  /** The pharmacy switched maker: keep the plan entry (schedule) but take the new product and look. */
-  takeOver(prod, old) {
-    const i = this.myMeds.findIndex((m) => m.pzn === old.pzn);
-    if (i < 0) return;
-    this.myMeds[i] = { ...prod, schedule: old.schedule };
-    this.save();
-  }
+  // No "take over the new pack" here: a person's tap must not replace the plan's PZN and look (INV-15, T-15).
 
   identify(cues) { return Matcher.answer(this.myMeds, this.products, cues); }
 

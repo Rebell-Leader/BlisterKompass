@@ -41,6 +41,7 @@ export const adding = (meds, med) => [...meds.filter((m) => m.pzn !== med.pzn), 
 export function sourceText(look) {
   const s = look?.source;
   if (s == null) return null;
+  if (s.startsWith("leaflet:pdf:")) return "Aussehen laut der Packungsbeilage, die Sie gewählt haben";
   if (s.startsWith("leaflet:")) return "Aussehen laut Packungsbeilage";
   if (s.startsWith("ema")) return "Aussehen laut EMA-Produktinformation";
   if (s.startsWith("dailymed")) return "Aussehen: US-Referenzdaten";
@@ -64,16 +65,19 @@ export function slotAt(date) {
 export const weekdayAt = (date) => ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][date.getDay()];
 
 /**
- * Now first, then the rest of the day in order (slots already past come back as tomorrow), then the weekly meds that are
- * not due in a slot still ahead today (with their next date), meds with free-text dosing, as-needed last. Empty sections
- * are left out. A weekly med sits in its own slot on its weekday – only while that slot is still today – and never in a
- * "tomorrow" slot, because tomorrow is not its day.
- * Section: { kind: "slot"|"weeklyToday"|"weeklyLater"|"text"|"prn", slot?, entries: [{med, amount, dose?, weekly?, next?}], now, tomorrow }
+ * Now first, then the rest of the day in order, then today's slots that are already past (`past`: never "tomorrow", so
+ * nobody skips a morning dose at 11:05), then the weekly meds that are not due in a slot still ahead today (with their next
+ * date), meds with free-text dosing, as-needed last. Empty sections are left out. The day runs 04:00–04:00: between
+ * midnight and 04:00 the night slot is last night's bedtime dose (`lastNight`), never "now" again (T-06).
+ * A weekly med sits in its own slot on its weekday – only while that slot is still ahead today.
+ * Section: { kind: "slot"|"weeklyToday"|"weeklyLater"|"text"|"prn", slot?, entries: [{med, amount, dose?, weekly?, next?}],
+ *            now, past, lastNight, tomorrow (always false; kept for older callers) }
  */
 export function sections(meds, date) {
   const current = slotAt(date);
   const start = SLOT_ORDER.indexOf(current);
   const afterMidnight = current === "night" && date.getHours() < 4;
+  const flags = { now: false, past: false, lastNight: false, tomorrow: false };
   const out = [];
   const today = weekdayAt(date);
   const isWeekly = (m) => m.schedule?.kind === "weekly";
@@ -81,30 +85,31 @@ export function sections(meds, date) {
   const placed = new Set();
   // Older saved plans have weekly meds without a time of day: listed for today as before, but never as "now".
   const legacy = meds.filter((m) => dueToday(m) && !(m.schedule.slots ?? []).length);
-  if (legacy.length) out.push({ kind: "weeklyToday", entries: legacy.map((med) => ({ med, amount: null })), now: false, tomorrow: false });
+  if (legacy.length) out.push({ kind: "weeklyToday", entries: legacy.map((med) => ({ med, amount: null })), ...flags });
   legacy.forEach((m) => placed.add(m));
   for (let k = 0; k < SLOT_ORDER.length; k++) {
     const slot = SLOT_ORDER[(start + k) % SLOT_ORDER.length];
-    const tomorrow = start + k >= SLOT_ORDER.length && !afterMidnight;
+    const past = start + k >= SLOT_ORDER.length && !afterMidnight;
+    const lastNight = k === 0 && afterMidnight;
     const entries = [];
     for (const m of meds) {
       const s = m.schedule;
       if (!s || !(s.slots.includes(slot) || (s.amounts?.[slot] ?? 0) > 0)) continue;
-      if (s.kind === "daily") entries.push({ med: m, amount: s.amounts[slot] ?? null, dose: s.doses?.[slot] ?? null });
-      else if (dueToday(m) && !tomorrow) { entries.push({ med: m, amount: s.amounts[slot] ?? null, dose: s.doses?.[slot] ?? null, weekly: true }); placed.add(m); }
+      if (s.kind === "daily") entries.push({ med: m, amount: s.amounts?.[slot] ?? null, dose: s.doses?.[slot] ?? null });
+      else if (dueToday(m) && !past && !lastNight) { entries.push({ med: m, amount: s.amounts?.[slot] ?? null, dose: s.doses?.[slot] ?? null, weekly: true }); placed.add(m); }
     }
     if (!entries.length) continue;
-    out.push({ kind: "slot", slot, entries, now: k === 0, tomorrow });
+    out.push({ kind: "slot", slot, entries, ...flags, now: k === 0 && !afterMidnight, past, lastNight });
   }
   // The current slot leads.
   const i = out.findIndex((s) => s.kind === "slot" && s.slot === current);
   if (i > 0) out.unshift(...out.splice(i, 1));
   const later = meds.filter((m) => isWeekly(m) && !placed.has(m));
-  if (later.length) out.push({ kind: "weeklyLater", entries: later.map((med) => ({ med, amount: null, next: nextDay(med.schedule.days?.[0], date) })), now: false, tomorrow: false });
+  if (later.length) out.push({ kind: "weeklyLater", entries: later.map((med) => ({ med, amount: null, next: nextDay(med.schedule.days?.[0], date) })), ...flags });
   const text = meds.filter((m) => m.schedule?.kind === "text");
-  if (text.length) out.push({ kind: "text", entries: text.map((med) => ({ med, amount: null })), now: false, tomorrow: false });
+  if (text.length) out.push({ kind: "text", entries: text.map((med) => ({ med, amount: null })), ...flags });
   const prn = meds.filter((m) => m.schedule?.kind === "prn");
-  if (prn.length) out.push({ kind: "prn", entries: prn.map((med) => ({ med, amount: null })), now: false, tomorrow: false });
+  if (prn.length) out.push({ kind: "prn", entries: prn.map((med) => ({ med, amount: null })), ...flags });
   return out;
 }
 
@@ -153,7 +158,8 @@ export function countText(a, look, unit = null, dose = null) {
 export function whenText(med) {
   const s = med.schedule;
   if (!s) return "";
-  const slots = () => SLOTS.filter((x) => s.slots.includes(x.id)).map((x) => `${x.label.toLowerCase()} ${amountText(s.amounts[x.id] ?? 1)}`).join(", ");
+  // An amount the plan (or the person) didn't give stays unknown: never "eine" by default (INV-05, T-13).
+  const slots = () => SLOTS.filter((x) => s.slots.includes(x.id)).map((x) => `${x.label.toLowerCase()} ${s.amounts?.[x.id] != null ? amountText(s.amounts[x.id]) : "(Menge nicht angegeben)"}`).join(", ");
   if (s.kind === "prn") return "nur bei Bedarf" + (s.text && s.text.toLowerCase() !== "bei bedarf" ? `, ${s.text}` : "");
   if (s.kind === "text") return s.text ? `laut Plan: ${s.text}` : "Dosierung steht nicht auf dem Plan";
   if (s.kind === "weekly") return "nur einmal pro Woche" + (s.days[0] ? `, am ${dayName(s.days[0])}` : "") + (s.slots.length ? `, ${slots()}` : "") + (s.text ? ` (${s.text})` : "");
@@ -169,7 +175,6 @@ export function spoken(med) {
   if (w) parts.push(`Einnehmen: ${w}.`);
   if (med.schedule?.note) parts.push(`Hinweis: ${med.schedule.note}.`);
   if (med.extra) parts.push(`${med.extra}.`);
-  if (med.change) parts.push("Die Tablette sieht neu aus, es ist aber dasselbe Medikament.");
   return parts.join(" ");
 }
 
@@ -191,18 +196,23 @@ export function spokenLook(look) {
   return words.length > 1 ? `${words.slice(0, -1).join(", ")} und ${words.at(-1)}` : (words[0] ?? "");
 }
 
-/** "Heute Abend", "Morgen früh", "Heute zur Nacht". */
-export function spokenWhen(slot, tomorrow) {
-  const day = tomorrow ? "Morgen" : "Heute";
-  return { morning: `${day} früh`, noon: `${day} Mittag`, evening: `${day} Abend` }[slot] ?? `${day} zur Nacht`;
+/** "Heute Abend", "Heute früh, schon vorbei", "Zur Nacht, seit gestern Abend" – never "Morgen" for a slot of today (T-06). */
+export function spokenWhen(slot, { past = false, lastNight = false } = {}) {
+  if (lastNight) return "Zur Nacht, seit gestern Abend";
+  const when = { morning: "Heute früh", noon: "Heute Mittag", evening: "Heute Abend" }[slot] ?? "Heute zur Nacht";
+  return past ? `${when}, schon vorbei` : when;
 }
+
+/** Shown and spoken with the day list: the app never knows what was taken. */
+export const NOT_RECORDED = "Die App merkt sich nicht, was Sie schon genommen haben.";
 
 const COUNT_WORDS = ["", "Ein", "Zwei", "Drei", "Vier", "Fünf", "Sechs", "Sieben", "Acht", "Neun", "Zehn", "Elf", "Zwölf"];
 export const medCount = (n) => (n === 1 ? "Ein Medikament" : `${COUNT_WORDS[n] ?? n} Medikamente`);
 
 /**
- * The day plan read aloud in plain sentences (fixed templates over plan data, INV-12), one line per pill:
- * "Jetzt, heute Abend. Zwei Medikamente." · "Ramipril, eine Tablette, weiß und rund." · "Morgen früh. …"
+ * The day plan read aloud in plain sentences (fixed templates over plan data, INV-12), one line per pill, ending with the
+ * line that the app records no intake: "Jetzt, heute Abend. Zwei Medikamente." · "Ramipril, eine Tablette, weiß und rund." ·
+ * "Heute früh, schon vorbei. …"
  * Same text as Day.spokenLines on iPhone.
  */
 export function spokenLines(secs) {
@@ -212,9 +222,9 @@ export function spokenLines(secs) {
   const lines = [];
   for (const s of secs) {
     if (s.kind === "slot") {
-      const when = spokenWhen(s.slot, s.tomorrow);
+      const when = spokenWhen(s.slot, s);
       lines.push(`${s.now ? `Jetzt, ${when[0].toLowerCase()}${when.slice(1)}` : when}. ${medCount(s.entries.length)}.`);
-      for (const e of s.entries) lines.push(join([name(e.med), e.amount != null ? spokenCount(e.amount, e.med.look, e.med.schedule?.unit) : null, spokenLook(e.med.look), e.weekly ? "nur einmal pro Woche" : null]));
+      for (const e of s.entries) lines.push(join([name(e.med), e.amount != null ? spokenCount(e.amount, e.med.look, e.med.schedule?.unit) : e.med.schedule?.kind === "daily" ? "Menge nicht angegeben" : null, spokenLook(e.med.look), e.weekly ? "nur einmal pro Woche" : null]));
     } else if (s.kind === "weeklyToday") {
       lines.push("Heute außerdem, nur einmal pro Woche.");
       for (const e of s.entries) lines.push(join([name(e.med), spokenLook(e.med.look)]));
@@ -236,6 +246,7 @@ export function spokenLines(secs) {
       }
     }
   }
+  lines.push(NOT_RECORDED);
   return lines;
 }
 

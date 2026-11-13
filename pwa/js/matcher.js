@@ -2,10 +2,12 @@
 // Deterministic scorer, reduced to what a photo can show.
 //
 // PillCues { found, colors: [code], shape?, imprint?, size?, score?: bool, finish?, seenHex: [hex] }
-// Answer   { source, state: sure|likely|choose|other_maker|not_on_plan|unknown|retake|need_plan|not_a_plan,
+// Answer   { source, state: sure|likely|choose|other_maker|other_strength|not_on_plan|unknown|retake|need_plan|not_a_plan,
 //            candidates, notOnPlan, question, problem }
+// A look never proves identity (INV-15): every state is a candidate to check, and the score is a heuristic, not a probability.
 
 import { SLOTS, colorText, hasScore, shapeName } from "./model.js";
+import { norm } from "./pack-code.js";
 
 const WEIGHT = { imprint: 5.0, color: 3.0, shape: 2.5, size: 1.5, score: 1.5, finish: 0.5 };
 
@@ -48,11 +50,7 @@ export function score(med, cues) {
     const hit = own !== "" && ocrVariants(cues.imprint).has(own);
     add(WEIGHT.imprint, hit ? 1 : -0.5);
   }
-  if (cues.colors?.length) {
-    const halves = [look.color, look.color2].filter((x) => x != null);
-    const v = cues.colors.map((c) => Math.max(...halves.map((h) => sim(COLOR_PAIRS, c, h)), -1)).reduce((a, b) => a + b, 0) / cues.colors.length;
-    add(WEIGHT.color, v);
-  }
+  if (cues.colors?.length) add(WEIGHT.color, colorFit(look, cues));
   if (cues.shape != null) add(WEIGHT.shape, sim(SHAPE_PAIRS, cues.shape, look.shape));
   if (cues.size != null) {
     const order = ["small", "medium", "large"];
@@ -64,6 +62,19 @@ export function score(med, cues) {
   if (cues.finish != null) add(WEIGHT.finish, look.finish === cues.finish ? 1 : -0.5);
   return { med, score: got, match: possible > 0 ? Math.max(0, got) / possible : 0 };
 }
+
+/** How well the photo's colours fit a look: 1 = same, table value = similar, -1 = clearly different. */
+function colorFit(look, cues) {
+  if (!cues.colors?.length) return 1;
+  const halves = [look.color, look.color2].filter((x) => x != null);
+  return cues.colors.map((c) => Math.max(...halves.map((h) => sim(COLOR_PAIRS, c, h)), -1)).reduce((a, b) => a + b, 0) / cues.colors.length;
+}
+
+/** Same strength, as far as both state one ("7,5 mg" = "7.5mg"). Unknown is never the same. */
+export const sameStrength = (a, b) => a?.strength != null && b?.strength != null && norm(a.strength) === norm(b.strength);
+
+/** Candidates count: the choose screen shows at most this many. */
+export const MAX_CANDIDATES = 6;
 
 export function rank(meds, cues) {
   const results = meds.map((m) => score(m, cues)).sort((a, b) => (a.score !== b.score ? b.score - a.score : b.match - a.match));
@@ -80,18 +91,25 @@ export const local = (state, candidates = [], problem = null) =>
 export function answer(myMeds, catalog, cues) {
   // Only plan entries with a known look can match a photo; the others stay "Aussehen unbekannt" (INV-05).
   const own = rank(myMeds.filter((m) => m.look), cues);
+  // Without a read imprint and without a measured size, colour and shape can't tell look-alikes apart (four white pills on
+  // plan A). Every plan pill whose colour fits and whose shape isn't clearly different stays a candidate, so the person
+  // chooses instead of the app picking one (T-05).
+  const unreadNoSize = (cues.imprint ?? "") === "" && cues.size == null;
+  const close = unreadNoSize
+    ? own.results.filter((s) => own.close.includes(s) || (s.score > 0 && colorFit(s.med.look, cues) >= 0.7 && (cues.shape == null || sim(SHAPE_PAIRS, cues.shape, s.med.look.shape) > 0)))
+    : own.close;
   let state, candidates;
-  if (own.close.length === 0) { state = "unknown"; candidates = []; }
-  else if (own.close.length === 1) {
+  if (close.length === 0) { state = "unknown"; candidates = []; }
+  else if (close.length === 1) {
     // Colour and shape alone never make it "sure" when the pill carries an imprint nobody read.
-    const unread = (own.close[0].med.look.imprint ?? "") !== "" && (cues.imprint ?? "") === "";
-    state = own.close[0].match >= 0.75 && !unread ? "sure" : "likely";
-    candidates = [own.close[0].med];
-  } else { state = "choose"; candidates = own.close.map((s) => s.med); }
+    const unread = (close[0].med.look.imprint ?? "") !== "" && (cues.imprint ?? "") === "";
+    state = close[0].match >= 0.75 && !unread ? "sure" : "likely";
+    candidates = [close[0].med];
+  } else { state = "choose"; candidates = close.map((s) => s.med); }
   let notOnPlan = null;
 
-  // Something not on the plan fits clearly better → warn. Near-ties: a different maker of a plan drug
-  // (pharmacy switch) first, German-market products before US reference data.
+  // Something not on the plan fits clearly better → warn. Near-ties: a different maker of a plan drug with the plan's
+  // strength (pharmacy switch) first, German-market products before US reference data.
   const onPlan = new Set(myMeds.map((m) => m.pzn));
   const other = rank(catalog.filter((m) => !onPlan.has(m.pzn) && !(m.pzns ?? []).some((p) => onPlan.has(p))), cues).results;
   const ownTop = state === "unknown" ? 0 : own.results[0].match;
@@ -99,17 +117,24 @@ export function answer(myMeds, catalog, cues) {
   if (top) {
     const ties = other.filter((s) => s.score > 0 && s.match >= top.match - 0.05);
     const mine = (s) => myMeds.some((m) => m.substance === s.med.substance);
+    const mineSame = (s) => myMeds.some((m) => m.substance === s.med.substance && sameStrength(m, s.med));
     const german = (s) => s.med.market !== "US";
-    const best = ties.find((s) => mine(s) && german(s)) ?? ties.find(mine) ?? ties.find(german) ?? top;
+    const best = ties.find((s) => mineSame(s) && german(s)) ?? ties.find(mineSame)
+      ?? ties.find((s) => mine(s) && german(s)) ?? ties.find(mine) ?? ties.find(german) ?? top;
     if (best.score > 0 && best.match >= 0.7 && best.match > ownTop + 0.1) {
       notOnPlan = best.med;
-      const m = myMeds.find((x) => x.substance === best.med.substance) ?? myMeds.find((x) => x.atc === best.med.atc);
-      if (m) { state = "other_maker"; candidates = [m]; } else { state = "not_on_plan"; candidates = []; }
+      // Only the same substance with the same strength can be a switch of maker (T-04). A different or unknown strength,
+      // or a shared ATC code alone, stays unresolved: "other_strength" shows the look-alike's own title, never the plan's.
+      const same = myMeds.find((x) => x.substance === best.med.substance && sameStrength(x, best.med));
+      const related = myMeds.find((x) => x.substance === best.med.substance) ?? myMeds.find((x) => x.atc && x.atc === best.med.atc);
+      if (same) { state = "other_maker"; candidates = [same]; }
+      else if (related) { state = "other_strength"; candidates = [related]; }
+      else { state = "not_on_plan"; candidates = []; }
     }
   }
   return {
-    source: "phone", state, candidates: candidates.slice(0, 4), notOnPlan,
-    question: state === "choose" ? question(own.close.map((s) => s.med), cues) : null, problem: null,
+    source: "phone", state, candidates: candidates.slice(0, MAX_CANDIDATES), notOnPlan,
+    question: state === "choose" ? question(close.map((s) => s.med), cues) : null, problem: null,
   };
 }
 
@@ -117,7 +142,7 @@ export function answer(myMeds, catalog, cues) {
 
 const SLOT_WORDS = { morning: "morgens", noon: "mittags", evening: "abends", night: "zur Nacht" };
 const QUESTIONS = [
-  { key: "score", text: "Hat die Tablette einen Strich in der Mitte (zum Teilen)?", value: (m) => (hasScore(m.look) ? "ja" : "nein") },
+  { key: "score", text: "Hat die Tablette eine Kerbe oder einen Strich?", value: (m) => (hasScore(m.look) ? "ja" : "nein") },
   {
     key: "time", text: "Wann nehmen Sie sie – morgens, mittags, abends oder zur Nacht?", value: (m) => {
       const s = m.schedule;
