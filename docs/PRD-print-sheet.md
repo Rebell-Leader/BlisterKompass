@@ -54,6 +54,7 @@ small type (8.5 pt), its own 2D code, or licensed product images.
 |---|---|---|
 | PS-01 | Printed from the app ("Plan drucken"), A4 landscape, laid out in mm, through the system print dialog (PDF or printer). | Now (web); iOS T-30 |
 | PS-02 | Title "Meine Medikamente mit Bildern" (20 pt), "Seite x von n". The word "Medikationsplan" appears only in "Gehört zu Ihrem Medikationsplan". | Now (web); iOS T-30 |
+| PS-02a | The waving mascot (`pwa/icons/mascot-wave.png`, about 17 mm) left of the title; decorative, no text in it. Not on the BMP page, which keeps the KBV layout. | Now (web, demo prints); iOS T-30 |
 | PS-03 | "für:" line left blank to fill in by hand; the app never stores a name or birth date. | Now |
 | PS-04 | "Gehört zu Ihrem Medikationsplan. Maßgeblich ist der Plan Ihrer Praxis." plus the date the list was printed. The plan's own date needs D-10. | Now; plan date D-10 |
 | PS-05 | "Fragen? Sagen Sie am Telefon die Nummer aus der ersten Spalte." Optional contact lines (practice, care service, pharmacy). | Text now; contacts future |

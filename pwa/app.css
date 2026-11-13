@@ -328,6 +328,8 @@ dialog.sheet::backdrop { background: rgba(0, 0, 0, .4); }
 }
 /* Companion sheet after G_plan_review §5: ≥ 12 pt body, 14–18 pt names and doses, nothing below 9 pt, no grey text. */
 .ps-head { display: grid; grid-template-columns: 96mm 1fr 46mm; gap: 5mm; align-items: start; padding-bottom: 2.5mm; border-bottom: .5mm solid #111; }
+.ps-brand { display: flex; gap: 3mm; align-items: flex-start; }
+.ps-mascot { width: 17mm; height: 17mm; flex: none; }
 .ps-title { font-size: 20pt; font-weight: 700; line-height: 1.05; }
 .ps-page { font-size: 12pt; margin-top: 1.5mm; }
 .ps-for { display: flex; align-items: flex-end; gap: 2mm; font-size: 12pt; margin-bottom: 1.5mm; }

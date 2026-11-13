@@ -111,7 +111,8 @@ export function pages(data, printedOn = new Date()) {
   const chunks = pageRows(data);
   return chunks.map((chunk, i) => h("div.ps-sheet", { lang: "de" },
     h("header.ps-head", null,
-      h("div", null, h("div.ps-title", null, "Meine Medikamente mit Bildern"), h("div.ps-page", null, `Seite ${i + 1} von ${chunks.length}`)),
+      h("div.ps-brand", null, h("img.ps-mascot", { src: "icons/mascot-wave.png", alt: "" }),
+        h("div", null, h("div.ps-title", null, "Meine Medikamente mit Bildern"), h("div.ps-page", null, `Seite ${i + 1} von ${chunks.length}`))),
       h("div", null,
         h("div.ps-for", null, h("span", null, "für:"), h("span.ps-write")),
         h("div.ps-belongs", null, "Gehört zu Ihrem Medikationsplan. Maßgeblich ist der Plan Ihrer Praxis."),
