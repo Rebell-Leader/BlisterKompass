@@ -56,7 +56,7 @@ IDs: SA-xx. "Now" = built (both clients unless noted); T-xx = open item in [TODO
 | SA-11 | **Own list**: put a scanned pack on the phone's list with its times. Shown as the person's own entry, never as a prescription (INV-19). | Now; T-08, T-11, T-12, T-13, T-14 |
 | SA-12 | **Plan drucken**: the sheet "Meine Medikamente mit Bildern". | Now (web); iOS T-30 |
 | SA-13 | **Offline**: everything on the phone; the web app installs and works in flight mode; no request after the first load. | Now; T-09 (update prompt) |
-| SA-14 | **Leaflet look for an unknown PZN**: iPhone app only, online, after the user allows it; only the PZN leaves the phone. | Now (iOS); web none (T-21) |
+| SA-14 | **Leaflet look for an unknown PZN**: iPhone app downloads the leaflet after the user allows it (only the PZN leaves the phone); the web app links to the leaflet, the person saves the PDF and picks it, and it is read on the phone (pdf.js). A leaflet of another substance is refused; an unclear section 6 leaves the look unknown. | Now (both) |
 | SA-15 | **Same product on both clients**: same features, texts and data, paired checks. | Rule ([AGENTS.md](../AGENTS.md) §3); T-29…T-31, T-42…T-44 |
 
 ## 6. Acceptance criteria
@@ -76,7 +76,7 @@ the examples header (T-27), focus handling (T-39).
 
 ## 8. Privacy and compliance
 
-- No person data: the plan reader skips `P`, `A`, `O`; only `myMeds` and `unknownPZNs` are stored; photos stay in memory.
+- No person data: the plan reader skips `P`, `A`, `O`; only `myMeds`, `unknownPZNs` and `learnedLeaflets` (products) are stored; photos and picked PDFs stay in memory.
 - No network in the web app after the first load (strict CSP, tested); the iPhone app's only request is the optional leaflet lookup.
 - Identity only from plan entry + PZN or a professional (INV-15); unknown stays unknown (INV-05); fixed-template text (INV-12); no
   tablet-handling instructions (INV-16); prepared doses are the professional's (INV-17); the own list is not a regimen change (INV-19).

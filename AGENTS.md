@@ -31,7 +31,9 @@ recognition as proof of identity; an ePA/TI integration; a server backend or acc
 8. **No BMP code built from the phone's list** (D-09). The paper BMP from the practice stays the valid plan; our sheet is titled
    "Meine Medikamente mit Bildern" and says it belongs to that plan.
 9. **Privacy.** The plan reader never reads `P`, `A` or `O` (patient, issuer, parameters). The web app makes no network request after
-   the first load (strict CSP). Only `myMeds` and `unknownPZNs` are stored on the phone. Photos are never stored or uploaded.
+   the first load (strict CSP); the only other hosts in its code are the two leaflet links the person opens themselves
+   (`pwa/js/leaflet-parser.js`). Only `myMeds`, `unknownPZNs` and `learnedLeaflets` (products whose look was read from a leaflet
+   PDF the person picked, no person data) are stored on the phone. Photos are never stored or uploaded.
 10. **Data licences.** This repo is public. Never commit the full BfArM PZN list or verbatim package-leaflet quotes; the CI data guard
     fails on both. Details in [docs/DATA.md](docs/DATA.md).
 11. **Never weaken a test to make it pass.** If a test encodes behaviour that is now wrong, change it on purpose, say why in the

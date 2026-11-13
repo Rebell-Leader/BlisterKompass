@@ -7,8 +7,8 @@ struct PillView: View {
     /// No sheen and no shadow: for the printed plan (PDF has no soft alpha gradients, they print as black).
     var flat = false
 
-    private var L: CGFloat { CGFloat(look.lengthMm ?? 8) * pointsPerMm }
-    private var W: CGFloat { CGFloat(look.widthMm ?? 8) * pointsPerMm }
+    private var L: CGFloat { CGFloat(look.drawSize.0) * pointsPerMm }
+    private var W: CGFloat { CGFloat(look.drawSize.1) * pointsPerMm }
     private var base: Color { Color(hex: look.colorHex) }
 
     var body: some View {
@@ -89,14 +89,90 @@ struct HeartShape: Shape {
     }
 }
 
-/// Fixed-size box so pills of different sizes line up in grids.
+extension Look {
+    /// Drawing size in mm. Leaflets often state no size: then a shape's typical proportions are drawn (a capsule stays
+    /// long), only for the picture; lengthMm/widthMm stay unknown (INV-05).
+    var drawSize: (Double, Double) {
+        let typical: [String: (Double, Double)] = ["capsule": (18, 7), "oblong": (15, 7), "oval": (11, 7.5), "softgel": (12, 8)]
+        if lengthMm == nil, widthMm == nil, let t = typical[shape] { return t }
+        return (lengthMm ?? 8, widthMm ?? 8)
+    }
+}
+
+/// Fixed-size box so pills of different sizes line up in grids. Tapping it opens the pill large (`PillPopup`);
+/// pass `zoomable: false` where the tile sits inside a button, so the button keeps the tap.
 struct PillTile: View {
     let look: Look
     var box: CGFloat = 90
+    var zoomable = true
+    @State private var zoomed = false
 
     var body: some View {
-        let longest = CGFloat(max(look.lengthMm ?? 8, look.widthMm ?? 8))
-        PillView(look: look, pointsPerMm: min(9, box * 0.85 / longest))
+        let longest = CGFloat(max(look.drawSize.0, look.drawSize.1))
+        let tile = PillView(look: look, pointsPerMm: min(9, box * 0.85 / longest))
             .frame(width: box, height: box)
+        if zoomable {
+            tile.contentShape(Rectangle())
+                .onTapGesture { zoomed = true }
+                .accessibilityAddTraits(.isButton)
+                .accessibilityHint("Groß anzeigen")
+                .sheet(isPresented: $zoomed) { PillPopup(look: look) }
+        } else {
+            tile
+        }
+    }
+}
+
+/// The pill large, with what is known about its look and where that comes from. Unknown fields say so.
+struct PillPopup: View {
+    let look: Look
+    @Environment(\.dismiss) private var dismiss
+
+    private var size: String {
+        guard let l = look.lengthMm else { return "nicht angegeben" }
+        let f = { (v: Double) in v.formatted(.number.precision(.fractionLength(0...1)).locale(Locale(identifier: "de_DE"))) }
+        if let w = look.widthMm, w != l { return "\(f(l)) × \(f(w)) mm" }
+        return look.shape == "round" ? "\(f(l)) mm Durchmesser" : "\(f(l)) mm"
+    }
+    private var score: String {
+        switch look.score { case "cross": "Kreuzbruchkerbe"; case "single": "Bruchkerbe"; default: "keine angegeben" }
+    }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                HStack {
+                    Spacer()
+                    Button { dismiss() } label: {
+                        Label("Schließen", systemImage: "xmark").font(.title3.weight(.semibold))
+                    }
+                }
+                PillTile(look: look, box: 260, zoomable: false)
+                    .background(Theme.card, in: RoundedRectangle(cornerRadius: 28))
+                VStack(spacing: 10) {
+                    InfoRow(icon: "paintpalette.fill", tint: Theme.accent, title: "Farbe", value: look.colorText)
+                    InfoRow(icon: "pills.fill", tint: Theme.accent, title: "Form", value: ShapeInfo.name(look.shape))
+                    InfoRow(icon: "ruler", tint: Theme.accent, title: "Größe", value: size)
+                    InfoRow(icon: "minus.circle", tint: Theme.accent, title: "Bruchkerbe", value: score)
+                    InfoRow(icon: "character.textbox", tint: Theme.accent, title: "Prägung", value: look.imprint.flatMap { $0.isEmpty ? nil : "„\($0)“" } ?? "keine angegeben")
+                }
+                if let t = look.sourceText {
+                    Label(t, systemImage: "checkmark.seal").font(.callout.weight(.semibold)).foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                if let quote = look.leaflet {
+                    Label("„\(quote)“", systemImage: "doc.text").font(.callout).foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                if look.lengthMm == nil {
+                    Text("Größe in der Zeichnung geschätzt – die Packungsbeilage nennt keine.").font(.footnote).foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .padding(20)
+        }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
+        .onAppear { Speaker.shared.say("\(look.colorText), \(ShapeInfo.name(look.shape)).") }
     }
 }

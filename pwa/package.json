@@ -9,6 +9,7 @@
     "sync": "sh scripts/sync.sh"
   },
   "devDependencies": {
+    "pdfjs-dist": "4.10.38",
     "zxing-wasm": "3.1.6"
   }
 }

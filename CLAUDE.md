@@ -8,7 +8,7 @@ iPhone app (`ios/`) + web app (`pwa/`), one product. Public repo, MIT, synthetic
 Read first: `AGENTS.md`, `ARCHITECTURE.md` (incl. the iOS ↔ PWA code map), `TODO.md`, `docs/PRD-*.md`, `docs/DECISIONS.md`.
 
 ```bash
-cd pwa && npm test                  # web-app tests (Node 22); CI runs them on every PR
+cd pwa && npm install && npm test                  # web-app tests (Node 22); CI runs them on every PR
 cd pwa && npm run sync              # after editing ios/PillSnap/Data or Examples
 ios/checks/run.sh                   # iOS checks (macOS + swiftc); the app needs Xcode 26
 python3 -m http.server 8090         # from the repo root → http://localhost:8090/pwa/

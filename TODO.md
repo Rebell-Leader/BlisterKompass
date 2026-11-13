@@ -73,6 +73,9 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 | T-44 | P2 | No iOS app icon: asset catalog from the mascot | skilled user |
 | T-45 | P1 | Verify Vercel deploys teammates' commits on the public repo | deploy |
 | T-46 | P2 | Screenshots in `docs/screens` predate the rename and the mascot | skilled user |
+| T-47 | P2 | PWA: tap a pill picture → popup with the pill large (iOS has `PillPopup`) | patient |
+| T-48 | P2 | PWA precaches pdf.js (~1.8 MB) for an optional feature | skilled user |
+| T-49 | P2 | Leaflet link points to a commercial pharmacy CDN: check its terms | pharmacist |
 
 ---
 
@@ -703,3 +706,35 @@ screen and the BMP 2.8 day view.
 landing page's screen section.
 
 **Test.** Visual check of README and `docs/landing.html`.
+
+### T-47 PWA: tap a pill picture → popup with the pill large (patient, iOS done)
+
+**Problem.** On iPhone, tapping a `PillTile` opens `PillPopup` (`ios/PillSnap/PillView.swift`): the pill at 260 pt with colour, shape,
+size, score line, imprint, source and leaflet quote; unknown fields say "nicht angegeben". The PWA's `pillTile` (`pwa/js/ui.js`) has
+no tap. Tiles inside buttons (day plan rows, `MedTile`, shape picker, suggestions) stay plain on iOS (`zoomable: false`).
+
+**Fix.** `pillTile(look, box, cls, { zoomable })` opens a `sheet` with the same fields and wording; pass `zoomable: false` at the same
+places as iOS.
+
+**Test.** A PWA test that the popup lists "nicht angegeben" for a look without size and imprint; iOS check of the same name.
+
+### T-48 PWA precaches pdf.js (~1.8 MB) for an optional feature (skilled user, verified)
+
+**Problem.** `vendor/pdfjs/pdf.min.mjs` and `pdf.worker.min.mjs` are in `PRECACHE` (`pwa/sw.js`): every first visit downloads about
+1.8 MB extra, although only people who pick a leaflet PDF need it.
+
+**Fix.** Leave both out of `PRECACHE`, cache them in the fetch handler on first use, and let the "every file precached" test in
+`pwa.test.js` allow this one runtime-cached folder.
+
+**Test.** The first load transfers no `vendor/pdfjs/*`; picking a PDF once online, then in flight mode, still works.
+
+### T-49 Leaflet link points to a commercial pharmacy CDN: check its terms (pharmacist, open)
+
+**Problem.** "Beipackzettel öffnen" opens `cdn.shop-apotheke.com/PDF/…` (`pwa/js/leaflet-parser.js`); the iPhone app downloads from the
+same host. Fine for the demo, but it's a commercial shop's CDN.
+
+**Fix.** Check the terms before any use beyond the hackathon; otherwise make Apotheken Umschau (or the BfArM/PharmNet portal) the main
+link on both clients.
+
+**Test.** Both clients open the chosen host; the PWA host test lists exactly that host.
+

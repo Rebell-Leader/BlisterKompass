@@ -1,6 +1,7 @@
 // App state. Everything stays on the phone: the bundled pill catalog and the meds of the scanned plan.
-// Port of ios/PillSnap/Store.swift. localStorage keeps exactly two keys, as UserDefaults does on iPhone:
-// myMeds and unknownPZNs. No account, no name, no network.
+// Port of ios/PillSnap/Store.swift. localStorage keeps exactly three keys, as UserDefaults does on iPhone:
+// myMeds, unknownPZNs and learnedLeaflets (products whose look was read from a leaflet PDF the person picked).
+// No account, no name, no network.
 
 import { product, adding } from "./model.js";
 import * as PlanReader from "./plan-reader.js";
@@ -18,6 +19,17 @@ export class Store {
     this.names = {};
     this.myMeds = read("myMeds", []);
     this.unknownPZNs = read("unknownPZNs", []);
+    /** Products whose look was read from their package leaflet on this phone. */
+    this.learned = read("learnedLeaflets", []);
+  }
+
+  /** Bundled catalog plus what was learned from leaflets. */
+  get products() { return [...this.learned, ...this.catalog]; }
+
+  /** Keep a product whose look was read from its leaflet PDF (as Store.learn on iPhone). */
+  learn(med) {
+    this.learned = [...this.learned.filter((m) => m.pzn !== med.pzn), med];
+    try { localStorage.setItem("learnedLeaflets", JSON.stringify(this.learned)); } catch { /* private mode */ }
   }
 
   async load() {
@@ -41,7 +53,7 @@ export class Store {
 
   /** A read (or merged multi-page) plan code → { meds, unknown, unknownPZNs, notes, id, page, pages, missing }. */
   resolvePlan(code) {
-    return { ...PlanReader.resolve(code.items, this.catalog, this.names), notes: code.notes, id: code.id, page: code.page ?? 1, pages: code.pages ?? 1, missing: code.missing ?? [], code };
+    return { ...PlanReader.resolve(code.items, this.products, this.names), notes: code.notes, id: code.id, page: code.page ?? 1, pages: code.pages ?? 1, missing: code.missing ?? [], code };
   }
 
   /** A new plan replaces the old list. Its lines without picture data are in plan.meds too (look null, with their schedule);
@@ -56,10 +68,10 @@ export class Store {
 
   nameOf(pzn) { return pznName(this.names, pzn)?.name ?? `PZN ${pzn}`; }
   pznName(pzn) { return pznName(this.names, pzn); }
-  product(pzn) { return product(this.catalog, pzn); }
+  product(pzn) { return product(this.products, pzn); }
 
   /** A scanned pack compared with the plan (exact, by PZN). */
-  check(code) { return Pack.evaluate(code, { myMeds: this.myMeds, unknownPZNs: this.unknownPZNs, catalog: this.catalog, names: this.names }); }
+  check(code) { return Pack.evaluate(code, { myMeds: this.myMeds, unknownPZNs: this.unknownPZNs, catalog: this.products, names: this.names }); }
 
   /** The pharmacy switched maker: keep the plan entry (schedule) but take the new product and look. */
   takeOver(prod, old) {
@@ -69,7 +81,7 @@ export class Store {
     this.save();
   }
 
-  identify(cues) { return Matcher.answer(this.myMeds, this.catalog, cues); }
+  identify(cues) { return Matcher.answer(this.myMeds, this.products, cues); }
 
   save() {
     try {

@@ -20,6 +20,11 @@ from the hackathon repo were cut down before the move; CI checks that they stay 
 | `pwa/icons/mascot-*.png`, `docs/brand/` | mascot and app icons | © Anna P. (AnnXQP) | used with permission for this project |
 | `docs/fonts/` | Atkinson Hyperlegible | Braille Institute | SIL OFL 1.1 |
 | `pwa/vendor/zxing-wasm/` | barcode reader and writer (WebAssembly) | zxing-wasm 3.1.6 | MIT |
+| `pwa/vendor/pdfjs/` | PDF text extraction for a leaflet PDF the person picks (eval off, read on the phone) | pdf.js 4.10.38 (Mozilla) | Apache-2.0 |
+
+No leaflet PDF is committed. The leaflet links in `pwa/js/leaflet-parser.js` (Apotheken Umschau and a pharmacy CDN, the same PDF the
+iPhone app downloads) are opened by the person; a look read from a picked PDF stays on that phone (`learnedLeaflets`), with its
+quote, and is never uploaded. The tests use a synthetic PDF built in code.
 
 ## What was cut for the public repo
 
