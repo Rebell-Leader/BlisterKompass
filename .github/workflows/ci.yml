@@ -1,0 +1,70 @@
+# BlisterKompass CI: every PR and every push to main. Deployment is Vercel's Git integration (preview per PR,
+# production on main); its status shows up on the PR next to these checks.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  pwa:
+    name: PWA tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: npm test (node --test, no install needed)
+        working-directory: pwa
+        run: npm test
+
+  site:
+    name: Site build and data guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Build the site (what Vercel publishes)
+        run: python3 deploy/build.py
+      - name: Only the landing page and the PWA are published
+        working-directory: deploy/dist
+        run: |
+          test "$(ls)" = "$(printf 'docs\npwa')" || { echo "unexpected top-level entries:"; ls; exit 1; }
+          if find . -name '*.md' -o -name '*.py' -o -name 'package*.json' -o -path '*/tests/*' | grep .; then exit 1; fi
+      - name: Data guard (public repo, see docs/DATA.md)
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          cat = json.load(open("ios/PillSnap/Data/catalog.json"))
+          names = json.load(open("ios/PillSnap/Data/pzn-names.json"))
+          bad = [m["pzn"] for m in cat if "leaflet" in m["look"]]
+          if bad: sys.exit(f"verbatim leaflet quotes must not be committed: {bad[:5]}")
+          if len(names) > 500: sys.exit(f"pzn-names.json has {len(names)} rows; only the demo subset may be public")
+          print(f"ok: {len(cat)} catalog products without quotes, {len(names)} PZN rows")
+          PY
+
+  print:
+    name: Print generator tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -q zxing-cpp==3.1.1 pillow xmlschema pytest
+      - run: python3 -m pytest -q tools/test_make_bmp_sheet.py
