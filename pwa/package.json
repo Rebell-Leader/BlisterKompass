@@ -1,0 +1,14 @@
+{
+  "name": "blisterkompass-pwa",
+  "private": true,
+  "type": "module",
+  "description": "BlisterKompass as an installable web app. No build step: the folder is served as is.",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "serve": "python3 -m http.server 8090",
+    "sync": "sh scripts/sync.sh"
+  },
+  "devDependencies": {
+    "zxing-wasm": "3.1.6"
+  }
+}

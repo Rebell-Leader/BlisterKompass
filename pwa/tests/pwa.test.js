@@ -1,0 +1,108 @@
+// Installability and offline/privacy rules, checked on the files themselves.
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = fileURLToPath(new URL("..", import.meta.url));
+const read = (p) => fs.readFileSync(path.join(root, p));
+const text = (p) => read(p).toString("utf8");
+const exists = (p) => fs.existsSync(path.join(root, p));
+
+function walk(dir, out = []) {
+  for (const e of fs.readdirSync(path.join(root, dir), { withFileTypes: true })) {
+    const p = path.posix.join(dir, e.name);
+    if (e.isDirectory()) walk(p, out); else out.push(p);
+  }
+  return out;
+}
+
+const precache = [...text("sw.js").matchAll(/^\s+"([^"]+)",$/gm)].map((m) => m[1]);
+
+/** PNG width/height from the IHDR chunk. */
+const pngSize = (p) => { const b = read(p); return [b.readUInt32BE(16), b.readUInt32BE(20)]; };
+
+test("manifest: name, German, standalone, theme colour, start_url and scope in this folder", () => {
+  const m = JSON.parse(text("manifest.webmanifest"));
+  assert.equal(m.name, "BlisterKompass");
+  assert.equal(m.lang, "de");
+  assert.equal(m.display, "standalone");
+  assert.equal(m.theme_color, "#0B6E8A");
+  assert.equal(m.start_url, "./");
+  assert.equal(m.scope, "./");
+});
+
+test("manifest icons exist with their stated sizes: 192, 512 and a maskable 512", () => {
+  const m = JSON.parse(text("manifest.webmanifest"));
+  for (const i of m.icons) {
+    assert.ok(exists(i.src), i.src);
+    assert.deepEqual(pngSize(i.src).join("x"), i.sizes, i.src);
+  }
+  assert.ok(m.icons.some((i) => i.sizes === "192x192" && i.purpose.includes("any")));
+  assert.ok(m.icons.some((i) => i.sizes === "512x512" && i.purpose.includes("any")));
+  assert.ok(m.icons.some((i) => i.sizes === "512x512" && i.purpose.includes("maskable")));
+  assert.deepEqual(pngSize("icons/apple-touch-icon.png"), [180, 180]);
+});
+
+test("index.html links the manifest, the apple touch icon and loads the app as a module", () => {
+  const html = text("index.html");
+  assert.match(html, /<html lang="de">/);
+  assert.match(html, /<link rel="manifest" href="manifest.webmanifest">/);
+  assert.match(html, /<link rel="apple-touch-icon" href="icons\/apple-touch-icon.png">/);
+  assert.match(html, /<script type="module" src="js\/app.js">/);
+  assert.match(html, /<meta name="theme-color" content="#0B6E8A">/);
+});
+
+test("strict CSP: only this origin, wasm allowed, no inline scripts or styles", () => {
+  const csp = /http-equiv="Content-Security-Policy" content="([^"]+)"/.exec(text("index.html"))?.[1];
+  assert.ok(csp);
+  for (const part of ["default-src 'self'", "connect-src 'self'", "img-src 'self' blob: data:", "script-src 'self' 'wasm-unsafe-eval'", "style-src 'self'"]) {
+    assert.ok(csp.includes(part), part);
+  }
+  assert.ok(!csp.includes("unsafe-inline") && !csp.includes("https:") && !csp.includes("*"));
+  assert.ok(!/<script(?![^>]*\bsrc=)[^>]*>/.test(text("index.html")), "no inline script");
+  assert.ok(!/<style/.test(text("index.html")), "no inline style element");
+});
+
+test("service worker precaches every app file, and only files that exist", () => {
+  const app = ["index.html", "app.css", "manifest.webmanifest",
+    ...walk("js"), ...walk("vendor").filter((p) => !/LICENSE|VERSION/.test(p)), ...walk("data"), ...walk("icons"), ...walk("examples")];
+  for (const p of app) assert.ok(precache.includes(p), `missing from sw.js: ${p}`);
+  for (const p of precache) if (p !== "./") assert.ok(exists(p), `listed but missing: ${p}`);
+  assert.ok(precache.includes("./"));
+});
+
+test("no network at runtime: app code names no other host", () => {
+  for (const p of ["index.html", "app.css", "sw.js", "manifest.webmanifest", ...walk("js")]) {
+    assert.ok(!/https?:\/\//.test(text(p).replace(/http:\/\/www\.w3\.org\/2000\/svg/g, "")), p);
+  }
+});
+
+test("zxing loads its .wasm from this folder, never from its default CDN", () => {
+  assert.match(text("js/code-reader.js"), /locateFile/);
+  assert.match(text("js/code-reader.js"), /vendor\/zxing-wasm\/zxing_reader\.wasm/);
+});
+
+test("nothing personal is stored: localStorage holds only myMeds and unknownPZNs", () => {
+  const keys = new Set();
+  for (const p of walk("js")) for (const m of text(p).matchAll(/localStorage\.(?:get|set)Item\("([^"]+)"/g)) keys.add(m[1]);
+  assert.deepEqual([...keys].sort(), ["myMeds", "unknownPZNs"]);
+});
+
+test("the plan reader never reads P, A or O", () => {
+  const src = text("js/plan-reader.js");
+  assert.ok(!/case "(P|A|O)"/.test(src));
+});
+
+test("data and examples are byte-identical to the iPhone app's (ios/PillSnap is the source of truth)", () => {
+  const ios = path.join(root, "../ios/PillSnap");
+  const same = (a, b) => assert.ok(fs.readFileSync(a).equals(fs.readFileSync(b)), `${a} differs; run npm run sync`);
+  same(path.join(ios, "Data/catalog.json"), path.join(root, "data/catalog.json"));
+  same(path.join(ios, "Data/pzn-names.json"), path.join(root, "data/pzn-names.json"));
+  same(path.join(ios, "Examples/examples.json"), path.join(root, "examples/examples.json"));
+  for (const f of JSON.parse(text("examples/examples.json"))) {
+    const sub = f.kind === "plan" ? "plans" : f.kind === "pack" ? "packs" : "photos";
+    same(path.join(ios, "Examples", sub, f.file), path.join(root, "examples", f.file));
+  }
+});

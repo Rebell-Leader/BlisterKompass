@@ -1,0 +1,3638 @@
+[
+ {
+  "pzn": "NDC:42507-146",
+  "name": "Adult Low Dose Aspirin 81 mg (HYVEE INC)",
+  "substance": "Acetylsalicylsäure",
+  "strength": "81 mg",
+  "manufacturer": "HYVEE INC",
+  "atc": "B01AC06",
+  "indication": {
+   "en": "Blood thinner",
+   "de": "Blutverdünner"
+  },
+  "look": {
+   "shape": "round",
+   "color": "orange",
+   "color2": null,
+   "lengthMm": 7,
+   "widthMm": 7,
+   "score": "none",
+   "imprint": "heart",
+   "coating": "enteric",
+   "finish": "glossy",
+   "source": "dailymed:45ae4509-fb50-66fd-e063-6294a90a2d7b",
+   "colorHex": "#F0954A",
+   "color2Hex": null,
+   "colorName": {
+    "en": "orange",
+    "de": "orange"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:69729-104",
+  "name": "CARDIASPIRIN PROTECT 81 mg (OPMX LLC)",
+  "substance": "Acetylsalicylsäure",
+  "strength": "81 mg",
+  "manufacturer": "OPMX LLC",
+  "atc": "B01AC06",
+  "indication": {
+   "en": "Blood thinner",
+   "de": "Blutverdünner"
+  },
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": 7,
+   "widthMm": 7,
+   "score": "none",
+   "imprint": "A1",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:03774690-662b-1c30-e063-6294a90a3488",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:72090-037",
+  "name": "Gencare-Aspirin Low Dose Pain reliever (NSAID) 81 mg (Pioneer Life Sciences, LLC)",
+  "substance": "Acetylsalicylsäure",
+  "strength": "81 mg",
+  "manufacturer": "Pioneer Life Sciences, LLC",
+  "atc": "B01AC06",
+  "indication": {
+   "en": "Blood thinner",
+   "de": "Blutverdünner"
+  },
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": 7,
+   "widthMm": 7,
+   "score": "none",
+   "imprint": "S17",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:24d4f46a-c7a5-4e94-804f-1e307d8e8cfc",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "66201556",
+  "name": "ASS Rhenus 100 mg Tabletten",
+  "substance": "Acetylsalicylsäure",
+  "strength": "100 mg",
+  "manufacturer": "Rhenus Generika",
+  "atc": "B01AC06",
+  "indication": {
+   "en": "Blood thinner",
+   "de": "Blutverdünner"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 7,
+   "widthMm": 7,
+   "score": "none",
+   "imprint": "100",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:16729-135",
+  "name": "Allopurinol 300 mg (Accord Healthcare Inc.)",
+  "substance": "Allopurinol",
+  "strength": "300 mg",
+  "manufacturer": "Accord Healthcare Inc.",
+  "atc": "M04AA01",
+  "indication": {
+   "en": "Gout",
+   "de": "Gicht"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 11,
+   "widthMm": 11,
+   "score": "single",
+   "imprint": "AX",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:682dd8b8-fc6e-47c5-95b7-82d7ad96b750",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:50268-031",
+  "name": "Allopurinol 300 mg (AvPAK)",
+  "substance": "Allopurinol",
+  "strength": "300 mg",
+  "manufacturer": "AvPAK",
+  "atc": "M04AA01",
+  "indication": {
+   "en": "Gout",
+   "de": "Gicht"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "pink",
+   "color2": null,
+   "lengthMm": 11,
+   "widthMm": 4.6,
+   "score": "single",
+   "imprint": "I 136",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:5d330416-4289-762e-e063-6294a90a532e",
+   "colorHex": "#F2B8C3",
+   "color2Hex": null,
+   "colorName": {
+    "en": "pink",
+    "de": "rosa"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "91201069",
+  "name": "Allopurinol Nordapharm 300 mg Tabletten",
+  "substance": "Allopurinol",
+  "strength": "300 mg",
+  "manufacturer": "Nordapharm",
+  "atc": "M04AA01",
+  "indication": {
+   "en": "Gout",
+   "de": "Gicht"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 11,
+   "widthMm": 11,
+   "score": "single",
+   "imprint": "AL300",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:85766-288",
+  "name": "Allopurinol 300 mg (Sportpharm LLC)",
+  "substance": "Allopurinol",
+  "strength": "300 mg",
+  "manufacturer": "Sportpharm LLC",
+  "atc": "M04AA01",
+  "indication": {
+   "en": "Gout",
+   "de": "Gicht"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 12,
+   "widthMm": 12,
+   "score": "single",
+   "imprint": "AL 300",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:76ca6bea-5f63-4e76-b161-1dbcbad18421",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "91200130",
+  "name": "Amlodipin Alpinmed 5 mg Tabletten",
+  "substance": "Amlodipin",
+  "strength": "5 mg",
+  "manufacturer": "Alpinmed",
+  "atc": "C08CA01",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 8,
+   "widthMm": 8,
+   "score": "single",
+   "imprint": "AM5",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:70518-2981",
+  "name": "Amlodipine Besylate 5 mg (REMEDYREPACK INC.)",
+  "substance": "Amlodipin",
+  "strength": "5 mg",
+  "manufacturer": "REMEDYREPACK INC.",
+  "atc": "C08CA01",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 8,
+   "widthMm": 8,
+   "score": "none",
+   "imprint": "210",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:204f27e9-5041-4677-b313-866ca69abad9",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:67296-1876",
+  "name": "Amlodipine Besylate 5 mg (Redpharm Drug)",
+  "substance": "Amlodipin",
+  "strength": "5 mg",
+  "manufacturer": "Redpharm Drug",
+  "atc": "C08CA01",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 6,
+   "widthMm": 6,
+   "score": "none",
+   "imprint": "U 5",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:58d2fbed-3904-3e31-e063-6294a90af21d",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:64980-724",
+  "name": "Amlodipine Besylate 5 mg (Rising Pharma Holdings, Inc.)",
+  "substance": "Amlodipin",
+  "strength": "5 mg",
+  "manufacturer": "Rising Pharma Holdings, Inc.",
+  "atc": "C08CA01",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 11,
+   "widthMm": 4.6,
+   "score": "none",
+   "imprint": "A5 Gr",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:4f42d132-9a8d-4cd4-ae94-318205fb870e",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:16729-045",
+  "name": "ATORVASTATIN CALCIUM 20 mg (Accord Healthcare Inc.)",
+  "substance": "Atorvastatin",
+  "strength": "20 mg",
+  "manufacturer": "Accord Healthcare Inc.",
+  "atc": "C10AA05",
+  "indication": {
+   "en": "Cholesterol",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 12,
+   "widthMm": 6.6,
+   "score": "none",
+   "imprint": "FF2",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:4e06b20d-cc5d-46eb-991b-5972248de3af",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "30477231",
+  "name": "Atorvastatin Alpinmed 20 mg Filmtabletten",
+  "substance": "Atorvastatin",
+  "strength": "20 mg",
+  "manufacturer": "Alpinmed",
+  "atc": "C10AA05",
+  "indication": {
+   "en": "Cholesterol",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 11,
+   "widthMm": 5.5,
+   "score": "none",
+   "imprint": "A20",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:81033-513",
+  "name": "Atorvastatin Calcium 20 mg (Kesin Pharma Corporation)",
+  "substance": "Atorvastatin",
+  "strength": "20 mg",
+  "manufacturer": "Kesin Pharma Corporation",
+  "atc": "C10AA05",
+  "indication": {
+   "en": "Cholesterol",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 12,
+   "widthMm": 6.6,
+   "score": "none",
+   "imprint": "20 ATS",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:56826bb5-ae70-af65-e063-6294a90abf74",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:68071-5292",
+  "name": "Atorvastatin calcium 20 mg (NuCare Pharmaceuticals, Inc.)",
+  "substance": "Atorvastatin",
+  "strength": "20 mg",
+  "manufacturer": "NuCare Pharmaceuticals, Inc.",
+  "atc": "C10AA05",
+  "indication": {
+   "en": "Cholesterol",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 12,
+   "widthMm": 6.6,
+   "score": "none",
+   "imprint": "MA 2",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:52f99e39-fb92-e9f5-e063-6294a90a1b6a",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "30477403",
+  "name": "Atorvastatin Rhenus 20 mg Filmtabletten",
+  "substance": "Atorvastatin",
+  "strength": "20 mg",
+  "manufacturer": "Rhenus Generika",
+  "atc": "C10AA05",
+  "indication": {
+   "en": "Cholesterol",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 9,
+   "widthMm": 9,
+   "score": "none",
+   "imprint": "20",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:51407-645",
+  "name": "Bisoprolol Fumarate 5 mg (Golden State Medical Supply, Inc.)",
+  "substance": "Bisoprolol",
+  "strength": "5 mg",
+  "manufacturer": "Golden State Medical Supply, Inc.",
+  "atc": "C07AB07",
+  "indication": {
+   "en": "Heart / blood pressure",
+   "de": "Herz / Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "pink",
+   "color2": null,
+   "lengthMm": 6,
+   "widthMm": 6,
+   "score": "single",
+   "imprint": "N455",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:df37d337-9978-0c31-e053-2a95a90a3258",
+   "colorHex": "#F2B8C3",
+   "color2Hex": null,
+   "colorName": {
+    "en": "pink",
+    "de": "rosa"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:42571-470",
+  "name": "Bisoprolol 5 mg (Micro Labs Limited)",
+  "substance": "Bisoprolol",
+  "strength": "5 mg",
+  "manufacturer": "Micro Labs Limited",
+  "atc": "C07AB07",
+  "indication": {
+   "en": "Heart / blood pressure",
+   "de": "Herz / Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "pink",
+   "color2": null,
+   "lengthMm": 6,
+   "widthMm": 6,
+   "score": "single",
+   "imprint": "I",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:c3ee566c-74c4-45f4-a947-526a7313e326",
+   "colorHex": "#F2B8C3",
+   "color2Hex": null,
+   "colorName": {
+    "en": "pink",
+    "de": "rosa"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:72789-392",
+  "name": "BISOPROLOL FUMARATE 5 mg (PD-Rx Pharmaceuticals, Inc.)",
+  "substance": "Bisoprolol",
+  "strength": "5 mg",
+  "manufacturer": "PD-Rx Pharmaceuticals, Inc.",
+  "atc": "C07AB07",
+  "indication": {
+   "en": "Heart / blood pressure",
+   "de": "Herz / Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "purple",
+   "color2": null,
+   "lengthMm": 6,
+   "widthMm": 6,
+   "score": "single",
+   "imprint": "H14",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:c8fa858c-7e42-4134-9fc6-604a11a66fe2",
+   "colorHex": "#B497D6",
+   "color2Hex": null,
+   "colorName": {
+    "en": "purple",
+    "de": "lila"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "41288303",
+  "name": "Bisoprolol Vitacur 5 mg Tabletten",
+  "substance": "Bisoprolol",
+  "strength": "5 mg",
+  "manufacturer": "Vitacur",
+  "atc": "C07AB07",
+  "indication": {
+   "en": "Heart / blood pressure",
+   "de": "Herz / Blutdruck"
+  },
+  "look": {
+   "shape": "heart",
+   "color": "lightyellow",
+   "color2": null,
+   "lengthMm": 8,
+   "widthMm": 8,
+   "score": "single",
+   "imprint": "B5",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#F6EAA8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "light yellow",
+    "de": "hellgelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "91200756",
+  "name": "Candesartan Medivia 8 mg Tabletten",
+  "substance": "Candesartan",
+  "strength": "8 mg",
+  "manufacturer": "Medivia",
+  "atc": "C09CA06",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "pink",
+   "color2": null,
+   "lengthMm": 7,
+   "widthMm": 7,
+   "score": "single",
+   "imprint": "C8",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#F2B8C3",
+   "color2Hex": null,
+   "colorName": {
+    "en": "pink",
+    "de": "rosa"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "91201684",
+  "name": "Colecalciferol Alpinmed 20.000 I.E. Weichkapseln",
+  "substance": "Colecalciferol",
+  "strength": "20.000 I.E.",
+  "manufacturer": "Alpinmed",
+  "atc": "A11CC05",
+  "indication": null,
+  "look": {
+   "shape": "softgel",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": 10,
+   "widthMm": 6,
+   "score": "none",
+   "imprint": "",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "91201997",
+  "name": "Diclofenac Rhenus 75 mg Retardtabletten",
+  "substance": "Diclofenac-Natrium",
+  "strength": "75 mg",
+  "manufacturer": "Rhenus Generika",
+  "atc": "M01AB05",
+  "indication": {
+   "en": "Pain / inflammation",
+   "de": "Schmerzmittel"
+  },
+  "look": {
+   "shape": "round",
+   "color": "red",
+   "color2": null,
+   "lengthMm": 8,
+   "widthMm": 8,
+   "score": "none",
+   "imprint": "D75",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#C9483F",
+   "color2Hex": null,
+   "colorName": {
+    "en": "red",
+    "de": "rot"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:62207-354",
+  "name": "Ibuprofen 400 mg (Granules India Limited)",
+  "substance": "Ibuprofen",
+  "strength": "400 mg",
+  "manufacturer": "Granules India Limited",
+  "atc": "M01AE01",
+  "indication": {
+   "en": "Pain / inflammation",
+   "de": "Schmerzmittel"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 14,
+   "widthMm": 7.7,
+   "score": "none",
+   "imprint": "I 6",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:8804564c-9e1b-43c1-8b58-fd6ace645f00",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "83402776",
+  "name": "Ibuprofen Nordapharm 400 mg Filmtabletten",
+  "substance": "Ibuprofen",
+  "strength": "400 mg",
+  "manufacturer": "Nordapharm",
+  "atc": "M01AE01",
+  "indication": {
+   "en": "Pain / inflammation",
+   "de": "Schmerzmittel"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 15,
+   "widthMm": 7,
+   "score": "none",
+   "imprint": "I400",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:68071-5346",
+  "name": "Ibuprofen 400 mg (NuCare Pharmaceuticals, Inc.)",
+  "substance": "Ibuprofen",
+  "strength": "400 mg",
+  "manufacturer": "NuCare Pharmaceuticals, Inc.",
+  "atc": "M01AE01",
+  "indication": {
+   "en": "Pain / inflammation",
+   "de": "Schmerzmittel"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 15,
+   "widthMm": 8.3,
+   "score": "none",
+   "imprint": "BI4",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:5f7cdea0-c222-0a84-e063-6394a90af7fa",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:70518-2432",
+  "name": "Ibuprofen 400 mg (REMEDYREPACK INC.)",
+  "substance": "Ibuprofen",
+  "strength": "400 mg",
+  "manufacturer": "REMEDYREPACK INC.",
+  "atc": "M01AE01",
+  "indication": {
+   "en": "Pain / inflammation",
+   "de": "Schmerzmittel"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 13,
+   "widthMm": 13,
+   "score": "none",
+   "imprint": "121",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:a7756b22-73cf-4262-aa8e-0577ddecd03b",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "72311869",
+  "name": "Levothyroxin Alpinmed 75 µg Tabletten",
+  "substance": "Levothyroxin-Natrium",
+  "strength": "75 µg",
+  "manufacturer": "Alpinmed",
+  "atc": "H03AA01",
+  "indication": {
+   "en": "Thyroid",
+   "de": "Schilddrüse"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 8,
+   "widthMm": 8,
+   "score": "single",
+   "imprint": "75",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:72162-1460",
+  "name": "levothyroxine sodium 75 µg (Bryant Ranch Prepack)",
+  "substance": "Levothyroxin-Natrium",
+  "strength": "75 µg",
+  "manufacturer": "Bryant Ranch Prepack",
+  "atc": "H03AA01",
+  "indication": {
+   "en": "Thyroid",
+   "de": "Schilddrüse"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "purple",
+   "color2": null,
+   "lengthMm": 10,
+   "widthMm": 4.2,
+   "score": "single",
+   "imprint": "75 T 4",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:fc803107-aaa2-4753-ab97-7b4ed5cf4be5",
+   "colorHex": "#B497D6",
+   "color2Hex": null,
+   "colorName": {
+    "en": "purple",
+    "de": "lila"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:60793-852",
+  "name": "LEVOXYL 75 µg (Pfizer Laboratories Div Pfizer Inc)",
+  "substance": "Levothyroxin-Natrium",
+  "strength": "75 µg",
+  "manufacturer": "Pfizer Laboratories Div Pfizer Inc",
+  "atc": "H03AA01",
+  "indication": {
+   "en": "Thyroid",
+   "de": "Schilddrüse"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "purple",
+   "color2": null,
+   "lengthMm": 10,
+   "widthMm": 5.5,
+   "score": "single",
+   "imprint": "Levoxyl dp 75",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:758588c3-c63e-491b-0aa2-4f50d80cb174",
+   "colorHex": "#B497D6",
+   "color2Hex": null,
+   "colorName": {
+    "en": "purple",
+    "de": "lila"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:70518-4435",
+  "name": "LEVOTHYROXINE SODIUM 75 µg (REMEDYREPACK INC.)",
+  "substance": "Levothyroxin-Natrium",
+  "strength": "75 µg",
+  "manufacturer": "REMEDYREPACK INC.",
+  "atc": "H03AA01",
+  "indication": {
+   "en": "Thyroid",
+   "de": "Schilddrüse"
+  },
+  "look": {
+   "shape": "round",
+   "color": "purple",
+   "color2": null,
+   "lengthMm": 7,
+   "widthMm": 7,
+   "score": "single",
+   "imprint": "M58",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:9ad82faf-3734-42a1-befe-f6197b27f534",
+   "colorHex": "#B497D6",
+   "color2Hex": null,
+   "colorName": {
+    "en": "purple",
+    "de": "lila"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:60429-113",
+  "name": "METFORMIN HYDROCHLORIDE 1000 mg (Golden State Medical Supply, Inc.)",
+  "substance": "Metformin",
+  "strength": "1000 mg",
+  "manufacturer": "Golden State Medical Supply, Inc.",
+  "atc": "A10BA02",
+  "indication": {
+   "en": "Diabetes",
+   "de": "Zucker"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 19,
+   "widthMm": 10.5,
+   "score": "single",
+   "imprint": "S G 1 07",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:f86bda10-8b25-4125-8bb1-1b5917969ff0",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "22104326",
+  "name": "Metformin Medivia 1000 mg Filmtabletten",
+  "substance": "Metformin",
+  "strength": "1000 mg",
+  "manufacturer": "Medivia",
+  "atc": "A10BA02",
+  "indication": {
+   "en": "Diabetes",
+   "de": "Zucker"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 21,
+   "widthMm": 10,
+   "score": "single",
+   "imprint": "MF",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:68071-5313",
+  "name": "Metformin Hydrochloride 1000 mg (NuCare Pharmaceuticals, Inc.)",
+  "substance": "Metformin",
+  "strength": "1000 mg",
+  "manufacturer": "NuCare Pharmaceuticals, Inc.",
+  "atc": "A10BA02",
+  "indication": {
+   "en": "Diabetes",
+   "de": "Zucker"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 19,
+   "widthMm": 10.5,
+   "score": "single",
+   "imprint": "M 8",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:583f2a2e-a9d7-f266-e063-6294a90ad0ab",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:70518-4262",
+  "name": "Metformin Hydrochloride 1000 mg (REMEDYREPACK INC.)",
+  "substance": "Metformin",
+  "strength": "1000 mg",
+  "manufacturer": "REMEDYREPACK INC.",
+  "atc": "A10BA02",
+  "indication": {
+   "en": "Diabetes",
+   "de": "Zucker"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 19,
+   "widthMm": 10.5,
+   "score": "single",
+   "imprint": "L 11",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "dailymed:bfd6ec0f-8264-4877-aa6d-f347f53bc426",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "22104154",
+  "name": "Metformin Rhenus 1000 mg Filmtabletten",
+  "substance": "Metformin",
+  "strength": "1000 mg",
+  "manufacturer": "Rhenus Generika",
+  "atc": "A10BA02",
+  "indication": {
+   "en": "Diabetes",
+   "de": "Zucker"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 19,
+   "widthMm": 9.5,
+   "score": "single",
+   "imprint": "M 1000",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:50090-5457",
+  "name": "Methotrexate 2.5 mg (A-S Medication Solutions)",
+  "substance": "Methotrexat",
+  "strength": "2,5 mg",
+  "manufacturer": "A-S Medication Solutions",
+  "atc": "L04AX03",
+  "indication": {
+   "en": "Rheumatism (immune)",
+   "de": "Rheuma"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": 8,
+   "widthMm": 4.4,
+   "score": "single",
+   "imprint": "b 572",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:22e10810-16fb-4c84-bccf-972405b77ef8",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:60687-975",
+  "name": "Methotrexate 2.5 mg (American Health Packaging)",
+  "substance": "Methotrexat",
+  "strength": "2,5 mg",
+  "manufacturer": "American Health Packaging",
+  "atc": "L04AX03",
+  "indication": {
+   "en": "Rheumatism (immune)",
+   "de": "Rheuma"
+  },
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": 6,
+   "widthMm": 6,
+   "score": "single",
+   "imprint": "L2",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:aafd97c1-3a0a-42b2-845a-a9db9bb7d876",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:71335-2221",
+  "name": "Methotrexate 2.5 mg (Bryant Ranch Prepack)",
+  "substance": "Methotrexat",
+  "strength": "2,5 mg",
+  "manufacturer": "Bryant Ranch Prepack",
+  "atc": "L04AX03",
+  "indication": {
+   "en": "Rheumatism (immune)",
+   "de": "Rheuma"
+  },
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": 6,
+   "widthMm": 6,
+   "score": "single",
+   "imprint": "M 2 5",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:b6e61c50-024a-494f-b04c-100fb371a837",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "78095421",
+  "name": "Methotrexat Vitacur 7,5 mg Tabletten",
+  "substance": "Methotrexat",
+  "strength": "7,5 mg",
+  "manufacturer": "Vitacur",
+  "atc": "L04AX03",
+  "indication": {
+   "en": "Rheumatism (immune)",
+   "de": "Rheuma"
+  },
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": 8,
+   "widthMm": 8,
+   "score": "single",
+   "imprint": "MTX",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:60687-725",
+  "name": "Pantoprazole Sodium 20 mg (American Health Packaging)",
+  "substance": "Pantoprazol",
+  "strength": "20 mg",
+  "manufacturer": "American Health Packaging",
+  "atc": "A02BC02",
+  "indication": {
+   "en": "Stomach protection",
+   "de": "Magenschutz"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": 8,
+   "widthMm": 4.4,
+   "score": "none",
+   "imprint": "I 51",
+   "coating": "enteric",
+   "finish": "glossy",
+   "source": "dailymed:5ff3cf6c-6f0a-4374-8b80-4e1eb1df6245",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:55154-4346",
+  "name": "Pantoprazole Sodium 20 mg (Cardinal Health 107, LLC)",
+  "substance": "Pantoprazol",
+  "strength": "20 mg",
+  "manufacturer": "Cardinal Health 107, LLC",
+  "atc": "A02BC02",
+  "indication": {
+   "en": "Stomach protection",
+   "de": "Magenschutz"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 9,
+   "widthMm": 5,
+   "score": "none",
+   "imprint": "18",
+   "coating": "enteric",
+   "finish": "glossy",
+   "source": "dailymed:410d5577-e50a-44f3-aaa8-fbf391a0c261",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "60133486",
+  "name": "Pantoprazol Medivia 20 mg magensaftresistente Tabletten",
+  "substance": "Pantoprazol",
+  "strength": "20 mg",
+  "manufacturer": "Medivia",
+  "atc": "A02BC02",
+  "indication": {
+   "en": "Stomach protection",
+   "de": "Magenschutz"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": 9,
+   "widthMm": 5,
+   "score": "none",
+   "imprint": "P20",
+   "coating": "enteric",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:13668-096",
+  "name": "Pantoprazole Sodium 20 mg (Torrent Pharmaceuticals Limited)",
+  "substance": "Pantoprazol",
+  "strength": "20 mg",
+  "manufacturer": "Torrent Pharmaceuticals Limited",
+  "atc": "A02BC02",
+  "indication": {
+   "en": "Stomach protection",
+   "de": "Magenschutz"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 9,
+   "widthMm": 5,
+   "score": "none",
+   "imprint": "96",
+   "coating": "enteric",
+   "finish": "glossy",
+   "source": "dailymed:9c983da1-a8e0-479e-8816-5d5668ea242e",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "EMA:pregabalin-accord:25mg",
+  "name": "Pregabalin Accord 25 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "25 mg",
+  "manufacturer": "Accord Healthcare S.L.U.",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "white",
+   "lengthMm": 14.4,
+   "widthMm": 5.3,
+   "score": "none",
+   "imprint": "PG 25",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:pregabalin-accord",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:pregabalin-accord:50mg",
+  "name": "Pregabalin Accord 50 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "50 mg",
+  "manufacturer": "Accord Healthcare S.L.U.",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "white",
+   "lengthMm": 15.8,
+   "widthMm": 5.8,
+   "score": "none",
+   "imprint": "PG 50",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:pregabalin-accord",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:pregabalin-accord:75mg",
+  "name": "Pregabalin Accord 75 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "75 mg",
+  "manufacturer": "Accord Healthcare S.L.U.",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "red",
+   "color2": "white",
+   "lengthMm": 14.4,
+   "widthMm": 5.3,
+   "score": "none",
+   "imprint": "PG 75",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:pregabalin-accord",
+   "colorHex": "#C9483F",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "red",
+    "de": "rot"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:pregabalin-accord:100mg",
+  "name": "Pregabalin Accord 100 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "100 mg",
+  "manufacturer": "Accord Healthcare S.L.U.",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "red",
+   "color2": "red",
+   "lengthMm": 15.8,
+   "widthMm": 5.8,
+   "score": "none",
+   "imprint": "PG 100",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:pregabalin-accord",
+   "colorHex": "#C9483F",
+   "color2Hex": "#C9483F",
+   "colorName": {
+    "en": "red",
+    "de": "rot"
+   },
+   "color2Name": {
+    "en": "red",
+    "de": "rot"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:pregabalin-accord:150mg",
+  "name": "Pregabalin Accord 150 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "150 mg",
+  "manufacturer": "Accord Healthcare S.L.U.",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "white",
+   "lengthMm": 17.8,
+   "widthMm": 6.4,
+   "score": "none",
+   "imprint": "PG 150",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:pregabalin-accord",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:pregabalin-accord:200mg",
+  "name": "Pregabalin Accord 200 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "200 mg",
+  "manufacturer": "Accord Healthcare S.L.U.",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "orange",
+   "color2": "orange",
+   "lengthMm": 19.3,
+   "widthMm": 6.9,
+   "score": "none",
+   "imprint": "PG 200",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:pregabalin-accord",
+   "colorHex": "#F0954A",
+   "color2Hex": "#F0954A",
+   "colorName": {
+    "en": "orange",
+    "de": "orange"
+   },
+   "color2Name": {
+    "en": "orange",
+    "de": "orange"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:pregabalin-accord:225mg",
+  "name": "Pregabalin Accord 225 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "225 mg",
+  "manufacturer": "Accord Healthcare S.L.U.",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "orange",
+   "color2": "white",
+   "lengthMm": 19.3,
+   "widthMm": 6.9,
+   "score": "none",
+   "imprint": "PG 225",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:pregabalin-accord",
+   "colorHex": "#F0954A",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "orange",
+    "de": "orange"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:pregabalin-accord:300mg",
+  "name": "Pregabalin Accord 300 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "300 mg",
+  "manufacturer": "Accord Healthcare S.L.U.",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "red",
+   "color2": "white",
+   "lengthMm": 21.4,
+   "widthMm": 7.6,
+   "score": "none",
+   "imprint": "PG 300",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:pregabalin-accord",
+   "colorHex": "#C9483F",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "red",
+    "de": "rot"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:60687-495",
+  "name": "Pregabalin 75 mg (American Health Packaging)",
+  "substance": "Pregabalin",
+  "strength": "75 mg",
+  "manufacturer": "American Health Packaging",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "red",
+   "color2": "white",
+   "lengthMm": 14,
+   "widthMm": 5,
+   "score": "none",
+   "imprint": "LA 43",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "dailymed:59da1a16-d409-49eb-9b44-397c77006043",
+   "colorHex": "#C9483F",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "red",
+    "de": "rot"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:71335-1758",
+  "name": "Pregabalin 75 mg (Bryant Ranch Prepack)",
+  "substance": "Pregabalin",
+  "strength": "75 mg",
+  "manufacturer": "Bryant Ranch Prepack",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "orange",
+   "lengthMm": 14,
+   "widthMm": 5,
+   "score": "none",
+   "imprint": "A009 PREG75",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "dailymed:b5b22ec1-3fd8-4631-ba7e-98d8e5d030b3",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#F0954A",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "orange",
+    "de": "orange"
+   }
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "89116304",
+  "name": "Pregabalin Medivia 75 mg Hartkapseln",
+  "substance": "Pregabalin",
+  "strength": "75 mg",
+  "manufacturer": "Medivia",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "orange",
+   "lengthMm": 14.3,
+   "widthMm": 5.3,
+   "score": "none",
+   "imprint": "PGB 75",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#F0954A",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "orange",
+    "de": "orange"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:82804-299",
+  "name": "Pregabalin 75 mg (Proficient Rx LP)",
+  "substance": "Pregabalin",
+  "strength": "75 mg",
+  "manufacturer": "Proficient Rx LP",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "orange",
+   "color2": "white",
+   "lengthMm": 14,
+   "widthMm": 5,
+   "score": "none",
+   "imprint": "SK F PG75",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "dailymed:189b610e-3e29-42fa-ab6e-73effbe0d054",
+   "colorHex": "#F0954A",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "orange",
+    "de": "orange"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "EMA:lyrica:25mg",
+  "name": "Lyrica 25 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "25 mg",
+  "manufacturer": "Viatris EESV",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "white",
+   "lengthMm": 15.9,
+   "widthMm": 5.9,
+   "score": "none",
+   "imprint": "VTRS PGN 25",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:lyrica",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:lyrica:50mg",
+  "name": "Lyrica 50 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "50 mg",
+  "manufacturer": "Viatris EESV",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "white",
+   "lengthMm": 15.9,
+   "widthMm": 5.9,
+   "score": "none",
+   "imprint": "VTRS PGN 50",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:lyrica",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:lyrica:75mg",
+  "name": "Lyrica 75 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "75 mg",
+  "manufacturer": "Viatris EESV",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "orange",
+   "lengthMm": 15.9,
+   "widthMm": 5.9,
+   "score": "none",
+   "imprint": "VTRS PGN 75",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:lyrica",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#F0954A",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "orange",
+    "de": "orange"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:lyrica:100mg",
+  "name": "Lyrica 100 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "100 mg",
+  "manufacturer": "Viatris EESV",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "orange",
+   "color2": "orange",
+   "lengthMm": 15.9,
+   "widthMm": 5.9,
+   "score": "none",
+   "imprint": "VTRS PGN 100",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:lyrica",
+   "colorHex": "#F0954A",
+   "color2Hex": "#F0954A",
+   "colorName": {
+    "en": "orange",
+    "de": "orange"
+   },
+   "color2Name": {
+    "en": "orange",
+    "de": "orange"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:lyrica:150mg",
+  "name": "Lyrica 150 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "150 mg",
+  "manufacturer": "Viatris EESV",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "white",
+   "lengthMm": 15.9,
+   "widthMm": 5.9,
+   "score": "none",
+   "imprint": "VTRS PGN 150",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:lyrica",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#FBFBF8",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "white",
+    "de": "weiß"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:lyrica:200mg",
+  "name": "Lyrica 200 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "200 mg",
+  "manufacturer": "Viatris EESV",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "orange",
+   "color2": "orange",
+   "lengthMm": 15.9,
+   "widthMm": 5.9,
+   "score": "none",
+   "imprint": "VTRS PGN 200",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:lyrica",
+   "colorHex": "#F0954A",
+   "color2Hex": "#F0954A",
+   "colorName": {
+    "en": "orange",
+    "de": "orange"
+   },
+   "color2Name": {
+    "en": "orange",
+    "de": "orange"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:lyrica:225mg",
+  "name": "Lyrica 225 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "225 mg",
+  "manufacturer": "Viatris EESV",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "orange",
+   "lengthMm": 15.9,
+   "widthMm": 5.9,
+   "score": "none",
+   "imprint": "VTRS PGN 225",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:lyrica",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#F0954A",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "orange",
+    "de": "orange"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "EMA:lyrica:300mg",
+  "name": "Lyrica 300 mg Hartkapsel",
+  "substance": "Pregabalin",
+  "strength": "300 mg",
+  "manufacturer": "Viatris EESV",
+  "atc": "N02BF02",
+  "indication": {
+   "en": "Nerve pain",
+   "de": "Nervenschmerzen"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "orange",
+   "lengthMm": 15.9,
+   "widthMm": 5.9,
+   "score": "none",
+   "imprint": "VTRS PGN 300",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "ema:lyrica",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#F0954A",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "orange",
+    "de": "orange"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:68180-590",
+  "name": "Ramipril 5 mg (Lupin Pharmaceuticals, Inc.)",
+  "substance": "Ramipril",
+  "strength": "5 mg",
+  "manufacturer": "Lupin Pharmaceuticals, Inc.",
+  "atc": "C09AA05",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "red",
+   "color2": null,
+   "lengthMm": 14,
+   "widthMm": 5,
+   "score": "none",
+   "imprint": "LUPIN RAMIPRIL 5 mg",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "dailymed:a8cdec12-81d1-4ef4-82c0-d05d93c37a07",
+   "colorHex": "#C9483F",
+   "color2Hex": null,
+   "colorName": {
+    "en": "red",
+    "de": "rot"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "18342014",
+  "name": "Ramipril Medivia 5 mg Tabletten",
+  "substance": "Ramipril",
+  "strength": "5 mg",
+  "manufacturer": "Medivia",
+  "atc": "C09AA05",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "pink",
+   "color2": null,
+   "lengthMm": 7,
+   "widthMm": 7,
+   "score": "single",
+   "imprint": "5",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#F2B8C3",
+   "color2Hex": null,
+   "colorName": {
+    "en": "pink",
+    "de": "rosa"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "18342020",
+  "name": "Ramipril Nordapharm 5 mg Tabletten",
+  "substance": "Ramipril",
+  "strength": "5 mg",
+  "manufacturer": "Nordapharm",
+  "atc": "C09AA05",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 10,
+   "widthMm": 5,
+   "score": "single",
+   "imprint": "R5",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:70518-4607",
+  "name": "Ramipril 5 mg (REMEDYREPACK INC.)",
+  "substance": "Ramipril",
+  "strength": "5 mg",
+  "manufacturer": "REMEDYREPACK INC.",
+  "atc": "C09AA05",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "red",
+   "color2": null,
+   "lengthMm": 15,
+   "widthMm": 5.4,
+   "score": "none",
+   "imprint": "D 07",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "dailymed:fcf42121-8e85-4eae-82b4-bc029653b462",
+   "colorHex": "#C9483F",
+   "color2Hex": null,
+   "colorName": {
+    "en": "red",
+    "de": "rot"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:68382-146",
+  "name": "Ramipril 5 mg (Zydus Pharmaceuticals USA Inc.)",
+  "substance": "Ramipril",
+  "strength": "5 mg",
+  "manufacturer": "Zydus Pharmaceuticals USA Inc.",
+  "atc": "C09AA05",
+  "indication": {
+   "en": "Blood pressure",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "white",
+   "color2": "red",
+   "lengthMm": 14,
+   "widthMm": 5,
+   "score": "none",
+   "imprint": "ZA 45 5mg",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "dailymed:055bb582-67cd-425a-8823-d543c14305ce",
+   "colorHex": "#FBFBF8",
+   "color2Hex": "#C9483F",
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": {
+    "en": "red",
+    "de": "rot"
+   }
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "91200443",
+  "name": "Simvastatin Rhenus 40 mg Filmtabletten",
+  "substance": "Simvastatin",
+  "strength": "40 mg",
+  "manufacturer": "Rhenus Generika",
+  "atc": "C10AA01",
+  "indication": {
+   "en": "Cholesterol",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "pink",
+   "color2": null,
+   "lengthMm": 12,
+   "widthMm": 6,
+   "score": "none",
+   "imprint": "S40",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#F2B8C3",
+   "color2Hex": null,
+   "colorName": {
+    "en": "pink",
+    "de": "rosa"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "NDC:42291-817",
+  "name": "Torsemide 10 mg (AvKARE)",
+  "substance": "Torasemid",
+  "strength": "10 mg",
+  "manufacturer": "AvKARE",
+  "atc": "C03CA04",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 8,
+   "widthMm": 8,
+   "score": "single",
+   "imprint": "PA 916",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:7fc14338-92e4-cf57-a3e8-ef64d8d1026c",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:50268-755",
+  "name": "Torsemide 10 mg (AvPAK)",
+  "substance": "Torasemid",
+  "strength": "10 mg",
+  "manufacturer": "AvPAK",
+  "atc": "C03CA04",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 11,
+   "widthMm": 6.1,
+   "score": "single",
+   "imprint": "57 H",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:f1439b9c-c01c-a6d4-594b-d92b8e0af26e",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "NDC:62135-819",
+  "name": "Torsemide 10 mg (Chartwell RX, LLC)",
+  "substance": "Torasemid",
+  "strength": "10 mg",
+  "manufacturer": "Chartwell RX, LLC",
+  "atc": "C03CA04",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 9,
+   "widthMm": 5,
+   "score": "single",
+   "imprint": "C 41",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "dailymed:a3d68763-95e0-4ad6-89c2-c4b1c0b43948",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "US"
+ },
+ {
+  "pzn": "55029172",
+  "name": "Torasemid Nordapharm 10 mg Tabletten",
+  "substance": "Torasemid",
+  "strength": "10 mg",
+  "manufacturer": "Nordapharm",
+  "atc": "C03CA04",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 7,
+   "widthMm": 7,
+   "score": "single",
+   "imprint": "T10",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "55029344",
+  "name": "Torasemid Vitacur 10 mg Tabletten",
+  "substance": "Torasemid",
+  "strength": "10 mg",
+  "manufacturer": "Vitacur",
+  "atc": "C03CA04",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "offwhite",
+   "color2": null,
+   "lengthMm": 11,
+   "widthMm": 5,
+   "score": "cross",
+   "imprint": "TO",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "demo",
+   "colorHex": "#F1EBDD",
+   "color2Hex": null,
+   "colorName": {
+    "en": "off-white",
+    "de": "cremeweiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "91201371",
+  "name": "Tramadol Vitacur 50 mg Hartkapseln",
+  "substance": "Tramadol",
+  "strength": "50 mg",
+  "manufacturer": "Vitacur",
+  "atc": "N02AX02",
+  "indication": {
+   "en": "Pain",
+   "de": "Schmerzmittel"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "yellow",
+   "color2": "green",
+   "lengthMm": 15.9,
+   "widthMm": 5.8,
+   "score": "none",
+   "imprint": "T50",
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "demo",
+   "colorHex": "#F2CC3D",
+   "color2Hex": "#86C49A",
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": {
+    "en": "green",
+    "de": "grün"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "05387239",
+  "pzns": [],
+  "name": "Aspirin N 100 mg Tabletten",
+  "substance": "Acetylsalicylsäure",
+  "strength": "100 mg",
+  "manufacturer": "Bayer Vital",
+  "atc": "B01AC06",
+  "indication": {
+   "en": "Blood thinner",
+   "de": "Blutverdünner"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 7,
+   "widthMm": 7,
+   "score": null,
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/21630/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "06453174",
+  "pzns": [
+   "06453240",
+   "06453257"
+  ],
+  "name": "HCT - 1 A Pharma 25 mg Tabletten",
+  "substance": "Hydrochlorothiazid",
+  "strength": "25 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C03AA03",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "round",
+   "color": "offwhite",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "cross",
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://medikamio.com/downloads/de-de/drugs/hct-1-a-pharma-25-mg-tabletten.pdf",
+   "colorHex": "#F1EBDD",
+   "color2Hex": null,
+   "colorName": {
+    "en": "off-white",
+    "de": "cremeweiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "03159468",
+  "pzns": [
+   "04939139"
+  ],
+  "name": "MTX HEXAL 10 mg Tabletten",
+  "substance": "Methotrexat",
+  "strength": "10 mg",
+  "manufacturer": "Hexal",
+  "atc": "L04AX03",
+  "indication": {
+   "en": "Rheumatism (immune)",
+   "de": "Rheuma"
+  },
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/20870/pdf",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "09321616",
+  "pzns": [],
+  "name": "Naratriptan-ratiopharm bei Migräne 2,5 mg Filmtabletten",
+  "substance": "Naratriptan",
+  "strength": "2,5 mg",
+  "manufacturer": "ratiopharm",
+  "atc": "N02CC02",
+  "indication": {
+   "en": "Migraine",
+   "de": "Migräne"
+  },
+  "look": {
+   "shape": "round",
+   "color": "green",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": null,
+   "imprint": "NT 2,5",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://cdn.shop-apotheke.com/PDF/D09/321/616/D09321616-bp.pdf",
+   "colorHex": "#86C49A",
+   "color2Hex": null,
+   "colorName": {
+    "en": "green",
+    "de": "grün"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "00811690",
+  "pzns": [
+   "14295111",
+   "00811709"
+  ],
+  "name": "L-Thyrox HEXAL 50 Mikrogramm Tabletten",
+  "substance": "Levothyroxin-Natrium",
+  "strength": "50 µg",
+  "manufacturer": "Hexal",
+  "atc": "H03AA01",
+  "indication": {
+   "en": "Thyroid",
+   "de": "Schilddrüse"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": "50",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/20824/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "06488652",
+  "pzns": [
+   "06488669"
+  ],
+  "name": "L-Thyroxin 50 - 1 A Pharma Tabletten",
+  "substance": "Levothyroxin-Natrium",
+  "strength": "50 µg",
+  "manufacturer": "1 A Pharma",
+  "atc": "H03AA01",
+  "indication": {
+   "en": "Thyroid",
+   "de": "Schilddrüse"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": "50",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/20805/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "17420781",
+  "pzns": [],
+  "name": "Metformin HEXAL 500 mg Filmtabletten",
+  "substance": "Metformin",
+  "strength": "500 mg",
+  "manufacturer": "Hexal",
+  "atc": "A10BA02",
+  "indication": {
+   "en": "Diabetes",
+   "de": "Zucker"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": null,
+   "imprint": "M 500",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/19944/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "03055639",
+  "pzns": [
+   "02145122",
+   "03568238",
+   "19535761"
+  ],
+  "name": "Furosemid-ratiopharm 40 mg Tabletten",
+  "substance": "Furosemid",
+  "strength": "40 mg",
+  "manufacturer": "ratiopharm",
+  "atc": "C03CA01",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.ratiopharm.de/assets/products/de/pkg_insert/Furosemid-ratiopharm%2040%20mg%20Tabletten%20-%205.pdf?pzn=3055639",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "17420717",
+  "pzns": [],
+  "name": "Furorese 40 mg Tabletten",
+  "substance": "Furosemid",
+  "strength": "40 mg",
+  "manufacturer": "Hexal",
+  "atc": "C03CA01",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://beipackzettel.apocdn.net/medien/0168d8f6a1ee9dea1beda95d0748b63c5b336c47b88accc74f525497d980e871.pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "11851959",
+  "pzns": [
+   "11851965"
+  ],
+  "name": "Spironolacton Accord 25 mg Filmtabletten",
+  "substance": "Spironolacton",
+  "strength": "25 mg",
+  "manufacturer": "Accord Healthcare",
+  "atc": "C03DA01",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 8.1,
+   "widthMm": 8.1,
+   "score": null,
+   "imprint": "AD",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://beipackzettel.apocdn.net/medien/95799.pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "02071079",
+  "pzns": [
+   "02071085",
+   "03574115",
+   "19535896"
+  ],
+  "name": "Spironolacton-ratiopharm 50 mg Tabletten",
+  "substance": "Spironolacton",
+  "strength": "50 mg",
+  "manufacturer": "ratiopharm",
+  "atc": "C03DA01",
+  "indication": {
+   "en": "Water pill (diuretic)",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://mediately-spcs.s3.amazonaws.com/de_web/2102352_pil.pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "00089603",
+  "pzns": [
+   "00089626",
+   "00089632"
+  ],
+  "name": "Metoprolol-ratiopharm Succinat 47,5 mg Retardtabletten",
+  "substance": "Metoprololsuccinat",
+  "strength": "47,5 mg",
+  "manufacturer": "ratiopharm",
+  "atc": "C07AB02",
+  "indication": {
+   "en": "Heart / blood pressure",
+   "de": "Herz / Blutdruck"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.ratiopharm.de/assets/products/de/pkg_insert/Metoprolol-ratiopharm%20Succinat%2047%2C5%20mg%20Retardtabletten%20-%204.pdf?pzn=89603",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "20171324",
+  "pzns": [
+   "00229903",
+   "00230272"
+  ],
+  "name": "Metoprololsuccinat - 1 A Pharma 95 mg Retardtabletten",
+  "substance": "Metoprololsuccinat",
+  "strength": "95 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C07AB02",
+  "indication": {
+   "en": "Heart / blood pressure",
+   "de": "Herz / Blutdruck"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "lightyellow",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17954/pdf",
+   "colorHex": "#F6EAA8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "light yellow",
+    "de": "hellgelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "07189466",
+  "pzns": [
+   "01175026",
+   "07189472",
+   "01175084",
+   "07189673",
+   "01175121",
+   "07189696",
+   "01175167",
+   "07189704",
+   "19535815"
+  ],
+  "name": "Pantoprazol-ratiopharm 20 mg magensaftresistente Tabletten",
+  "substance": "Pantoprazol",
+  "strength": "20 mg",
+  "manufacturer": "ratiopharm",
+  "atc": "A02BC02",
+  "indication": {
+   "en": "Stomach protection",
+   "de": "Magenschutz"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": null,
+   "imprint": null,
+   "coating": "enteric",
+   "finish": "glossy",
+   "source": "leaflet:https://www.ratiopharm.de/assets/products/de/pkg_insert/Pantoprazol-ratiopharm%2020%20mg%20magensaftresistente%20Tabletten%20-%204.pdf?pzn=7189466",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "01686198",
+  "pzns": [
+   "01675496"
+  ],
+  "name": "Allopurinol-ratiopharm 100 mg Tabletten",
+  "substance": "Allopurinol",
+  "strength": "100 mg",
+  "manufacturer": "ratiopharm",
+  "atc": "M04AA01",
+  "indication": {
+   "en": "Gout",
+   "de": "Gicht"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.ratiopharm.de/assets/products/de/pkg_insert/Allopurinol-ratiopharm%20100%20mg%20Tabletten%20-%204.pdf?pzn=1686198",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "07752944",
+  "pzns": [
+   "07752950",
+   "07752967"
+  ],
+  "name": "Atorvastatin - 1 A Pharma 40 mg Filmtabletten",
+  "substance": "Atorvastatin",
+  "strength": "40 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C10AA05",
+  "indication": {
+   "en": "Cholesterol",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "cross",
+   "imprint": "A40",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17618/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "11297397",
+  "pzns": [
+   "11297428",
+   "11297351"
+  ],
+  "name": "Atorvastatin PUREN 40 mg Filmtabletten",
+  "substance": "Atorvastatin",
+  "strength": "40 mg",
+  "manufacturer": "PUREN Pharma",
+  "atc": "C10AA05",
+  "indication": {
+   "en": "Cholesterol",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 15.5,
+   "widthMm": 8.1,
+   "score": null,
+   "imprint": "AS",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/19850/pdf2",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "03820206",
+  "pzns": [
+   "03820471",
+   "03820525"
+  ],
+  "name": "BISOPROLOL 5 1A PHARMA",
+  "substance": "Bisoprolol",
+  "strength": "5 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C07AB07",
+  "indication": {
+   "en": "Herz / Blutdruck",
+   "de": "Herz / Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "cross",
+   "imprint": "BIS5",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17597/pdf",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "05391726",
+  "pzns": [
+   "05391732"
+  ],
+  "name": "BISOPROLOL 1A PHARMA 2.5MG",
+  "substance": "Bisoprolol",
+  "strength": "2,5 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C07AB07",
+  "indication": {
+   "en": "Herz / Blutdruck",
+   "de": "Herz / Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": null,
+   "imprint": "BIS 2,5",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17595/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "00766736",
+  "pzns": [
+   "00766742",
+   "00766759"
+  ],
+  "name": "RAMIPRIL 1A PHARMA 5 MG",
+  "substance": "Ramipril",
+  "strength": "5 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C09AA05",
+  "indication": {
+   "en": "Blutdruck",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17937/pdf2",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "00766699",
+  "pzns": [
+   "00766707",
+   "00766713"
+  ],
+  "name": "RAMIPRIL 1A PHARMA 2.5 MG",
+  "substance": "Ramipril",
+  "strength": "2,5 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C09AA05",
+  "indication": {
+   "en": "Blutdruck",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17936/pdf2",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "05881985",
+  "pzns": [
+   "00889887",
+   "00889893"
+  ],
+  "name": "AMLODIPIN 1A PHARMA 5MG N",
+  "substance": "Amlodipin",
+  "strength": "5 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C08CA01",
+  "indication": {
+   "en": "Blutdruck",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": "5",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17599/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "00889947",
+  "pzns": [
+   "00889976",
+   "00923360"
+  ],
+  "name": "AMLODIPIN 1A PHARMA 10MG N",
+  "substance": "Amlodipin",
+  "strength": "10 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C08CA01",
+  "indication": {
+   "en": "Blutdruck",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": "10",
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17601/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "00773972",
+  "pzns": [
+   "00774003",
+   "00774026"
+  ],
+  "name": "TORASEMID 1A PHARMA 10 MG",
+  "substance": "Torasemid",
+  "strength": "10 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C03CA04",
+  "indication": {
+   "en": "Wassertablette",
+   "de": "Wassertablette"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "cross",
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17991/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "01970516",
+  "pzns": [
+   "01970522",
+   "01970060"
+  ],
+  "name": "SIMVASTATIN 1A PHARMA 20MG",
+  "substance": "Simvastatin",
+  "strength": "20 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C10AA01",
+  "indication": {
+   "en": "Cholesterin",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "oval",
+   "color": "orange",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": "20",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17967/pdf3",
+   "colorHex": "#F0954A",
+   "color2Hex": null,
+   "colorName": {
+    "en": "orange",
+    "de": "orange"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "07752884",
+  "pzns": [
+   "07752890",
+   "07752909"
+  ],
+  "name": "ATORVASTATIN 1A PHAR 20MG",
+  "substance": "Atorvastatin",
+  "strength": "20 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "C10AA05",
+  "indication": {
+   "en": "Cholesterin",
+   "de": "Cholesterin"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": "A20",
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/17616/pdf",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "13706285",
+  "pzns": [
+   "13706316"
+  ],
+  "name": "LISINOPRIL PUREN 10MG",
+  "substance": "Lisinopril",
+  "strength": "10 mg",
+  "manufacturer": "PUREN Pharma",
+  "atc": "C09AA03",
+  "indication": {
+   "en": "Blutdruck",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": null,
+   "imprint": null,
+   "coating": "uncoated",
+   "finish": "matte",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/20675/pdf2",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "01339806",
+  "pzns": [
+   "01339812",
+   "01339835"
+  ],
+  "name": "CARMEN 10MG",
+  "substance": "Lercanidipin",
+  "strength": "10 mg",
+  "manufacturer": null,
+  "atc": "C08CA13",
+  "indication": {
+   "en": "Blutdruck",
+   "de": "Blutdruck"
+  },
+  "look": {
+   "shape": "round",
+   "color": "yellow",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/18810/pdf2",
+   "colorHex": "#F2CC3D",
+   "color2Hex": null,
+   "colorName": {
+    "en": "yellow",
+    "de": "gelb"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "04555887",
+  "pzns": [],
+  "name": "TAMSULOSIN-DURA 0.4MG REK",
+  "substance": "Tamsulosin",
+  "strength": "0,4 mg",
+  "manufacturer": "Viatris (dura)",
+  "atc": "G04CA02",
+  "indication": {
+   "en": "Prostata",
+   "de": "Prostata"
+  },
+  "look": {
+   "shape": "capsule",
+   "color": "orange",
+   "color2": "green",
+   "lengthMm": null,
+   "widthMm": null,
+   "score": null,
+   "imprint": null,
+   "coating": "gelatin",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/16560/pdf2",
+   "colorHex": "#F0954A",
+   "color2Hex": "#86C49A",
+   "colorName": {
+    "en": "orange",
+    "de": "orange"
+   },
+   "color2Name": {
+    "en": "green",
+    "de": "grün"
+   }
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "00176101",
+  "pzns": [
+   "20329469",
+   "00176207",
+   "20329423",
+   "00176868"
+  ],
+  "name": "CITALOPRAM 1A PHARMA 20MG",
+  "substance": "Citalopram",
+  "strength": "20 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "N06AB04",
+  "indication": {
+   "en": "Stimmung",
+   "de": "Stimmung"
+  },
+  "look": {
+   "shape": "oblong",
+   "color": "white",
+   "color2": null,
+   "lengthMm": null,
+   "widthMm": null,
+   "score": "single",
+   "imprint": null,
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/20020/pdf3",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ },
+ {
+  "pzn": "09322219",
+  "pzns": [
+   "09322225",
+   "09322231"
+  ],
+  "name": "DONEPEZIL HCL 1A PHAR 5MG",
+  "substance": "Donepezil",
+  "strength": "5 mg",
+  "manufacturer": "1 A Pharma",
+  "atc": "N06DA02",
+  "indication": {
+   "en": "Gedächtnis",
+   "de": "Gedächtnis"
+  },
+  "look": {
+   "shape": "round",
+   "color": "white",
+   "color2": null,
+   "lengthMm": 7.0,
+   "widthMm": 7.0,
+   "score": null,
+   "imprint": null,
+   "coating": "film",
+   "finish": "glossy",
+   "source": "leaflet:https://www.patienteninfo-service.de/gi/21320/pdf3",
+   "colorHex": "#FBFBF8",
+   "color2Hex": null,
+   "colorName": {
+    "en": "white",
+    "de": "weiß"
+   },
+   "color2Name": null
+  },
+  "market": "DE"
+ }
+]
