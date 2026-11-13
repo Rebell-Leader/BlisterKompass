@@ -116,6 +116,7 @@ pwa/            web app: js/ modules paired with the Swift files, tests/ (node -
 docs/           PRDs, decisions, data provenance, landing page (DE/EN), screenshots, brand, research notes
 print/          example sheets: the BMP page and "Meine Medikamente mit Bildern" for plan A and the KBV sample
 tools/          generators: example plan and pack codes, leaflet looks, demo print (+ tests), test-photo download
+android/        Android app: the web app in an offline WebView (no internet permission); build-apk.sh → android/dist/, published as a release asset
 deploy/         build.py → deploy/dist (landing page + web app), what Vercel publishes
 test-photos/    NLM ground truth (manifest.json) and RESULTS.md
 ```
@@ -127,6 +128,9 @@ Vercel's Git integration builds every PR as a preview and `main` as production a
 `/` → landing redirect and the headers. GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs the web-app tests,
 the site build with a data guard and the print tests on every PR and on `main`. `docs/landing.html` is a fragment; `deploy/build.py`
 wraps it in a full page and swaps Google Fonts for the self-hosted font in `docs/fonts/`, so visitors' IP addresses don't go to Google.
+The Android APK (debug-signed, for sideloading) is not committed: it is the asset of the latest GitHub release
+(<https://github.com/Rebell-Leader/BlisterKompass/releases/latest/download/blister-kompass.apk>), which the landing page links to.
+Rebuild it with `android/build-apk.sh` (JDK 17, Android SDK 35) after web-app changes, then `gh release upload <tag> android/dist/blister-kompass.apk --clobber`.
 
 ## Data and licences
 
