@@ -72,6 +72,7 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 | T-43 | P2 | Xcode project, target and folder still named `PillSnap` | deploy |
 | T-45 | P1 | Verify Vercel deploys teammates' commits on the public repo | deploy |
 | T-46 | P2 | Screenshots in `docs/screens` predate the rename and the mascot | skilled user |
+| T-47 | P1 | Impressum and Datenschutz still have placeholder name, address and e-mail | site |
 
 ---
 
@@ -692,3 +693,12 @@ screen and the BMP 2.8 day view.
 landing page's screen section.
 
 **Test.** Visual check of README and `docs/landing.html`.
+
+### T-47 Impressum and Datenschutz have placeholders (site, verified)
+
+**Problem.** `docs/impressum.html` and `docs/datenschutz.html` mark the provider's name, address and e-mail as `.todo` placeholders
+("Vorname Nachname", "kontakt@example.de"). A public German site needs them filled (§ 5 DDG, Art. 13 DSGVO).
+
+**Fix.** Fill in the responsible person or organisation in both pages (the `.todo` spans), then remove the `.todo` style.
+
+**Test.** `grep -n 'class="todo"' docs/*.html` finds nothing; both pages load from the landing page footer.
