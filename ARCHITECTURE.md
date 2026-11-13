@@ -10,14 +10,14 @@ flowchart LR
     subgraph Phone["iPhone (offline)"]
         Cam["Camera or<br/>photo library"] --> Code{"2D / 1D code?<br/>CodeReader"}
         Code -- "BMP XML" --> Reader["PlanReader<br/>medication lines only"]
-        Reader --> Resolve["resolve PZN / substance<br/>against catalog"]
+        Reader --> Resolve["resolve PZN<br/>against catalog"]
         Resolve --> Plan[("myMeds + unknownPZNs<br/>UserDefaults")]
         Code -- "pack code" --> Pack["PackCode → PackResult<br/>PZN vs. plan"]
-        Pack -- "add / take over look" --> Plan
+        Pack -- "add to own list" --> Plan
         Code -- "no code" --> Rec["PillRecognizer<br/>colour · shape · imprint"]
         Rec --> Match["Matcher<br/>score · rank · warn"]
         Plan --> Match
-        Plan --> Day["Day.sections<br/>now · later · tomorrow"]
+        Plan --> Day["Day.sections<br/>now · later · past today"]
         Cat[("catalog.json · 108 products<br/>pzn-names.json · 93 demo packs")] --> Match
         Cat --> Resolve
         Cat --> Pack
@@ -41,18 +41,21 @@ flowchart LR
 3. **Plan → my meds.** `PlanReader` parses the BMP XML with `XMLParser` and keeps only `<S>` sections and their `<M>`/`<W>` entries:
    PZN (zero-padded to 8), substance and strength, dosing `m/d/v/h` (also `½`, `1/2`, `0,5`), weekday `wo`, as-needed section
    (`c="411"` or free text "Bedarf…"), weekly section (`c="425"` or "wöchentlich"), free text `t`, hint `i`. `<P>` (patient), `<A>`
-   (practice) and `<O>` (parameters) are skipped during parsing, so they never reach memory or storage. Entries are resolved against the
-   catalog by PZN (any pack size of a product), else by substance + strength (German products first; the PWA no longer does this and
-   keeps the plan line's own PZN, name and schedule with an unknown look – iOS port open as `TODO.md` T-29). Unresolved entries stay unknown and
+   (practice) and `<O>` (parameters) are skipped during parsing, so they never reach memory or storage. A code that breaks the BMP 2.8
+   contract is refused, never read half-way: another version than `028`, a PZN outside 1–99999999, a dose outside the dose notation (never
+   read as 0), a weekday outside 1–7, bad pages (the PWA names the reason; iOS also refuses multi-page codes until it can merge pages).
+   Entries are resolved against the catalog by PZN only (any pack size of a product), never by substance (INV-05/15); all `<W>` of a
+   combination product are kept and a weekly line keeps its dose. The PWA keeps a line without a catalog look with its own PZN, name and
+   schedule; iOS still lists it by name only (`TODO.md` T-29). Unresolved entries stay unknown and
    are listed, never guessed. `Store.adopt` replaces `myMeds` and `unknownPZNs`.
 4. **Pack → plan.** `PackResult.evaluate` compares the PZN with the plan: `onPlan` · `onPlanNoLook` · `otherMaker` (same substance,
    strength and release type as far as known, other PZN: possibly the pharmacy's switch, never shown as "the same medicine") ·
    `sameSubstance` (same substance, but other strength, other release type such as gastro-resistant vs. plain, or strength unknown) ·
    `notOnPlan` · `unknown`, plus expiry/batch from the code. Strength of name-only packs comes from the PZN name ("ASPIRIN N 100MG"),
    release type from the IFA form code. Names and dosage forms for PZNs without a look come
-   from `Data/pzn-names.json`; `DoseForm` turns the form code into a grey outline (tablet, capsule, drops …). Two writes are possible,
-   both by explicit tap:
-   - `otherMaker` → only after **Apotheke hat bestätigt**, **Neues Aussehen übernehmen**: `Store.takeOver` swaps product and look, keeps the schedule;
+   from `Data/pzn-names.json`; `DoseForm` turns the form code into a grey outline (tablet, capsule, drops …). `otherMaker` writes
+   nothing: there is no "take over the new look", because a person's tap must not replace the plan's PZN (INV-15, T-15). One write is
+   possible, by explicit tap:
    - `notOnPlan` (`PackResult.canAdd`) → **Zu meinem Plan hinzufügen**: with a catalog look, `ManualPlanView(adding:)` asks for the
      times of day and `Store.add` appends the entry (same PZN replaces); without a look, `Store.addWithoutLook` adds the PZN to
      `unknownPZNs` and it is listed by its official name.
@@ -62,14 +65,20 @@ flowchart LR
 6. **Cues → answer.** `Matcher.answer(myMeds:catalog:cues:)`, the deterministic scorer:
    - score each plan entry: imprint 5, colour 3, shape 2.5, size 1.5, score line 1.5, finish 0.5; similar colours/shapes give partial
      credit; an imprint read by OCR also matches look-alike glyphs (I/1/l, O/0, S/5, B/8);
-   - rank; candidates within 0.15 of the best are "close": 1 → `sure` (≥ 0.75, and only with a read imprint) or `likely`; several →
-     `choose` plus the question with the highest information gain over the close set; none → `unknown`;
+   - rank; candidates within 0.15 of the best are "close". Without a read imprint and a measured size, every plan pill whose colour fits
+     (≥ 0.7) and whose shape isn't clearly different is close too (white look-alikes, T-05). 1 → `sure` (≥ 0.75, and only with a read
+     imprint; the banner says "Passt zu Ihrem Plan – bitte prüfen", never "Ihre Tablette") or `likely`; several → `choose` (up to 6) plus
+     the question with the highest information gain over the close set; none → `unknown`;
    - then rank the **rest of the catalog**. If something not on the plan fits clearly better (≥ 0.7 and > best own + 0.1): same substance
-     as a plan entry → `other_maker`, else `not_on_plan`. Near-ties prefer a plan substance and German-market products.
+     **and strength** as a plan entry → `other_maker`; same substance in another or unknown strength, or only the same ATC code →
+     `other_strength` (shows the look-alike's own title next to the plan entry, T-04); else `not_on_plan`. Near-ties prefer a plan
+     substance with the plan's strength and German-market products. The score is a heuristic, not a probability.
 7. **Home = the day.** `Day.sections(myMeds, at: now)` turns the plan into sections: the current slot (morning 4–11, noon 11–15,
-   evening 15–21, night 21–4) first and marked `now`, then the rest of the day in order, slots already past as `tomorrow`, weekly meds
-   whose weekday is today, other weekly meds under "Diese Woche", as-needed last. `DayPlanList` renders it (big rows for `now`) and
-   refreshes every minute. Read-aloud uses a fixed template over the same data.
+   evening 15–21, night 21–4) first and marked `now`, then the rest of the day in order, today's slots already past as `past` ("Heute
+   vorbei", never "Morgen": T-06), weekly meds whose weekday is today, other weekly meds under "Diese Woche", as-needed last. The day runs
+   04:00–04:00: from midnight to 04:00 the night slot is `lastNight` ("seit gestern Abend"), never `now`. "Die App merkt sich nicht, was
+   Sie schon genommen haben" sits under the heading and ends the read-aloud. `DayPlanList` renders it (big rows for `now`) and
+   refreshes every minute (the PWA with one app-wide timer that redraws only the list). Read-aloud uses a fixed template over the same data.
 
 ## Data model
 
@@ -130,11 +139,11 @@ classDiagram
 | `PZNName` | `PackCode.swift` | One row of the official PZN list: `[name, substance, form, pack size]`, e.g. `["ASPIRIN N 100MG", "Acetylsalicylsäure", "TABL", "98"]`. |
 | `DoseForm` | `DoseForm.swift` | IFA form code → family (tablet, capsule, drops, injection, patch …) and a German label; drawn as a grey dashed outline, never a coloured pill (INV-05). |
 | `PackCode` / `PackResult` | `PackCode.swift` | A decoded pack code and what it means for the plan (see flow step 4). |
-| `PillCues` / `Answer` | `Models.swift` | What the recogniser saw, and the matcher's verdict (`sure`, `likely`, `choose`, `other_maker`, `not_on_plan`, `unknown`, …). |
+| `PillCues` / `Answer` | `Models.swift` | What the recogniser saw, and the matcher's verdict (`sure`, `likely`, `choose`, `other_maker`, `other_strength`, `not_on_plan`, `unknown`, …). |
 | `Day.Section` / `Day.Entry` | `Models.swift` | The plan laid out over the day for the home screen; computed, never stored. |
 
 **Stored on the phone** (`UserDefaults`, nothing else): `myMeds` (JSON array of `Med` with schedule) and `unknownPZNs` (array of PZN
-strings). A new plan code overwrites both; "add to plan" and "take over look" update them in place. Photos, plan XML and pack codes are
+strings). A new plan code overwrites both; "add to plan" updates them in place. Photos, plan XML and pack codes are
 never stored.
 
 **Bundled, read-only:**
@@ -160,11 +169,11 @@ never stored.
 | `PlanReader.swift` | BMP XML → plan items → `ScannedPlan` (privacy boundary: only medication lines) |
 | `PillRecognizer.swift` | on-device image analysis + OCR → `PillCues` |
 | `Matcher.swift` | scoring, ranking, question, other-maker / not-on-plan warnings → `Answer` |
-| `Store.swift` | bundled catalog and PZN list; `myMeds` / `unknownPZNs` in UserDefaults; `adopt`, `add`, `addWithoutLook`, `takeOver` |
+| `Store.swift` | bundled catalog and PZN list; `myMeds` / `unknownPZNs` in UserDefaults; `adopt`, `add`, `addWithoutLook` |
 | `Bmp.swift` | code reading (zxing-cpp, Vision): plan or pack code |
 | `PackCode.swift` | pack code parser (securPharm IFA/GS1, Code 39 PZN), PZN check, expiry; `PackResult` = pack vs. plan |
 | `DoseForm.swift` | dosage form from the PZN list and its grey outline for packs without a look |
-| `PackViews.swift` | pack result screen (take over look, add to plan), camera / photo-library popup |
+| `PackViews.swift` | pack result screen (add to plan), camera / photo-library popup |
 | `PlanInput.swift` | "Plan einlesen" popup and the typed-entry screen; also the "when do you take it?" step when adding a scanned pack |
 | `OtherViews.swift` | `DayPlanList` (home: now / later), look picker, camera |
 | `ResultViews.swift` | result screens, med card |

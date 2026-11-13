@@ -3,7 +3,10 @@
 13 Nov 2026. Source: a multi-perspective review of the app in the hackathon repo (skilled user, pharmacist, physician, and a photo→PZN
 plus accessibility test run with Playwright and Chromium at 390×844, axe-core and pdf.js), re-checked when the code moved here. Line
 numbers refer to the code as moved on 13 Nov 2026 and may drift. Each item gives the problem, the fix, and how to test the fix.
-Status: **verified** means it was run or seen; **suspected** means it was found by reading code.
+Status: **verified** means it was run or seen; **suspected** means it was found by reading code. The summary's **Status** column says
+whether an item is open, fixed or mitigated, and on which client; "fixed" means the fix and its check are in the code, not only a test.
+14 Nov 2026: the submission review (`docs/submission_review_2026-11-13.md` in the hackathon repo) re-verified T-01, T-04–T-06, T-13 and
+T-15 on this code and added T-51–T-57; the fixes are in PR "fix: safety findings of the submission review".
 **Fix both clients** ([`AGENTS.md`](AGENTS.md) → “Two clients, one product”): most items cite the web-app file; apply the same fix to the
 paired Swift file from the code map in [`ARCHITECTURE.md`](ARCHITECTURE.md#code-map-ios--pwa), with the same check on both sides, or note
 in the PR why one side waits. Requirements behind these items: [PRD print sheet](docs/PRD-print-sheet.md), [PRD scanner app](docs/PRD-scanner-app.md).
@@ -26,62 +29,71 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 
 ## Summary
 
-| ID | P | Title | Area |
-|---|---|---|---|
-| T-01 | P0 | Home screen timers double every minute, app freezes after ~10 min | skilled user |
-| T-02 | P0 | Double-tap on any "back home" button leaves the app | skilled user |
-| T-03 | P0 | Generic switch or combination pack shows as "Nicht auf Ihrem Plan!" with Add | pharmacist |
-| T-04 | P0 | Pill photo: "anderer Hersteller" ignores strength | physician |
-| T-05 | P0 | White pills: one "Wahrscheinlich" pick among 4 look-alikes (metformin demo photo → Atorvastatin) | photo→PZN |
-| T-06 | P0 | Day view can cause a skipped or doubled dose (11:05, after midnight); no "intake not recorded" | physician |
-| T-07 | P0 | Demo plan A is clinically implausible | pharmacist, physician |
-| T-08 | P0 | INV-15/16/19 wording still in the PWA | pharmacist, physician |
-| T-09 | P0 | Old build after redeploy; saved meds keep stale looks | skilled user, deploy |
-| T-10 | P1 | Spoken confirmations are cut off after ~6 ms | skilled user, accessibility |
-| T-11 | P1 | "Fertig" in typed entry wipes no-picture entries; "Ohne Bild" rows dead | skilled user |
-| T-12 | P1 | Typed entry is a dead end outside the 108-product catalog | skilled user |
-| T-13 | P1 | Typed / added amounts default to 1 | pharmacist, physician |
-| T-14 | P1 | Patient list drifts from the BMP; no "laut Plan" vs "selbst eingetragen"; no plan date | physician |
-| T-15 | P1 | A user's "Apotheke hat bestätigt" tap becomes identity | pharmacist |
-| T-16 | P1 | INV-21 substitution-exclusion flag missing | pharmacist |
-| T-17 | P1 | Strength match ignores dose-form family and concentration | pharmacist |
-| T-18 | P1 | Other pack size of the same product shows as "andere Packung" | pharmacist |
-| T-19 | P1 | 1D PZN barcode fails on carton photos (2400 px downscale) | photo→PZN |
-| T-20 | P1 | Photo of a whole plan sheet never decodes | photo→PZN |
-| T-21 | P1 | Fake "Packungsbeilage wird gelesen …" animation | photo→PZN, pharmacist |
-| T-22 | P1 | Malformed saved data locks the app for good | skilled user |
-| T-23 | P1 | Misleading error messages; "Nochmal" goes home | skilled user |
-| T-24 | P1 | Hinweise and meal tags missing in day view and read-aloud | physician |
-| T-25 | P1 | Contrast below 4.5:1 (morning slot, "off" slots, dark slot buttons) | accessibility |
-| T-26 | P1 | 200% zoom: sideways scroll, names cut to "M…" | accessibility |
-| T-27 | P1 | "Eigene Fotos" off-screen; the only gallery path on Android | skilled user, accessibility |
-| T-29 | P1 | iOS: `PlanReader.swift` needs the PWA BMP 2.8 reading fixes | physician, pharmacist |
-| T-30 | P1 | iOS: print writes a BMP 2.8 code from the patient list; old layout | pharmacist, physician |
-| T-31 | P1 | iOS: `MealTiming.swift` inverts negations | pharmacist, physician |
-| T-32 | P1 | Decision: may the patient app reprint the original BMP code bytes? | pharmacist |
-| T-33 | P2 | Other-maker screen hides the scanned PZN | photo→PZN |
-| T-34 | P2 | PPN mod-97 and NTIN check digits not verified | pharmacist |
-| T-35 | P2 | Expiry text drops a coded day | pharmacist |
-| T-36 | P2 | Score-line question says "zum Teilen" (MTX HEXAL Kerbe is not for splitting) | pharmacist |
-| T-37 | P2 | "Verwerfen" with trash icon reads like "throw the medicine away" | skilled user |
-| T-38 | P2 | "Aussehen antippen" tile still on the PWA home screen | skilled user, physician |
-| T-39 | P2 | Focus: imprint field not autofocused, focus lost after adding | accessibility |
-| T-40 | P2 | Fictional demo PZNs may collide with real products | pharmacist |
-| T-41 | P2 | Print text extraction splits ligatures ("Wirksto ff") | accessibility |
-| T-42 | P2 | iOS checks and PWA tests are not paired one to one | skilled user, deploy |
-| T-43 | P2 | Xcode project, target and folder still named `PillSnap` | deploy |
-| T-45 | P1 | Verify Vercel deploys teammates' commits on the public repo | deploy |
-| T-46 | P2 | Screenshots in `docs/screens` predate the rename and the mascot | skilled user |
-| T-48 | P2 | PWA: tap a pill picture → popup with the pill large (iOS has `PillPopup`) | patient |
-| T-49 | P2 | PWA precaches pdf.js (~1.8 MB) for an optional feature | skilled user |
-| T-50 | P2 | Leaflet link points to a commercial pharmacy CDN: check its terms | pharmacist |
-| T-47 | P1 | Impressum and Datenschutz still have placeholder name, address and e-mail | site |
+| ID | P | Title | Area | Status |
+|---|---|---|---|---|
+| T-01 | P0 | Home screen timers double every minute, app freezes after ~10 min | skilled user | fixed (web; iOS uses `TimelineView`, n/a) |
+| T-02 | P0 | Double-tap on any "back home" button leaves the app | skilled user | open |
+| T-03 | P0 | Generic switch or combination pack shows as "Nicht auf Ihrem Plan!" with Add | pharmacist | open |
+| T-04 | P0 | Pill photo: "anderer Hersteller" ignores strength | physician | fixed (web + iOS) |
+| T-05 | P0 | White pills: one "Wahrscheinlich" pick among 4 look-alikes (metformin demo photo → Atorvastatin) | photo→PZN | fixed (web + iOS) |
+| T-06 | P0 | Day view can cause a skipped or doubled dose (11:05, after midnight); no "intake not recorded" | physician | fixed (web + iOS) |
+| T-07 | P0 | Demo plan A is clinically implausible | pharmacist, physician | open |
+| T-08 | P0 | INV-15/16/19 wording still in the PWA | pharmacist, physician | fixed in the apps (web + iOS); screenshots T-46 |
+| T-09 | P0 | Old build after redeploy; saved meds keep stale looks | skilled user, deploy | open |
+| T-10 | P1 | Spoken confirmations are cut off after ~6 ms | skilled user, accessibility | open |
+| T-11 | P1 | "Fertig" in typed entry wipes no-picture entries; "Ohne Bild" rows dead | skilled user | open |
+| T-12 | P1 | Typed entry is a dead end outside the 108-product catalog | skilled user | open |
+| T-13 | P1 | Typed / added amounts default to 1 | pharmacist, physician | fixed (web + iOS) |
+| T-14 | P1 | Patient list drifts from the BMP; no "laut Plan" vs "selbst eingetragen"; no plan date | physician | open |
+| T-15 | P1 | A user's "Apotheke hat bestätigt" tap becomes identity | pharmacist | mitigated: take-over removed (web + iOS) |
+| T-16 | P1 | INV-21 substitution-exclusion flag missing | pharmacist | open |
+| T-17 | P1 | Strength match ignores dose-form family and concentration | pharmacist | open |
+| T-18 | P1 | Other pack size of the same product shows as "andere Packung" | pharmacist | open |
+| T-19 | P1 | 1D PZN barcode fails on carton photos (2400 px downscale) | photo→PZN | open |
+| T-20 | P1 | Photo of a whole plan sheet never decodes | photo→PZN | open |
+| T-21 | P1 | Fake "Packungsbeilage wird gelesen …" animation | photo→PZN, pharmacist | open |
+| T-22 | P1 | Malformed saved data locks the app for good | skilled user | open |
+| T-23 | P1 | Misleading error messages; "Nochmal" goes home | skilled user | open |
+| T-24 | P1 | Hinweise and meal tags missing in day view and read-aloud | physician | open |
+| T-25 | P1 | Contrast below 4.5:1 (morning slot, "off" slots, dark slot buttons) | accessibility | open |
+| T-26 | P1 | 200% zoom: sideways scroll, names cut to "M…" | accessibility | open |
+| T-27 | P1 | "Eigene Fotos" off-screen; the only gallery path on Android | skilled user, accessibility | open |
+| T-29 | P1 | iOS: `PlanReader.swift` needs the PWA BMP 2.8 reading fixes | physician, pharmacist | partly fixed (iOS): no substance fallback, all `<W>`, weekly dose, BMP checks |
+| T-30 | P1 | iOS: print writes a BMP 2.8 code from the patient list; old layout | pharmacist, physician | open |
+| T-31 | P1 | iOS: `MealTiming.swift` inverts negations | pharmacist, physician | fixed (iOS) |
+| T-32 | P1 | Decision: may the patient app reprint the original BMP code bytes? | pharmacist | open |
+| T-33 | P2 | Other-maker screen hides the scanned PZN | photo→PZN | open |
+| T-34 | P2 | PPN mod-97 and NTIN check digits not verified | pharmacist | open |
+| T-35 | P2 | Expiry text drops a coded day | pharmacist | open |
+| T-36 | P2 | Score-line question says "zum Teilen" (MTX HEXAL Kerbe is not for splitting) | pharmacist | fixed (web + iOS) |
+| T-37 | P2 | "Verwerfen" with trash icon reads like "throw the medicine away" | skilled user | open |
+| T-38 | P2 | "Aussehen antippen" tile still on the PWA home screen | skilled user, physician | open |
+| T-39 | P2 | Focus: imprint field not autofocused, focus lost after adding | accessibility | open |
+| T-40 | P2 | Fictional demo PZNs may collide with real products | pharmacist | open |
+| T-41 | P2 | Print text extraction splits ligatures ("Wirksto ff") | accessibility | open |
+| T-42 | P2 | iOS checks and PWA tests are not paired one to one | skilled user, deploy | open |
+| T-43 | P2 | Xcode project, target and folder still named `PillSnap` | deploy | open |
+| T-45 | P1 | Verify Vercel deploys teammates' commits on the public repo | deploy | open |
+| T-46 | P2 | Screenshots in `docs/screens` predate the rename and the mascot | skilled user | open |
+| T-48 | P2 | PWA: tap a pill picture → popup with the pill large (iOS has `PillPopup`) | patient | open |
+| T-49 | P2 | PWA precaches pdf.js (~1.8 MB) for an optional feature | skilled user | open |
+| T-50 | P2 | Leaflet link points to a commercial pharmacy CDN: check its terms | pharmacist | open |
+| T-47 | P1 | Impressum and Datenschutz still have placeholder name, address and e-mail | site | open |
+| T-51 | P0 | BMP code that breaks the 2.8 contract is read anyway | physician, pharmacist | fixed (web + iOS) |
+| T-52 | P0 | Incomplete multi-page plan could be adopted and then looked complete | physician | fixed (web; iOS refuses multi-page) |
+| T-53 | P0 | Picked leaflet PDF accepted for another product with the same substance | pharmacist | fixed (web; iOS n/a) |
+| T-54 | P1 | Leaflet finish (matte/glossy) inferred from the coating | pharmacist | fixed for leaflet looks; other sources open |
+| T-55 | P1 | Android: camera capture stays in the app cache | site, privacy | fixed in source; APK not rebuilt |
+| T-56 | P0 | Site: unqualified "Kein Medizinprodukt", certainty and photo-identity claims, privacy notice gaps | site | fixed (texts) |
+| T-57 | P1 | Printed row numbers are not a stable medicine reference | physician, pharmacist | open |
 
 ---
 
 ## P0: before the Sat 11:00 freeze, demo-breaking or safety
 
 ### T-01 Home screen timers double every minute, app freezes (skilled user, verified)
+
+**Status (14 Nov): fixed in the web app.** One module-level `setInterval` redraws only `section.day` in place (scroll kept); `Home()` starts no timer. Check: `pwa/tests/pwa.test.js` "one timer for the day list (T-01)". Still to do: a Playwright run with a fake clock over 15 minutes; the install callbacks still call `render()`.
 
 **Problem.** `Home()` starts a 60 s `setInterval` at `js/app.js:85` and pushes its `clearInterval` into `cleanup`. The interval calls
 `render()` (`js/app.js:35`), which builds `Home()` again and starts another interval. `cleanup` only runs in `go()`, not in `render()`.
@@ -116,7 +128,7 @@ drop `pushState`/`back` and use `history.replaceState` plus `go({name:"home"})`.
 
 **Problem.**
 - `Pack.evaluate` (`js/pack-code.js:123-124`) matches the substance by exact lower-case string.
-- In `data/pzn-names.json`, 19,290 of 36,953 rows have an empty substance.
+- In the hackathon repo's full PZN list, 19,290 of 36,953 rows have an empty substance (this repo ships a 93-row demo excerpt).
 - The list drops salt names ("Metoprolol" vs the catalog's "Metoprololsuccinat").
 
 So every non-catalog generic of a plan drug falls through to `notOnPlan` (`js/pack-code.js:141`), and `canAdd` offers "Zu meinem Plan
@@ -132,6 +144,8 @@ A Ramipril/HCT pack vs plan Ramipril also gives `notOnPlan`. The spoken text say
 1. Match on ATC (catalog `atc`) where known.
 2. Otherwise match on a normalised substance: strip salt and hydrate words (succinat, tartrat, natrium, hydrochlorid, …).
 3. Otherwise match on name tokens of the PZN-list name against plan substances.
+   ATC and salt normalisation only find candidates; they never make two products interchangeable (ATC is a classification, and
+   normalising can hide a real difference). The result stays "ask the pharmacy", never "same medicine".
 4. If the substance is still unknown, return a new kind `askPharmacy` ("Diese Packung kennt die App nicht genau – bitte Apotheke
    fragen") with no Add button.
 5. A pack whose name contains a plan substance plus another one is `sameSubstance` with difference "Kombinationspräparat".
@@ -143,6 +157,8 @@ A Ramipril/HCT pack vs plan Ramipril also gives `notOnPlan`. The spoken text say
 - a Ramipril/HCT PZN against Ramipril → `sameSubstance`.
 
 ### T-04 Pill photo: "anderer Hersteller" ignores strength (physician, verified with catalog looks)
+
+**Status (14 Nov): fixed, web + iOS.** `other_maker` only for the same substance **and** strength; another or unknown strength, or only a shared ATC code → `other_strength` with the look-alike's own title. Checks (both): "Pregabalin 300 mg look on plan A (75 mg) → other_strength …", "no catalog look of another strength of a plan A drug gives other_maker".
 
 **Problem.** `Matcher.answer` (`js/matcher.js:96-106`) sets `other_maker` when the best catalog hit has the same substance as a plan
 entry, whatever its strength. The result screen then prints the plan entry's title (`js/app.js:333-337`).
@@ -161,6 +177,8 @@ The pack path does check strength (`js/pack-code.js:126-139`).
 **Test.** Matcher unit tests with the cues of a Pregabalin 300 mg catalog look against plan A → state `other_strength`.
 
 ### T-05 White pills: one "Wahrscheinlich" pick among four look-alikes (photo→PZN, verified)
+
+**Status (14 Nov): fixed, web + iOS.** Without a read imprint and a size, every colour-fitting (≥ 0.7) plan pill whose shape isn't clearly different stays a candidate; `choose` shows up to 6. Check (both): "off-white oval, no imprint, size unknown → choose, Metformin among the candidates". Open: the "Kein Aufdruck" / "Kann ich nicht lesen" split.
 
 **Problem.** The bundled demo photo `examples/nlm-metformin-2.jpg` (pill mode, "Kein Aufdruck") returns **"Wahrscheinlich – bitte
 prüfen: Atorvastatin 20 mg"**.
@@ -183,6 +201,8 @@ A juror tapping the metformin example sees the wrong drug.
 `tests/recognizer.test.js` or a new matcher test).
 
 ### T-06 Day view can cause a skipped or doubled dose (physician, verified with fake clock)
+
+**Status (14 Nov): fixed, web + iOS.** Sections carry `past` and `lastNight`; `tomorrow` is always false. Headers "Heute vorbei · Morgens" and "Nachts · seit gestern Abend"; "Die App merkt sich nicht, was Sie schon genommen haben." under the heading and at the end of the read-aloud. Checks (both): "11:05 → …", "00:30 → …", "18:30 → night later today, morning earlier today (past, never tomorrow)" (replaced "… morning tomorrow", which asserted the defect).
 
 **Problem.** Slots are morning 4–11, noon 11–15, evening 15–21, night 21–4 (`js/model.js:54-60`). Slots already past come back as
 `tomorrow` (`js/model.js:86`).
@@ -219,6 +239,8 @@ Diclofenac 75 retard 1-0-1, Ibuprofen 400 as needed, ASS 100, MTX, Ramipril and 
 
 ### T-08 INV-15/16/19 wording still in the PWA (pharmacist + physician, verified)
 
+**Status (14 Nov): fixed in both apps.** Banner "Passt zu Ihrem Plan – bitte prüfen" for `sure`; "Mit Apotheke oder Praxis klären, bevor Sie etwas ändern." replaces the tablet-handling lines; "Neu verordnet? …" removed. Check (web): "no tablet handling, sameness or splitting wording in app texts". Open: the add button's label ("Auf meine eigene Liste"), and the screenshots (T-46).
+
 **Problem.**
 - INV-15: "Ihre Tablette" as identity from appearance (`js/app.js:301`, `:303`).
 - INV-16: "In der Apotheke prüfen lassen. Nicht doppelt einnehmen." (`js/app.js:337`) and "Nicht einnehmen, bevor Apotheke oder Arzt
@@ -246,8 +268,8 @@ Diclofenac 75 retard 1-0-1, Ibuprofen 400 as needed, ASS 100, MTX, Ramipril and 
 **Fix.**
 - In `app.js`, on `navigator.serviceWorker.oncontrollerchange`, show a banner "Neue Version – tippen zum Neuladen", or reload when on
   home.
-- On `store.load()`, refresh each saved med's catalog fields (name, look, indication) by PZN from `catalog.json`, keeping
-  `schedule`.
+- On `store.load()`, refresh each saved med's catalog fields (name, look) by PZN from `catalog.json`, keeping the plan's own
+  `schedule`, indication (`r`), notes and extra line – never replace plan data with catalog defaults.
 - Demo checklist: open the app twice on every demo phone after the last deploy.
 
 **Test.** Playwright: load with the cache at `v7`, bump `VERSION`, reload once and expect the banner. Unit-test the refresh in
@@ -289,6 +311,8 @@ with its dose-form outline. If nothing matches, offer "Nur mit Namen eintragen (
 
 ### T-13 Typed and added amounts default to 1 (pharmacist + physician, verified)
 
+**Status (14 Nov): fixed, web + iOS** by not asking: typed entry stores the times only; whenText says "(Menge nicht angegeben)", the day list "Menge nicht angegeben", the card and print "?". Check (web): "no amount on the plan → no number in the dosing text" (iOS: `whenText` lives in `Theme.swift`, outside the macOS checks). Open: an optional amount stepper.
+
 **Problem.**
 - `add()` writes amount 1 for every picked slot (`js/app.js:487`).
 - Weekly and as-needed entries get no amount (`js/app.js:483-484`).
@@ -320,6 +344,8 @@ The patient never says how many, so the app invents a dose.
 **Test.** Unit: `adopt` marks `plan`, `add` marks `self`. Playwright: a plan entry has no remove button.
 
 ### T-15 A user's "Apotheke hat bestätigt" tap becomes identity (pharmacist, verified)
+
+**Status (14 Nov): mitigated, web + iOS.** The take-over ("Apotheke hat bestätigt" → "Neues Aussehen übernehmen") is removed and `Store.takeOver` deleted; the "dasselbe Medikament" sentence is gone. Check (web): "a person's tap never replaces the plan's product (T-15)". The `pending` design below stays the way to bring it back.
 
 **Problem.**
 - The patient's own tap (`js/app.js:615`) runs `store.takeOver` (`js/store.js:58-63`), which replaces the plan entry's PZN and look
@@ -499,6 +525,8 @@ hidden button is the only way to pick an existing photo.
 
 ### T-29 iOS: `PlanReader.swift` needs the PWA BMP 2.8 reading fixes (physician + pharmacist, suspected; iOS can't be built here)
 
+**Status (14 Nov): partly fixed.** iOS now has no substance fallback, keeps all `<W>`, keeps the weekly dose, refuses codes that break BMP 2.8 and refuses multi-page codes (it can't merge them). Still open: look-less lines keep no schedule (iOS `Med.look` isn't optional), `t`/`du`/`dud`/`r`/`x`, sections 412–424, `X`/`R`, page merge, and a specific "Plan-Code fehlerhaft" message instead of "kein Medikationsplan".
+
 **Problem.** The same defects as fixed in the PWA now:
 
 - only the last `<W>` is kept (`ios/PillSnap/PlanReader.swift:106`);
@@ -527,6 +555,8 @@ A pharmacy scanning it would import a patient-edited list as a professional plan
 **Test.** `ios/checks/run.sh`; a visual check of a printed PDF.
 
 ### T-31 iOS: `MealTiming.swift` inverts negations (pharmacist + physician, verified)
+
+**Status (14 Nov): fixed (iOS).** `MealTiming.from` returns nil for "nicht", "kein", "Abstand", "oder", "unabhängig", "egal", as the web app's `meal()`. Check: "meal: 'nicht zu den Mahlzeiten', 'Abstand zum Essen', … give no tag".
 
 **Problem.** `ios/PillSnap/MealTiming.swift:43` only excludes "unabhängig", "nicht nüchtern" and "egal":
 
@@ -585,6 +615,8 @@ handles the day correctly.
 
 ### T-36 Score-line question says "zum Teilen" (pharmacist, verified)
 
+**Status (14 Nov): fixed, web + iOS.** The question reads "Hat die Tablette eine Kerbe oder einen Strich?". Checks: "score-line question says nothing about splitting (INV-14)" (both) and the web string test.
+
 **Problem.** The matcher's question reads "Hat die Tablette einen Strich in der Mitte (zum Teilen)?" (`js/matcher.js:119`). MTX HEXAL
 10 mg (PZN 03159468) has `look.score: "single"`, but its leaflet says "Die Kerbe dient nicht zum Teilen der Tablette." A score line
 never means "may be split" (INV-14).
@@ -628,7 +660,9 @@ products, pharmacy software would show a different medicine.
 **Fix.** Check every demo PZN against `pzn-names.json` (and ideally the IFA list). Replace any hit with an unused valid PZN, and
 regenerate the plan and pack codes.
 
-**Test.** A test asserting that no catalog `source: demo` PZN appears in `pzn-names.json`.
+**Test.** A test asserting that no catalog `source: demo` PZN appears in `pzn-names.json`. Absence from the Festbetrag list (or the
+93-row excerpt) doesn't prove a PZN unassigned: keep demo identifiers visibly synthetic in the UI and the data, never as dispensing
+authority.
 
 ### T-41 Print text extraction splits ligatures (accessibility, verified on the old PDF)
 
@@ -736,3 +770,87 @@ link on both clients.
 **Fix.** Fill in the responsible person or organisation in both pages (the `.todo` spans), then remove the `.todo` style.
 
 **Test.** `grep -n 'class="todo"' docs/*.html` finds nothing; both pages load from the landing page footer.
+
+## Added by the submission review (14 Nov 2026)
+
+### T-51 BMP code that breaks the 2.8 contract is read anyway (physician + pharmacist, verified)
+
+**Problem.** `read('<MP v="999"><S><M p="1234567890123" m="wrong"/></S></MP>')` succeeded: the walker checked XML syntax, not the BMP
+contract, and a dose that is no number became 0 (line shown as "Dosierung steht nicht auf dem Plan").
+
+**Fix (done, web + iOS).** Refuse `MP/@v` ≠ `028`, `M/@p` outside 1–99999999, a dose outside the notation (`PlanReader.dose()` →
+null), `wo` outside 1–7, and pages outside `a` 1–5 / `z` 2–5. The web app says why (`PlanReader.INVALID`) and keeps the old list.
+
+**Test.** Checks "plan code of another version …", "… 13-digit PZN …", "… m=wrong …", "… weekday 9 or page 3 of 2 …", "the
+review's sample …", "all example plans still read" (both clients). Open: iOS shows the generic "kein Medikationsplan" text.
+
+### T-52 Incomplete multi-page plan could be adopted and then looked complete (physician, verified)
+
+**Problem.** "Nur diese Seiten übernehmen" showed an "Unvollständig" banner at import, but `Store.adopt` saved only the medicines, so
+the day view, read-aloud and print looked complete after a restart.
+
+**Fix (done).** The button is gone; `Store.adopt` returns false for a plan with missing pages; the old list stays. iOS can't merge
+pages and refuses multi-page codes (T-29). If partial adoption is wanted later, the saved state needs an "incomplete" marker that the
+day view, read-aloud and print all show.
+
+**Test.** `pwa/tests/pwa.test.js` "a plan with missing pages is never adopted; the old list stays".
+
+### T-53 Picked leaflet PDF accepted for another product with the same substance (pharmacist, verified)
+
+**Problem.** A leaflet for "Anderes-Produkt 10 mg" (Lisinopril, pink round) was accepted as `found` for LISINOPRIL PUREN 10MG: the check
+only looked for the substance.
+
+**Fix (done, web).** `LeafletPdf.namesProduct`: the leaflet must contain every product word of the official PZN name (strength and
+form words left out, umlauts folded) and the strength; otherwise `unbound` and the look stays unknown. Without an official name there
+is nothing to bind to: no picker. The learned look is labelled "Aussehen laut der Packungsbeilage, die Sie gewählt haben". iOS has no
+picked-file path (it downloads by the pack's PZN).
+
+**Test.** `pwa/tests/leaflet.test.js`: "leaflet of another product with the same substance … → unbound", "… in another strength (20 mg)
+→ unbound", "PZN without an official name → unbound". The PDF fixture now names the pack's product ("HCT - 1 A Pharma 25 mg").
+Open: the public build's PZN list has 93 rows, so most real packs get no picker here.
+
+### T-54 Leaflet finish inferred from the coating (pharmacist, verified)
+
+**Problem.** The parser set `finish: matte` for uncoated and `glossy` for coated tablets: a coating doesn't say how a surface looks
+(INV-05). The matcher weighs `finish` (0.5) when a recogniser reports it.
+
+**Fix (done for leaflet looks).** `finishIn` / `finish(in:)` only from "glänzend" / "matt"; the 31 leaflet looks in the catalog have
+`finish: null`; `tools/add-leaflet-looks.py` writes null. Open: the EMA, DailyMed and demo looks also carry a coating-derived finish;
+check their sources before relying on it.
+
+**Test.** "leaflet: finish only when the text states it; a film coating alone gives none" (both clients).
+
+### T-55 Android: camera capture stays in the app cache (privacy, verified in source)
+
+**Problem.** `cameraIntent()` deleted old captures only when the next camera photo started; the latest stayed in `cache/photos`,
+while the site said "Fotos werden nicht gespeichert".
+
+**Fix (done in source).** `clearPhotos()` on a fresh start, before every file chooser (camera or gallery), on a cancelled capture or a
+gallery pick, and in `onDestroy`. The capture can't be deleted in `onActivityResult` itself: the WebView reads the URI afterwards.
+The privacy page now describes this.
+
+**Test.** Not run: no Android SDK here. Rebuild the APK, take a photo, go back home, close the app; `adb shell run-as
+de.hackathon.blisterkompass ls cache/photos` is empty.
+
+### T-56 Site: unqualified medical-device and certainty claims, privacy notice gaps (site, verified)
+
+**Problem.** README, landing footer and Impressum said "Kein Medizinprodukt" (qualification hasn't been assessed); the landing page
+said "dann ist es sicher", "Ihre Tablette", "Nicht einnehmen", "nicht doppelt nehmen", offered a web component and API as if built,
+and said the fields of another PZN carry over automatically; the privacy page left out `learnedLeaflets`, the Android cache and the
+external leaflet link.
+
+**Fix (done).** "Not for clinical use; medical-device qualification not yet assessed"; PZN "names the exact pack"; photo answers as
+candidates with "Mit Apotheke oder Praxis klären"; partner offers labelled as proposals; privacy page lists the three storage keys,
+the Android cache and the connections. Open: T-47 (placeholders, needs a real responsible person), T-46 (screenshots still show
+"Ihre Tablette").
+
+### T-57 Printed row numbers are not a stable medicine reference (physician + pharmacist, suspected)
+
+**Problem.** `print-sheet.js` numbers rows after moving as-needed entries to the end, and a saved med has no immutable card id, so
+"Nr. 3" can mean another medicine after an edit or a reprint.
+
+**Fix.** Until a stable reference exists, don't claim that a number always means the same medicine (pitch, PRD print sheet). Later: a
+card id set at adoption and printed with the sheet date.
+
+**Test.** Print, add an entry, print again: the PRD and pitch don't promise stable numbers.
+

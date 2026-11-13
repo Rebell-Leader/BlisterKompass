@@ -47,16 +47,16 @@ IDs: SA-xx. "Now" = built (both clients unless noted); T-xx = open item in [TODO
 | SA-02 | Reads only the medication part: `S` blocks with `M`, `W`, `R`, `X`; never `P`, `A`, `O`. Free-text `X` lines are shown on import and not stored. | Now (web); iOS T-29 |
 | SA-03 | Keeps what the plan says: PZN, all ingredients, dose notation, unit (`du`/`dud`), weekday (`wo`), free-text dosing (`t`), hint (`i`), reason (`r`), extra line (`x`), block headings 411–425; pages of one plan merged. Lines without picture data keep their schedule and show a grey outline. | Now (web); iOS T-29 |
 | SA-04 | A line takes a picture only from the catalog product with its own PZN; never from a substance match or another maker (INV-05, INV-15). | Now (web); iOS T-29 |
-| SA-05 | **Day view**: now first, then later today, tomorrow, weekly medicines in their slot on their day (else the next date), free-text dosing as written, as-needed last. | Now; T-06 (11:05 and after-midnight cases, "intake not recorded" note) |
+| SA-05 | **Day view**: now first, then later today, then today's slots already past ("Heute vorbei", never "Morgen"), weekly medicines in their slot on their day (else the next date), free-text dosing as written, as-needed last. 00:00–04:00 the night slot is last night's, never "Jetzt". "Die App merkt sich nicht, was Sie schon genommen haben." on screen and in the read-aloud. | Now (both; T-06 fixed) |
 | SA-06 | **Read-aloud** (German voice) of what is due now, with each pill's look, from fixed templates. | Now; T-10 (cut off), T-24 (hints) |
 | SA-07 | **Medicine card**: picture or outline with its source, dose per time of day, unit, reason, hint, extra line, block heading. | Now; T-08 wording |
 | SA-08 | **Pack scan**: securPharm IFA and GS1 Data Matrix, PZN barcode (Code 39); PZN check digit; best-before and batch. | Now; T-19 (1D barcode from a distance), T-34, T-35 |
-| SA-09 | **Pack vs. plan**: on the plan · same substance, other pack (only the pharmacy says whether it replaces the plan's) · same substance, other strength or form · not on the plan · unknown. Taking over a new look only after "Apotheke hat bestätigt". | Now; T-03, T-15, T-16, T-17, T-18, T-33 |
-| SA-10 | **Pill photo** → colour, shape (and imprint: typed on the web, OCR on iOS) → candidates from the person's own plan only, a distinguishing question, and "other maker" / "not on your plan" warnings that send to the pharmacy. | Now; T-04, T-05 |
-| SA-11 | **Own list**: put a scanned pack on the phone's list with its times. Shown as the person's own entry, never as a prescription (INV-19). | Now; T-08, T-11, T-12, T-13, T-14 |
+| SA-09 | **Pack vs. plan**: on the plan · same substance, other pack (only the pharmacy says whether it replaces the plan's) · same substance, other strength or form · not on the plan · unknown. No take-over of a new look by the person's tap: the plan's PZN and look stay as the practice wrote them (T-15). | Now; T-03, T-16, T-17, T-18, T-33 |
+| SA-10 | **Pill photo** → colour, shape (and imprint: typed on the web, OCR on iOS) → candidates from the person's own plan only (without a read imprint, all colour-fitting look-alikes), a distinguishing question, and "other maker" (same strength only) / "other strength" / "not on your plan" warnings that send to the pharmacy or practice. Experimental: a look is never identity. | Now (both; T-04, T-05 fixed) |
+| SA-11 | **Own list**: put a scanned pack on the phone's list with its times; the amount is not asked and stays "Menge nicht angegeben" (no default). Shown as the person's own entry, never as a prescription (INV-19). | Now; T-11, T-12, T-14 (T-13 fixed) |
 | SA-12 | **Plan drucken**: the sheet "Meine Medikamente mit Bildern". | Now (web); iOS T-30 |
 | SA-13 | **Offline**: everything on the phone; the web app installs and works in flight mode; no request after the first load. | Now; T-09 (update prompt) |
-| SA-14 | **Leaflet look for an unknown PZN**: iPhone app downloads the leaflet after the user allows it (only the PZN leaves the phone); the web app links to the leaflet, the person saves the PDF and picks it, and it is read on the phone (pdf.js). A leaflet of another substance is refused; an unclear section 6 leaves the look unknown. | Now (both) |
+| SA-14 | **Leaflet look for an unknown PZN**: iPhone app downloads the leaflet after the user allows it (only the PZN leaves the phone); the web app links to the leaflet, the person saves the PDF and picks it, and it is read on the phone (pdf.js). A leaflet of another substance is refused; on the web a picked leaflet must also name the pack's product (official name words and strength), otherwise the look stays unknown; an unclear section 6 leaves the look unknown; a finish (glossy/matte) only when the leaflet states it. | Now (both) |
 | SA-15 | **Same product on both clients**: same features, texts and data, paired checks. | Rule ([AGENTS.md](../AGENTS.md) §3); T-29…T-31, T-42…T-44 |
 
 ## 6. Acceptance criteria
@@ -64,7 +64,8 @@ IDs: SA-xx. "Now" = built (both clients unless noted); T-xx = open item in [TODO
 - The KBV sample plan imports with all 7 lines; insulin shows "20 IE" morning and "10 IE" evening without a picture; MTX shows on Mondays
   with its dose; the nitro spray shows under "Nur bei Bedarf" with "max. 3".
 - A pack of another maker of a plan medicine never shows as "Nicht auf Ihrem Plan!" with an add button (T-03 open).
-- No screen or spoken text contains a tablet-handling instruction (INV-16) or calls an appearance match "Ihre Tablette" (INV-15, T-08 open).
+- No screen or spoken text contains a tablet-handling instruction (INV-16) or calls an appearance match "Ihre Tablette" (INV-15; T-08 fixed in both apps, a string test guards the web app; old screenshots T-46).
+- A plan code that breaks BMP 2.8 (other version, invalid PZN, dose or weekday) is refused; a plan with a missing page is never adopted.
 - In flight mode after one visit, plan import, pack scan and the PZN lookup work in the web app; no request leaves the phone.
 - `cd pwa && npm test` and `ios/checks/run.sh` pass; the same check names exist on both sides (T-42).
 
