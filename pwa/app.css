@@ -67,6 +67,9 @@ button:disabled { cursor: default; }
 .big .icon { width: clamp(30px, calc(var(--h, 120px) * .32), 64px); height: clamp(30px, calc(var(--h, 120px) * .32), 64px); }
 .big .mascot { width: calc(var(--h) * .68); height: calc(var(--h) * .68); margin: -14px 0 -8px; }
 .big .icon.big-only { width: clamp(40px, calc(var(--h) * .55), 72px); height: clamp(40px, calc(var(--h) * .55), 72px); }
+.big.compact { font-size: 20px; gap: 6px; padding: 6px; }
+.big.compact .icon { width: 34px; height: 34px; }
+.row.three { gap: 10px; }
 .big:active:not(:disabled), .tile:active, .day-row:active, .card:is(button):active { transform: scale(.98); }
 .fill-accent { background: var(--accent-fill); } .fill-ok { background: var(--ok-fill); } .fill-warn { background: var(--warn-fill); }
 .fill-bad { background: var(--bad-fill); } .fill-gray { background: var(--gray-fill); } .fill-disabled { background: var(--disabled-fill); }
@@ -317,6 +320,7 @@ dialog.sheet::backdrop { background: rgba(0, 0, 0, .4); }
 }
 @media (max-width: 360px) {
   .big { font-size: 22px; }
+  .big.compact { font-size: 17px; }
   .tile { font-size: 18px; }
   h1 { font-size: 30px; }
 }

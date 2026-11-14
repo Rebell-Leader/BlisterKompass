@@ -46,9 +46,11 @@ export function svg(tag, attrs = {}, ...children) {
 
 /** Big coloured button: icon over word (or icon only, with the word as its label). */
 /** `mascot` (a state name) replaces the icon with the mascot in that state. */
-export function bigButton({ icon: ic, title, onClick, color = "accent", height = 120, iconOnly = false, disabled = false, mascot: m }) {
-  return h(`button.big.fill-${color}`, { type: "button", onclick: onClick, disabled, "aria-label": title, style: { "--h": `${height}px` } },
-    m ? mascot(m) : icon(ic, { cls: iconOnly ? "icon big-only" : "icon" }), iconOnly ? null : h("span", null, title));
+export function bigButton({ icon: ic, title, onClick, color = "accent", height = 120, iconOnly = false, disabled = false, mascot: m, compact = false }) {
+  // compact: three in a row, smaller title on up to two lines ("\n" breaks it).
+  return h(`button.big.fill-${color}${compact ? ".compact" : ""}`, { type: "button", onclick: onClick, disabled, "aria-label": title.replace(/\n/g, " "), style: { "--h": `${height}px` } },
+    m ? mascot(m) : icon(ic, { cls: iconOnly ? "icon big-only" : "icon" }),
+    iconOnly ? null : h("span", null, ...title.split("\n").flatMap((t, i) => (i ? [h("br"), t] : [t]))));
 }
 
 /** Light tile: icon over (multi-line) word. */
