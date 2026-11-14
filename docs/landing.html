@@ -36,7 +36,7 @@ section { padding-block: 64px; }
 h2 { font-size: clamp(28px, 3.6vw, 38px); margin: 8px 0 32px; }
 
 /* top bar */
-.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; }
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; color: var(--ink); }
 .brand img { width: 44px; height: 44px; margin: -6px 0; }
 .langs { display: inline-flex; background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
@@ -165,6 +165,7 @@ footer nav a { color: var(--muted); }
 
 /* partner band: when the look matters, how it's drawn, how it plugs into existing systems */
 .toplink { font-size: 15px; font-weight: 700; text-decoration: none; margin-left: auto; padding: 8px 4px; }
+.toplink + .toplink { margin-left: 0; }
 .partner { background: var(--soft); border-radius: 28px; padding: clamp(32px, 5vw, 56px) clamp(18px, 4vw, 48px); margin-bottom: 48px; scroll-margin-top: 16px; }
 .partner > h2 { margin-bottom: 12px; }
 .partner .intro { color: var(--muted); font-size: 19px; max-width: 60ch; }
@@ -317,6 +318,7 @@ footer p { max-width: 95ch; }
   <div class="top">
     <div class="brand"><img src="../pwa/icons/mascot-wave.png" alt="" width="44" height="44" decoding="async">BlisterKompass</div>
     <a class="toplink" href="#partner"><span lang="de">Für Partner</span><span lang="en">For partners</span></a>
+    <a class="toplink" href="https://blister-kompass-voice.vercel.app/voice" target="_blank" rel="noopener"><span lang="de">Sprachmodul</span><span lang="en">Voice module</span></a>
     <div class="langs" role="group" aria-label="Sprache / Language">
       <button type="button" data-lang="de" aria-pressed="true">DE</button>
       <button type="button" data-lang="en" aria-pressed="false">EN</button>
