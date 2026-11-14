@@ -43,10 +43,12 @@ jobs:
           python-version: "3.12"
       - name: Build the site (what Vercel publishes)
         run: python3 deploy/build.py
-      - name: Only the landing page and the PWA are published
+      - name: Only the landing page, the PWA and the root icons are published
         working-directory: deploy/dist
         run: |
-          test "$(ls)" = "$(printf 'docs\npwa')" || { echo "unexpected top-level entries:"; ls; exit 1; }
+          # Root icons: browsers, iOS and Android ask the site root for them (deploy/build.py ROOT_ICONS).
+          test "$(ls | LC_ALL=C sort)" = "$(printf '%s\n' apple-touch-icon-precomposed.png apple-touch-icon.png docs favicon.ico pwa)" \
+            || { echo "unexpected top-level entries:"; ls; exit 1; }
           if find . -name '*.md' -o -name '*.py' -o -name 'package*.json' -o -path '*/tests/*' | grep .; then exit 1; fi
       - name: Data guard (public repo, see docs/DATA.md)
         run: |
