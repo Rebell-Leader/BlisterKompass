@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import * as PlanReader from "../js/plan-reader.js";
 import * as Pack from "../js/pack-code.js";
 import * as Matcher from "../js/matcher.js";
-import { product, adding, sections, spokenLines, spokenWhen, whenText, pznName, nameStrength, countText, doseSymbol, NOT_RECORDED } from "../js/model.js";
+import { product, adding, sections, spoken, spokenCount, spokenLines, spokenWhen, whenText, pznName, nameStrength, countText, doseSymbol, NOT_RECORDED } from "../js/model.js";
 import { doseForm, unitOf, bmpForm } from "../js/dose-form.js";
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
@@ -202,6 +202,9 @@ const halfPastMidnight = sections(planA.meds, new Date(2026, 10, 14, 0, 30));
 check("00:30 → night slot is last night's, never 'now' again", () => slotOf(halfPastMidnight, "night")?.lastNight === true && slotOf(halfPastMidnight, "night")?.now === false && !halfPastMidnight.some((s) => s.now));
 check("readout says the app records no intake; past and last-night slots are spoken as such", () => spokenLines(evening).at(-1) === NOT_RECORDED
   && spokenWhen("morning", { past: true }) === "Heute früh, schon vorbei" && spokenWhen("night", { lastNight: true }) === "Zur Nacht, seit gestern Abend");
+check("photo match read aloud: 'Sieht aus wie … Bitte prüfen', never 'Das ist' (INV-15)", () => { const d = planA.meds.find((m) => m.substance === "Diclofenac-Natrium");
+  return spoken(d, { check: true }).startsWith("Sieht aus wie Diclofenac") && spoken(d, { check: true }).includes("Bitte prüfen") && !spoken(d, { check: true }).includes("Das ist") && spoken(d).startsWith("Das ist Diclofenac"); });
+check("line without a picture: ½ is read 'ein halbes Stück'", () => spokenCount(0.5, null) === "ein halbes Stück" && spokenCount(1, null) === "ein Stück");
 // T-13: an amount nobody gave stays unknown.
 check("no amount on the plan → no number in the dosing text", () => { const t = whenText({ schedule: { kind: "daily", slots: ["morning"], amounts: {}, days: [] } }); return t === "morgens (Menge nicht angegeben)" && !/eine|\d/.test(t); });
 // BMP 2.8 contract: refused with a reason, never read half-way (also "do not turn malformed doses into zero").

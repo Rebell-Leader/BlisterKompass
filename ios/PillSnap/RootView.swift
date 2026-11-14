@@ -210,7 +210,7 @@ struct HomeView: View {
             Text("Lesen Sie zuerst Ihren **Medikationsplan** ein – per Kamera, aus den Beispielen oder selbst eingeben.")
                 .font(.title3).multilineTextAlignment(.center)
             BigButton(icon: "qrcode.viewfinder", title: "Plan einlesen", height: 230, mascot: "scan-plan") { showPlanSource = true }
-            Tip(icon: "lightbulb.fill", text: "Den **Code oben rechts** auf dem Plan ganz ins Bild nehmen.")
+            PlanCodeHint()
         }
     }
 
@@ -235,6 +235,75 @@ struct Tip: View {
         }
         .padding(14)
         .background(Theme.card, in: RoundedRectangle(cornerRadius: Theme.corner))
+    }
+}
+
+/// Welcome screen: where the plan code is, as a small picture of an example plan (tools/make-plan-hint.py).
+/// A tap opens it large with a close-up of the code (`PlanCodeHintPopup`). Same texts as `planCodeHint()` in pwa/js/app.js.
+struct PlanCodeHint: View {
+    @State private var open = false
+
+    var body: some View {
+        Button { open = true } label: {
+            HStack(spacing: 14) {
+                Image("plan-hint").resizable().interpolation(.high).scaledToFit()
+                    .frame(width: 132)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.secondary.opacity(0.35)))
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Den **Code oben rechts** fotografieren").font(.body).foregroundStyle(.primary)
+                    Label("Antippen zum Vergrößern", systemImage: "plus.magnifyingglass")
+                        .font(.footnote.weight(.semibold)).foregroundStyle(Theme.accent)
+                }
+                .multilineTextAlignment(.leading)
+                Spacer(minLength: 0)
+            }
+            .padding(14)
+            .background(Theme.card, in: RoundedRectangle(cornerRadius: Theme.corner))
+            .contentShape(RoundedRectangle(cornerRadius: Theme.corner))
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Den Code oben rechts fotografieren. Beispiel ansehen")
+        .accessibilityAddTraits(.isButton)
+        .sheet(isPresented: $open) { PlanCodeHintPopup() }
+    }
+}
+
+/// The example plan large, the code framed, then the code alone as it should fill the camera picture.
+struct PlanCodeHintPopup: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                HStack {
+                    Spacer()
+                    Button { dismiss() } label: {
+                        Label("Schließen", systemImage: "xmark").font(.title3.weight(.semibold))
+                    }
+                }
+                Text("So finden Sie den Code").font(.system(.title2, design: .rounded, weight: .bold))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Image("plan-hint").resizable().interpolation(.high).scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.secondary.opacity(0.35)))
+                    .accessibilityLabel("Beispiel eines Medikationsplans, der Code oben rechts ist gelb umrandet")
+                Text("Der Code steht **oben rechts** auf dem Medikationsplan.").font(.body)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Image("plan-hint-code").resizable().interpolation(.none).scaledToFit()
+                    .frame(width: 220)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .accessibilityLabel("Der Code füllt das Bild")
+                Text("So nah heran: Der Code **füllt das Bild**.").font(.body)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("Beispiel mit erfundenen Daten.").font(.footnote).foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(20)
+        }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
     }
 }
 
