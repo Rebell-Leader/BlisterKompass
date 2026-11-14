@@ -1,7 +1,7 @@
-"""Mascot state "scan-plan": the waving pill next to a paper Medikationsplan, scan corners on its code.
+"""Mascot state "scan-plan": the waving blister mascot of the app icon next to a paper Medikationsplan, scan corners on its code.
 
 Run after slice.py: python3 docs/brand/pill-mascot/make-scan-plan.py   (needs Pillow)
-Builds on pwa/img/mascot/base.png and writes the same two places as slice.py:
+Builds on pwa/icons/mascot-wave.png (art by Anna P., the app icon's mascot) and writes the same two places as slice.py:
 pwa/img/mascot/scan-plan.png and ios/PillSnap/Assets.xcassets/mascot-scan-plan.imageset.
 The plan is drawn, not photographed: A4 landscape, header, table rows, 2D code top right (as on the real BMP).
 """
@@ -18,6 +18,7 @@ TEAL = (6, 150, 174, 255)
 PAPER = (255, 255, 255, 255)
 ROW = (196, 210, 216, 255)
 SCAN = (255, 196, 46, 255)  # the yellow of the mascot's sparkles
+MASCOT_H = 300  # blister mascot height on the 512 canvas
 
 
 def s(v):
@@ -78,10 +79,10 @@ def main():
         d.line((s(x0), s(y0), s(x1), s(y1)), fill=SCAN, width=s(7))
         for x, y in ((x0, y0), (x1, y1)):
             d.ellipse((s(x) - s(3.5), s(y) - s(3.5), s(x) + s(3.5), s(y) + s(3.5)), fill=SCAN)
-    # The pill, mirrored so the waving hand points at the plan, in front of the sheet's lower left.
-    pill = Image.open(ROOT / "pwa/img/mascot/base.png").convert("RGBA").transpose(Image.FLIP_LEFT_RIGHT)
+    # The blister mascot, mirrored so the waving hand points at the plan, in front of the sheet's lower left.
+    pill = Image.open(ROOT / "pwa/icons/mascot-wave.png").convert("RGBA").transpose(Image.FLIP_LEFT_RIGHT)
     pill = pill.crop(pill.getbbox())
-    k = s(300) / pill.width
+    k = s(MASCOT_H) / pill.height
     pill = pill.resize((round(pill.width * k), round(pill.height * k)), Image.LANCZOS)
     canvas.alpha_composite(pill, (s(0), s(SIZE - 14) - pill.height))
     out = canvas.resize((SIZE, SIZE), Image.LANCZOS)
