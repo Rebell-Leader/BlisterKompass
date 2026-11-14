@@ -63,7 +63,7 @@ const PRECACHE = [
   "icons/ui-print.png",
   "icons/ui-lookup.png",
   "icons/mascot-install.png",
-    "examples/examples.json",
+  "examples/examples.json",
   "examples/plan-a.png",
   "examples/plan-b.png",
   "examples/plan-c.png",
