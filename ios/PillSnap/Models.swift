@@ -48,6 +48,26 @@ struct Schedule: Codable, Hashable {
     let text: String?
 }
 
+/// What a time-slot tile draws for the plan's amount: `whole` pills and one `part` pill (0 < part < 1, the plan's own
+/// fraction), or nil for the number alone: unknown amount, a unit like "20 IE", a form that isn't a tablet or capsule,
+/// a part capsule, or more than 4 pills. A whole dose is the pills alone; a part keeps the number below (`showNumber`).
+/// Only the plan's amount is drawn: a part pill never says the tablet may be split (INV-14). Port of doseGlyph (model.js).
+struct DoseGlyph: Equatable {
+    let whole: Int
+    let part: Double
+    var showNumber: Bool { part > 0 }
+
+    init?(_ amount: Double?, family: String?, unit: String? = nil) {
+        guard let amount, amount > 0, unit == nil || unit == "Stück", family == "tablet" || family == "capsule" else { return nil }
+        let whole = Int((amount + 1e-6).rounded(.down))
+        let part = ((amount - Double(whole)) * 1e4).rounded() / 1e4
+        if part > 0 && family == "capsule" { return nil }
+        if whole + (part > 0 ? 1 : 0) > 4 { return nil }
+        self.whole = whole
+        self.part = part
+    }
+}
+
 struct Change: Codable, Hashable {
     let daysAgo: Int
     let previousLook: Look?
