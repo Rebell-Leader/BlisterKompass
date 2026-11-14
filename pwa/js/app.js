@@ -81,7 +81,7 @@ function planSourceSheet() {
 
 function Home() {
   return h("main.screen.home", null,
-    h("p.privacy", null, icon("shield"), "Offline · keine Daten verlassen das Handy"),
+    h("p.privacy", null, icon("shield"), "Offline · keine Daten verlassen das Smartphone"),
     installCard(),
     store.hasPlan ? scanPill() : onboarding());
 }
@@ -103,15 +103,18 @@ function onboarding() {
 }
 
 function scanPill() {
+  // The often-used actions on top (plan, pack, print), then my pills for now and later; the pill photo, the look picker
+  // and the "not recorded" note at the bottom.
   return h("section.stack", null,
-    h("div.row", null,
-      bigButton({ icon: "camera", title: "Tablette", height: 110, onClick: () => photoSourceSheet("Tablette prüfen", "photo") }),
-      bigButton({ icon: "barcode", title: "Packung", height: 110, onClick: () => photoSourceSheet("Packung scannen", "pack") })),
+    h("div.row.three", null,
+      bigButton({ icon: "qr", title: "Plan neu\neinlesen", height: 120, compact: true, onClick: planSourceSheet }),
+      bigButton({ icon: "barcode", title: "Packung", height: 120, compact: true, onClick: () => photoSourceSheet("Packung scannen", "pack") }),
+      bigButton({ icon: "printer", title: "Plan\ndrucken", height: 120, compact: true, onClick: () => go({ name: "printPlan" }) })),
     dayPlanList(),
     h("div.row.top-gap", null,
-      tile({ icon: "tap", title: "Aussehen\nantippen", onClick: () => go({ name: "picker" }) }),
-      tile({ icon: "qr", title: "Plan neu\neinlesen", onClick: planSourceSheet }),
-      tile({ icon: "printer", title: "Plan\ndrucken", onClick: () => go({ name: "printPlan" }) })));
+      tile({ icon: "camera", title: "Tablette", onClick: () => photoSourceSheet("Tablette prüfen", "photo") }),
+      tile({ icon: "tap", title: "Aussehen\nantippen", onClick: () => go({ name: "picker" }) })),
+    h("p.muted.small.with-icon", null, icon("info"), NOT_RECORDED));
 }
 
 function sectionHeader(s) {
@@ -138,7 +141,6 @@ function dayPlanList() {
     h("div.day-head", null,
       h("h2", null, "Meine Tabletten"), h("span.muted", null, `${time} Uhr`),
       h("button.round", { type: "button", "aria-label": "Vorlesen", title: "Vorlesen", onclick: () => sayLines(spokenLines(secs)) }, icon("speaker"))),
-    h("p.muted.small.with-icon", null, icon("info"), NOT_RECORDED),
     secs.map((s) => {
       const hd = sectionHeader(s);
       return h(`div.day-section${s.now ? ".now" : ""}`, null,

@@ -187,19 +187,20 @@ struct HomeView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: open)
     }
 
-    /// Home: check a pill or a pack on top, then my pills for now and later.
+    /// Home: the often-used actions on top (plan, pack, print), then my pills for now and later;
+    /// the pill photo and the "not recorded" note at the bottom.
     private var scanPill: some View {
         VStack(spacing: 14) {
-            HStack(spacing: 14) {
-                BigButton(icon: "camera.fill", title: "Tablette", height: 110) { showPillSource = true }
-                BigButton(icon: "barcode.viewfinder", title: "Packung", height: 110) { showPackSource = true }
+            HStack(spacing: 10) {
+                BigButton(icon: "qrcode.viewfinder", title: "Plan neu\neinlesen", height: 120, compact: true) { showPlanSource = true }
+                BigButton(icon: "barcode.viewfinder", title: "Packung", height: 120, compact: true) { showPackSource = true }
+                BigButton(icon: "printer.fill", title: "Plan\ndrucken", height: 120, compact: true) { go(.printPlan) }
             }
             DayPlanList(go: go)
-            HStack(spacing: 10) {
-                Tile(icon: "qrcode.viewfinder", title: "Plan neu\neinlesen") { showPlanSource = true }
-                Tile(icon: "printer.fill", title: "Plan\ndrucken") { go(.printPlan) }
-            }
-            .padding(.top, 6)
+            Tile(icon: "camera.fill", title: "Tablette", wide: true) { showPillSource = true }
+                .padding(.top, 6)
+            Label(Day.notRecorded, systemImage: "info.circle").font(.footnote).foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -215,7 +216,7 @@ struct HomeView: View {
 
     /// No account, no name, no settings – just a privacy note.
     private var header: some View {
-        Label(store.onlineLeaflets == true ? "Nur die PZN geht online · keine persönlichen Daten" : "Offline · keine Daten verlassen das Handy",
+        Label(store.onlineLeaflets == true ? "Nur die PZN geht online · keine persönlichen Daten" : "Offline · keine Daten verlassen das Smartphone",
               systemImage: "lock.shield.fill")
             .font(.footnote.weight(.semibold)).foregroundStyle(.secondary)
             .frame(maxWidth: .infinity)
@@ -454,10 +455,16 @@ struct BigButtonLabel: View {
     var iconOnly = false
     /// Mascot state shown instead of the icon.
     var mascot: String? = nil
+    /// Three in a row: smaller title on up to two lines.
+    var compact = false
 
     var body: some View {
-        VStack(spacing: 10) {
-            if let mascot {
+        VStack(spacing: compact ? 8 : 10) {
+            if compact {
+                Image(systemName: icon).font(.system(size: 34, weight: .semibold))
+                Text(title).font(.system(.title3, design: .rounded, weight: .bold))
+                    .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.7)
+            } else if let mascot {
                 Mascot(state: mascot, size: height * 0.68).padding(.top, -14).padding(.bottom, -8)
                 Text(title).font(.system(.title, design: .rounded, weight: .bold)).minimumScaleFactor(0.7).lineLimit(1)
             } else if iconOnly {
@@ -481,12 +488,13 @@ struct BigButton: View {
     var color: Color = Theme.accentFill
     var iconOnly = false
     var mascot: String? = nil
+    var compact = false
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) { BigButtonLabel(icon: icon, title: title, height: height, color: color, iconOnly: iconOnly, mascot: mascot) }
+        Button(action: action) { BigButtonLabel(icon: icon, title: title, height: height, color: color, iconOnly: iconOnly, mascot: mascot, compact: compact) }
             .buttonStyle(.plain)
-            .accessibilityLabel(title)
+            .accessibilityLabel(title.replacingOccurrences(of: "\n", with: " "))
     }
 }
 

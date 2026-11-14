@@ -113,7 +113,6 @@ struct DayPlanList: View {
                     }
                     .accessibilityLabel("Vorlesen")
                 }
-                Label(Day.notRecorded, systemImage: "info.circle").font(.footnote).foregroundStyle(.secondary)
                 ForEach(sections) { section($0) }
                 if !store.unknownPZNs.isEmpty {
                     Text("Ohne Bild").font(.headline).foregroundStyle(.secondary).padding(.top, 4)
