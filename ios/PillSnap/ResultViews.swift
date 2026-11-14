@@ -57,7 +57,7 @@ struct MedCardScreen: View {
     var body: some View {
         FitOrScroll {
             VStack(spacing: 12) {
-                BackBar(title: "", speak: { Speaker.shared.say(med.spoken) }) { go(.home) }
+                BackBar(title: "", speak: { Speaker.shared.say(med.spoken(check: banner != .confirmed)) }) { go(.home) }
                 StatusBanner(icon: banner.icon, text: banner.text, color: banner.color, mascot: banner.mascot)
 
                 HStack(spacing: 14) {
