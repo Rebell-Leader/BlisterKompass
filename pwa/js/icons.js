@@ -70,7 +70,7 @@ const NS = "http://www.w3.org/2000/svg";
 
 /** Illustrated icons (PNG) for the main actions; every other name stays a line-drawn SVG. Paired with
  *  `ActionPicture` in ios/PillSnap/RootView.swift. A button with a picture shows no word: its title is the accessible label. */
-const PICTURES = { qr: "ui-plan", barcode: "ui-pack", printer: "ui-print", tap: "ui-lookup" };
+const PICTURES = { qr: "ui-plan", barcode: "ui-pack", printer: "ui-print", tap: "ui-lookup", tablette: "ui-pill" };
 export const hasPicture = (name) => name in PICTURES;
 
 /** <svg> icon (or the illustrated <img> for the main actions); size in px (default 1em via CSS). */

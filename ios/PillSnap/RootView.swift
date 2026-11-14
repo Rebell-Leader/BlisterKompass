@@ -199,7 +199,7 @@ struct HomeView: View {
                 BigButton(icon: "printer.fill", title: "Plan\ndrucken", height: 120, compact: true) { go(.printPlan) }
             }
             DayPlanList(go: go)
-            Tile(icon: "camera.fill", title: "Tablette", wide: true) { showPillSource = true }
+            Tile(icon: "tablette", title: "Tablette", wide: true) { showPillSource = true }
                 .padding(.top, 6)
             Label(Day.notRecorded, systemImage: "info.circle").font(.footnote).foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -544,7 +544,7 @@ struct BmpImportView: View {
 /// in pwa/js/icons.js. A button with a picture shows no word: its title stays the accessibility label.
 enum ActionPicture {
     static let byIcon = ["qrcode.viewfinder": "ui-plan", "barcode.viewfinder": "ui-pack",
-                         "printer.fill": "ui-print", "hand.tap.fill": "ui-lookup"]
+                         "printer.fill": "ui-print", "hand.tap.fill": "ui-lookup", "tablette": "ui-pill"]
 
     static func view(_ icon: String, size: CGFloat) -> some View {
         Image(byIcon[icon] ?? icon).resizable().interpolation(.high).scaledToFit()

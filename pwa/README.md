@@ -49,7 +49,7 @@ codes decoded through zxing-wasm (`codes.test.js`), the print sheet, the code wr
 | `vendor/pdfjs/` | pdf.js 4.10.38 (Apache-2.0), loaded on first use, eval off |
 | `vendor/zxing-wasm/` | zxing-wasm 3.1.6 reader and writer (MIT, zxing-cpp compiled to WebAssembly), loaded from here, never from a CDN |
 | `scripts/sync.sh`, `scripts/make-icons.py` | Refresh copies and the vendored decoder; make the app icons from the mascot (`icons/mascot-wave.png`, art by Anna P.) |
-| `icons/` | App icons, the mascot pictures shown on the welcome screen and the landing page, and the illustrated action icons `ui-plan`, `ui-pack`, `ui-print`, `ui-lookup` (art by Anna P.; picture-only buttons, the title is the accessible label) |
+| `icons/` | App icons, the mascot pictures shown on the welcome screen and the landing page, and the illustrated action icons `ui-plan`, `ui-pack`, `ui-print`, `ui-lookup` (art by Anna P.) and `ui-pill` for "Tablette" (source `docs/brand/tablette-scan.jpeg`; picture-only buttons, the title is the accessible label) |
 | `img/plan-hint.png`, `img/plan-hint-code.png` | Welcome screen: example plan A as a printed BMP with the code framed, and the code alone as it should fill the photo. Synthetic data; same pictures as `ios/PillSnap/Assets.xcassets/plan-hint*`, made by `tools/make-plan-hint.py` |
 | `img/mascot/` | The pill mascot in one state per screen (scanning, found, check, other maker, not on plan, not recognised, not in list, scan plan); decorative, the banner text says it. Same pictures as `ios/PillSnap/Assets.xcassets/mascot-*`, made by `docs/brand/pill-mascot/` |
 

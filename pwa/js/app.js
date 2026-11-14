@@ -155,7 +155,7 @@ function scanPill() {
       bigButton({ icon: "printer", title: "Plan\ndrucken", height: 120, compact: true, onClick: () => go({ name: "printPlan" }) })),
     dayPlanList(),
     h("div.row.top-gap", null,
-      tile({ icon: "camera", title: "Tablette", onClick: () => photoSourceSheet("Tablette prüfen", "photo") }),
+      tile({ icon: "tablette", title: "Tablette", onClick: () => photoSourceSheet("Tablette prüfen", "photo") }),
       tile({ icon: "tap", title: "Aussehen\nantippen", onClick: () => go({ name: "picker" }) })),
     h("p.muted.small.with-icon", null, icon("info"), NOT_RECORDED));
 }
