@@ -23,6 +23,30 @@ enum CodeReader {
         }.value
     }
 
+    /// No code decoded on a pack → the printed "PZN 12345678", read by Apple Vision OCR (rule: `PackCode.fromText`).
+    /// Upright first, then turned a quarter either way, then upside down.
+    static func readPrintedPZN(_ image: UIImage) async -> PackCode? {
+        await Task.detached(priority: .userInitiated) { () -> PackCode? in
+            guard let cg = image.normalizedCGImage(maxSide: 2400) else { return nil }
+            for orientation in [CGImagePropertyOrientation.up, .right, .left, .down] {
+                // .accurate can fail where no Neural Engine is available (e.g. simulator) → .fast.
+                for level in [VNRequestTextRecognitionLevel.accurate, .fast] {
+                    let req = VNRecognizeTextRequest()
+                    req.recognitionLevel = level
+                    req.usesLanguageCorrection = false
+                    do { try VNImageRequestHandler(cgImage: cg, orientation: orientation, options: [:]).perform([req]) } catch {
+                        print("BlisterKompass pack OCR failed: \(error)")
+                        continue
+                    }
+                    let text = (req.results ?? []).compactMap { $0.topCandidates(1).first?.string }.joined(separator: "\n")
+                    if let code = PackCode.fromText(text) { return code }
+                    break
+                }
+            }
+            return nil
+        }.value
+    }
+
     private static func zxing(_ cg: CGImage) -> [String] {
         let options = ZXIReaderOptions()
         options.formats = [ZXIFormat.DATA_MATRIX, .QR_CODE, .AZTEC, .PDF_417, .CODE_39].map { NSNumber(value: $0.rawValue) }

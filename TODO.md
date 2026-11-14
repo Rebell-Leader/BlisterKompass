@@ -49,7 +49,7 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 | T-16 | P1 | INV-21 substitution-exclusion flag missing | pharmacist | open |
 | T-17 | P1 | Strength match ignores dose-form family and concentration | pharmacist | open |
 | T-18 | P1 | Other pack size of the same product shows as "andere Packung" | pharmacist | open |
-| T-19 | P1 | 1D PZN barcode fails on carton photos (2400 px downscale) | photo→PZN | open |
+| T-19 | P1 | 1D PZN barcode fails on carton photos (2400 px downscale) | photo→PZN | mitigated in the apps: printed PZN by OCR; browser open |
 | T-20 | P1 | Photo of a whole plan sheet never decodes | photo→PZN | open |
 | T-21 | P1 | Fake "Packungsbeilage wird gelesen …" animation | photo→PZN, pharmacist | open |
 | T-22 | P1 | Malformed saved data locks the app for good | skilled user | open |
@@ -406,6 +406,9 @@ full 4032 px. DataMatrix codes are unaffected: they decoded rotated 12°, skewed
 - In `scanCode`, if the 2400 px pass finds nothing, run a second pass at full resolution (cap 4096; ~0.6 s).
 - Alternatively, run a second pass on a full-resolution centre crop of 60%.
 - Show "Bitte näher heran" when both fail.
+
+**Mitigated (iPhone + Android app):** when no code decodes, the printed "PZN 12345678" is read by OCR (`PackCode.fromText`, check
+digit required). The browser still needs the second pass below.
 
 **Test.** A generated carton photo (Code 39 at ~11% of frame width, 4032×3024) decodes to PZN 05387239. The generator is in the
 review scratch scripts (`make_photos.py`); copy it to `pwa/tests/fixtures`.

@@ -78,6 +78,30 @@ struct PackCode: Equatable {
         return PackCode(pzn: pzn, batch: ai["10"], expiry: ai["17"], serial: ai["21"])
     }
 
+    /// Read from the printed "PZN 12345678" by OCR (no code decoded), not from a code.
+    var fromText = false
+
+    /// The PZN printed on the pack ("PZN 12345678", "PZN: …", "PZN-…"), read by OCR when no code could be decoded.
+    /// Only right after the label "PZN", with OCR look-alikes in the digits (O→0, I/L→1, S→5, B→8), PZN7 padded, and only if
+    /// the check digit holds. Two different PZNs in one photo → nil: the app can't tell which pack is meant.
+    static func fromText(_ text: String) -> PackCode? {
+        let s = text.uppercased()
+        let re = try! NSRegularExpression(pattern: #"PZN\s*[:.\-–]?\s*([0-9OILSB]{7,8})(?![0-9])"#)
+        var found = Set<String>()
+        for m in re.matches(in: s, range: NSRange(s.startIndex..., in: s)) {
+            guard let r = Range(m.range(at: 1), in: s) else { continue }
+            let digits = String(s[r].map { c -> Character in
+                switch c { case "O": "0"; case "I", "L": "1"; case "S": "5"; case "B": "8"; default: c }
+            })
+            let pzn = digits.count == 7 ? "0" + digits : digits
+            if pznValid(pzn) { found.insert(pzn) }
+        }
+        guard found.count == 1, let pzn = found.first else { return nil }
+        var c = PackCode(pzn: pzn, batch: nil, expiry: nil, serial: nil)
+        c.fromText = true
+        return c
+    }
+
     /// PZN check digit: d1…d7 weighted 1…7, sum mod 11 = d8.
     static func pznValid(_ p: String) -> Bool {
         let d = p.compactMap(\.wholeNumberValue)

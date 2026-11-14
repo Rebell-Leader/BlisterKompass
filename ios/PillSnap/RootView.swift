@@ -282,7 +282,9 @@ struct AnalyzingView: View {
         }
 
         func noCode(_ problem: String) async { await settle(); go(.result(.local("no_code", problem: problem), photo)) }
-        let code = await CodeReader.scan(photo)
+        var code = await CodeReader.scan(photo)
+        // No code decoded on a pack: the PZN printed on it, read by OCR (web: vision.js readPackText, Android app only).
+        if mode == .pack, code == nil, let printed = await CodeReader.readPrintedPZN(photo) { code = .pack(printed) }
 
         switch (mode, code) {
         case (.plan, .plan(let xml)?):

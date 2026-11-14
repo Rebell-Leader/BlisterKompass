@@ -71,6 +71,27 @@ export async function scanCode(blob) {
   return run("scan", pixels(b, 2400));
 }
 
+/** Android app only (ML Kit, see android-bridge.js): no code decoded on a pack → the printed "PZN 12345678".
+ *  Upright first, then turned a quarter either way, then upside down. PackCode with fromText, or null. */
+export async function readPackText(blob) {
+  if (typeof self.BKReadText !== "function") return null;
+  try {
+    const { fromText } = await import("./pack-code.js");
+    const b = await bitmap(blob);
+    const px = pixels(b, 2400), c = document.createElement("canvas");
+    c.width = px.width; c.height = px.height;
+    c.getContext("2d").putImageData(px, 0, 0);
+    const jpeg = c.toDataURL("image/jpeg", 0.92);
+    for (const deg of [0, 90, 270, 180]) {
+      const code = fromText(await self.BKReadText(jpeg, deg));
+      if (code) return code;
+    }
+  } catch (e) {
+    console.warn("pack OCR", e);
+  }
+  return null;
+}
+
 /** PillCues of the largest object in the photo. */
 export async function analyzePill(blob) {
   const b = await bitmap(blob);

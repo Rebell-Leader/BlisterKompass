@@ -340,7 +340,7 @@ public class MainActivity extends Activity {
             });
         }
 
-        /** JPEG data URL of the pill → window.__bkImprint(id, text|null). Off the UI thread; the image stays in memory. */
+        /** JPEG data URL of the pill → window.__bkReply(id, imprint|null). Off the UI thread; the image stays in memory. */
         @JavascriptInterface
         public void readImprint(int id, String dataUrl) {
             ocrThread.execute(() -> {
@@ -348,18 +348,45 @@ public class MainActivity extends Activity {
                 try { text = readImprintText(dataUrl); } catch (Exception | OutOfMemoryError e) {
                     android.util.Log.w("BlisterKompass", "imprint OCR failed", e);
                 }
-                String js = "window.__bkImprint && window.__bkImprint(" + id + "," + (text == null ? "null" : "\"" + text + "\"") + ")";
-                web.post(() -> web.evaluateJavascript(js, null));
+                reply(id, text);
             });
         }
+
+        /** JPEG data URL of a pack, turned by deg → window.__bkReply(id, all text|null). The PZN rule is in pack-code.js. */
+        @JavascriptInterface
+        public void readText(int id, String dataUrl, int deg) {
+            ocrThread.execute(() -> {
+                String text = null;
+                try {
+                    Bitmap b = decode(dataUrl);
+                    if (b != null) {
+                        if (ocr == null) ocr = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+                        text = Tasks.await(ocr.process(InputImage.fromBitmap(b, deg))).getText();
+                        b.recycle();
+                    }
+                } catch (Exception | OutOfMemoryError e) {
+                    android.util.Log.w("BlisterKompass", "pack OCR failed", e);
+                }
+                reply(id, text);
+            });
+        }
+    }
+
+    private void reply(int id, String text) {
+        String js = "window.__bkReply && window.__bkReply(" + id + "," + (text == null ? "null" : org.json.JSONObject.quote(text)) + ")";
+        web.post(() -> web.evaluateJavascript(js, null));
+    }
+
+    private static Bitmap decode(String dataUrl) {
+        int comma = dataUrl.indexOf(',');
+        byte[] jpeg = Base64.decode(comma >= 0 ? dataUrl.substring(comma + 1) : dataUrl, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(jpeg, 0, jpeg.length);
     }
 
     // ---- imprint OCR (port of PillRecognizer.readImprint) -------------------------------------
 
     private String readImprintText(String dataUrl) throws Exception {
-        int comma = dataUrl.indexOf(',');
-        byte[] jpeg = Base64.decode(comma >= 0 ? dataUrl.substring(comma + 1) : dataUrl, Base64.DEFAULT);
-        Bitmap decoded = BitmapFactory.decodeByteArray(jpeg, 0, jpeg.length);
+        Bitmap decoded = decode(dataUrl);
         if (decoded == null) return null;
         // A pill crop is often ~150 px wide; ML Kit wants characters of ≥ 16 px, so small crops are scaled up.
         int side = Math.max(decoded.getWidth(), decoded.getHeight());

@@ -10,7 +10,7 @@ import { local } from "./matcher.js";
 import * as Pack from "./pack-code.js";
 import * as PlanReader from "./plan-reader.js";
 import { PALETTE, colorName } from "./recognizer.js";
-import { scanCode, analyzePill } from "./vision.js";
+import { scanCode, analyzePill, readPackText } from "./vision.js";
 import { say, sayLines, stop } from "./speech.js";
 import { watchInstall, installCard } from "./install.js";
 import * as LeafletPdf from "./leaflet-pdf.js";
@@ -201,6 +201,9 @@ function Analyzing({ photo: blob, mode }) {
       return plan ? go({ name: "bmpImport", plan, photo: blob }) : go({ name: "result", answer: local("not_a_plan"), photo: blob });
     }
     if (mode === "pack") {
+      // No code decoded: the PZN printed on the pack, read by OCR (Android app; iPhone: CodeReader.readPrintedPZN).
+      if (!found) { const code = await readPackText(blob); if (code) found = { kind: "pack", code }; }
+      if (!alive) return;
       if (found?.kind !== "pack") return noCode(found ? "plan_not_pack" : "no_pack_code");
       // A medicine pack: exact identity from its PZN, compared with the plan.
       await settle(); if (!alive) return;
@@ -738,7 +741,8 @@ function PackResult({ result: r, photo: blob }) {
     purposeRow(shownMed),
     h("div.chips", null,
       exp ? chip("calendar", `Haltbar bis ${exp}`, Pack.expired(r) ? "bad" : "accent") : null,
-      r.code.batch ? chip("number", `Charge ${r.code.batch}`, "muted") : null),
+      r.code.batch ? chip("number", `Charge ${r.code.batch}`, "muted") : null,
+      r.code.fromText ? chip("text", "PZN vom Aufdruck gelesen", "muted") : null),
     h("div.stack.bottom", null, packActions(r)));
 
   const card = () => {

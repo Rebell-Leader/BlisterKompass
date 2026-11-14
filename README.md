@@ -50,7 +50,8 @@ only the medication lines: name, birth date, insurance number and practice are n
 3. **Tablette.** One pill on a dark, plain surface, photographed from above. Answers: probably yours (with "Ja, stimmt" / "Nein"),
    **Welche ist es?** (candidates plus the one question that tells them apart), **Anders als auf Ihrem Plan** (probably another maker:
    ask the pharmacy) or **Nicht auf Ihrem Plan!** (ask before taking it).
-4. **Packung.** Scan the securPharm Data Matrix on the box, or the PZN barcode on non-prescription packs. The PZN gives exact identity:
+4. **Packung.** Scan the securPharm Data Matrix on the box, or the PZN barcode on non-prescription packs; if no code can be read, the
+   printed "PZN 12345678" is read by OCR (iPhone and Android app; check digit required, marked "PZN vom Aufdruck gelesen"). The PZN gives exact identity:
    on your plan · same substance, other pack (only the pharmacy says whether it replaces yours) · same substance, other strength or form ·
    not on your plan (can be put on your own list) · not in the database. Best-before date and batch from the code, **Abgelaufen** when expired.
 5. **Plan drucken.** The sheet "Meine Medikamente mit Bildern" for the older person (A4 landscape, large print, no 2D code of its own).

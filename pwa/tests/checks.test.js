@@ -82,6 +82,8 @@ check("expiry: 12/2015 expired, 03/2028 not, day 00 = end of month", () => Pack.
 check("not a pack code → nil", () => Pack.parse("hello") === null && Pack.parse("9N119999999999") === null);
 check("Code 39 PZN barcode: PZN8, PZN7, PZN- prefix; no batch/expiry", () => eq(Pack.parse("-05387239"), code("05387239")) && Pack.parse("-5387239")?.pzn === "05387239" && Pack.parse("PZN-05387239")?.pzn === "05387239");
 check("Code 39: wrong check digit or no dash → nil", () => Pack.parse("-05387238") === null && Pack.parse("05387239") === null);
+check("PZN from printed text: label, look-alikes, PZN7; marked as read from text", () => Pack.fromText("Ibuprofen 400\nPZN 05387239\nCh.-B. X1")?.pzn === "05387239" && Pack.fromText("pzn: O5387239")?.pzn === "05387239" && Pack.fromText("PZN-5387239")?.pzn === "05387239" && Pack.fromText("PZN 05387239")?.fromText === true && Pack.fromText("PZN 05387239")?.batch === null);
+check("PZN from printed text: wrong check digit, no label, two PZNs → nil", () => Pack.fromText("PZN 05387238") === null && Pack.fromText("05387239") === null && Pack.fromText("PZN 05387239 PZN 06453257") === null && Pack.fromText("PZN 05387239 / PZN 05387239")?.pzn === "05387239");
 
 const ctx = (meds, unknownPZNs = []) => ({ myMeds: meds, unknownPZNs, catalog: all, names: rawNames });
 function pack(pzn, planName) {

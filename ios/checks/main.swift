@@ -68,6 +68,8 @@ check("expiry: 12/2015 expired, 03/2028 not, day 00 = end of month", ifa!.isExpi
 check("not a pack code → nil", PackCode.parse("hello") == nil && PackCode.parse("9N119999999999") == nil)
 check("Code 39 PZN barcode: PZN8, PZN7, PZN- prefix; no batch/expiry", PackCode.parse("-05387239") == PackCode(pzn: "05387239", batch: nil, expiry: nil, serial: nil) && PackCode.parse("-5387239")?.pzn == "05387239" && PackCode.parse("PZN-05387239")?.pzn == "05387239")
 check("Code 39: wrong check digit or no dash → nil", PackCode.parse("-05387238") == nil && PackCode.parse("05387239") == nil)
+check("PZN from printed text: label, look-alikes, PZN7; marked as read from text", PackCode.fromText("Ibuprofen 400\nPZN 05387239\nCh.-B. X1")?.pzn == "05387239" && PackCode.fromText("pzn: O5387239")?.pzn == "05387239" && PackCode.fromText("PZN-5387239")?.pzn == "05387239" && PackCode.fromText("PZN 05387239")?.fromText == true && PackCode.fromText("PZN 05387239")?.batch == nil)
+check("PZN from printed text: wrong check digit, no label, two PZNs → nil", PackCode.fromText("PZN 05387238") == nil && PackCode.fromText("05387239") == nil && PackCode.fromText("PZN 05387239 PZN 06453257") == nil && PackCode.fromText("PZN 05387239 / PZN 05387239")?.pzn == "05387239")
 
 func pack(_ pzn: String, _ plan: String) -> PackResult {
     let items = PlanReader.items(in: AppData.plan(plan))!

@@ -78,6 +78,19 @@ function parseGS1(s) {
   return code(pzn, ai["10"] ?? null, ai["17"] ?? null, ai["21"] ?? null);
 }
 
+/** The PZN printed on the pack ("PZN 12345678", "PZN: …", "PZN-…"), read by OCR when no code could be decoded.
+ *  Only right after the label "PZN", with OCR look-alikes in the digits (O→0, I/L→1, S→5, B→8), PZN7 padded, and only if
+ *  the check digit holds. Two different PZNs in one photo → null: the app can't tell which pack is meant. */
+export function fromText(text) {
+  const found = new Set();
+  for (const m of String(text ?? "").toUpperCase().matchAll(/PZN\s*[:.\-–]?\s*([0-9OILSB]{7,8})(?![0-9])/g)) {
+    const digits = m[1].replace(/O/g, "0").replace(/[IL]/g, "1").replace(/S/g, "5").replace(/B/g, "8");
+    const pzn = digits.length === 7 ? "0" + digits : digits;
+    if (pznValid(pzn)) found.add(pzn);
+  }
+  return found.size === 1 ? { ...code([...found][0]), fromText: true } : null;
+}
+
 /** PZN check digit: d1…d7 weighted 1…7, sum mod 11 = d8. */
 export function pznValid(p) {
   if (typeof p !== "string" || !/^\d{8}$/.test(p)) return false;

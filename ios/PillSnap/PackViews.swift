@@ -89,6 +89,7 @@ struct PackResultView: View {
                         chip("calendar", "Haltbar bis \(e)", result.expired ? Theme.bad : Theme.accent)
                     }
                     if let b = result.code.batch { chip("number", "Charge \(b)", .secondary) }
+                    if result.code.fromText { chip("textformat", "PZN vom Aufdruck gelesen", .secondary) }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 

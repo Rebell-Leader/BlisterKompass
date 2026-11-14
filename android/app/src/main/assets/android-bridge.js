@@ -20,19 +20,23 @@
   Object.defineProperty(window, "SpeechSynthesisUtterance", { value: Utterance, configurable: true, writable: true });
   window.print = function () { bridge.print(); };
 
-  // Imprint OCR on the phone (ML Kit, bundled model, no network), used by pwa/js/vision.js. JPEG data URL → text or null.
+  // OCR on the phone (ML Kit, bundled model, no network), used by pwa/js/vision.js. JPEG data URL → text or null.
   var ocrSeq = 0, ocrPending = {};
-  window.__bkImprint = function (id, text) {
+  window.__bkReply = function (id, text) {
     var p = ocrPending[id];
     if (!p) return;
     delete ocrPending[id];
     p(text || null);
   };
-  window.BKReadImprint = function (dataUrl) {
+  function ask(call) {
     return new Promise(function (resolve) {
       var id = ++ocrSeq;
       ocrPending[id] = resolve;
-      try { bridge.readImprint(id, String(dataUrl)); } catch (e) { delete ocrPending[id]; resolve(null); }
+      try { call(id); } catch (e) { delete ocrPending[id]; resolve(null); }
     });
-  };
+  }
+  // The pill's imprint (letters and digits, 1–8 characters).
+  window.BKReadImprint = function (dataUrl) { return ask(function (id) { bridge.readImprint(id, String(dataUrl)); }); };
+  // All text in the photo, turned by deg (0, 90, 180, 270): the printed PZN on a pack.
+  window.BKReadText = function (dataUrl, deg) { return ask(function (id) { bridge.readText(id, String(dataUrl), deg | 0); }); };
 })();

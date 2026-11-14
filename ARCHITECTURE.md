@@ -34,6 +34,8 @@ flowchart LR
 2. **Plan, pack or pill?** `CodeReader.scan` decodes codes with **zxing-cpp** (Swift package, CPU only, so it also works in the simulator,
    where Apple Vision's barcode model can't run) and Apple Vision as a second opinion on devices:
    - bytes (ISO-8859-1) containing `<MP` → a **Medikationsplan** (BMP Data Matrix) → step 3;
+   - pack mode and no code decoded → `CodeReader.readPrintedPZN` (Vision OCR, four angles) → `PackCode.fromText`: the label "PZN" +
+     7/8 digits with a valid check digit, exactly one PZN in the photo (web: `vision.js readPackText`, Android app only, ML Kit);
    - a **pack code** → `PackCode.parse`: securPharm IFA `[)>␞06␝9N<PPN>…` or GS1 `(01)04150<PZN>…`, or the Code 39 PZN barcode `-<PZN>`
      on non-prescription packs; PZN check digit verified → step 4;
    - no code → a pill photo → step 5.
@@ -171,7 +173,7 @@ never stored.
 | `Matcher.swift` | scoring, ranking, question, other-maker / not-on-plan warnings → `Answer` |
 | `Store.swift` | bundled catalog and PZN list; `myMeds` / `unknownPZNs` in UserDefaults; `adopt`, `add`, `addWithoutLook` |
 | `Bmp.swift` | code reading (zxing-cpp, Vision): plan or pack code |
-| `PackCode.swift` | pack code parser (securPharm IFA/GS1, Code 39 PZN), PZN check, expiry; `PackResult` = pack vs. plan |
+| `PackCode.swift` | pack code parser (securPharm IFA/GS1, Code 39 PZN), printed PZN from OCR text (`fromText`), PZN check, expiry; `PackResult` = pack vs. plan |
 | `DoseForm.swift` | dosage form from the PZN list and its grey outline for packs without a look |
 | `PackViews.swift` | pack result screen (add to plan), camera / photo-library popup |
 | `PlanInput.swift` | "Plan einlesen" popup and the typed-entry screen; also the "when do you take it?" step when adding a scanned pack |
