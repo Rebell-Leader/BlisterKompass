@@ -70,6 +70,10 @@ button:disabled { cursor: default; }
 .big.compact { font-size: 20px; gap: 6px; padding: 6px; }
 .big.compact .icon { width: 34px; height: 34px; }
 .row.three { gap: 10px; }
+/* Illustrated action icons carry their own white frame and replace the word (the title stays the aria-label). */
+.icon.pic { object-fit: contain; border-radius: 22%; flex: none; }
+.big .icon.pic, .big.compact .icon.pic { width: auto; max-width: 100%; height: calc(var(--h, 120px) * .8); aspect-ratio: 1; }
+.tile .icon.pic { width: 92px; height: 92px; }
 .big:active:not(:disabled), .tile:active, .day-row:active, .card:is(button):active { transform: scale(.98); }
 .fill-accent { background: var(--accent-fill); } .fill-ok { background: var(--ok-fill); } .fill-warn { background: var(--warn-fill); }
 .fill-bad { background: var(--bad-fill); } .fill-gray { background: var(--gray-fill); } .fill-disabled { background: var(--disabled-fill); }

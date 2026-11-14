@@ -67,8 +67,24 @@ const P = {
 
 const NS = "http://www.w3.org/2000/svg";
 
-/** <svg> icon; size in px (default 1em via CSS). */
+/** Illustrated icons (PNG) for the main actions; every other name stays a line-drawn SVG. Paired with
+ *  `ActionPicture` in ios/PillSnap/RootView.swift. A button with a picture shows no word: its title is the accessible label. */
+const PICTURES = { qr: "ui-plan", barcode: "ui-pack", printer: "ui-print", tap: "ui-lookup" };
+export const hasPicture = (name) => name in PICTURES;
+
+/** <svg> icon (or the illustrated <img> for the main actions); size in px (default 1em via CSS). */
 export function icon(name, { size, cls = "icon", stroke = 2.2 } = {}) {
+  if (PICTURES[name]) {
+    const img = document.createElement("img");
+    img.src = `icons/${PICTURES[name]}.png`;
+    img.alt = "";
+    img.setAttribute("class", `${cls} pic`);
+    img.setAttribute("aria-hidden", "true");
+    img.decoding = "async";
+    img.draggable = false;
+    if (size) { img.width = size; img.height = size; }
+    return img;
+  }
   const s = document.createElementNS(NS, "svg");
   s.setAttribute("viewBox", "0 0 24 24");
   s.setAttribute("class", cls);
