@@ -165,6 +165,9 @@ footer nav a { color: var(--muted); }
 
 /* partner band: when the look matters, how it's drawn, how it plugs into existing systems */
 .toplink { font-size: 15px; font-weight: 700; text-decoration: none; margin-left: auto; padding: 8px 4px; }
+.toplink + .toplink { margin-left: 0; }
+@media (max-width: 560px) { .toplink.repo { display: none; } }   /* phones: the repo link is in the closing section and the footer */
+.close-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .partner { background: var(--soft); border-radius: 28px; padding: clamp(32px, 5vw, 56px) clamp(18px, 4vw, 48px); margin-bottom: 48px; scroll-margin-top: 16px; }
 .partner > h2 { margin-bottom: 12px; }
 .partner .intro { color: var(--muted); font-size: 19px; max-width: 60ch; }
@@ -317,6 +320,7 @@ footer p { max-width: 95ch; }
   <div class="top">
     <div class="brand"><img src="../pwa/icons/mascot-wave.png" alt="" width="44" height="44" decoding="async">BlisterKompass</div>
     <a class="toplink" href="#partner"><span lang="de">Für Partner</span><span lang="en">For partners</span></a>
+    <a class="toplink repo" href="https://github.com/Rebell-Leader/BlisterKompass"><span lang="de">Quellcode</span><span lang="en">Source code</span></a>
     <div class="langs" role="group" aria-label="Sprache / Language">
       <button type="button" data-lang="de" aria-pressed="true">DE</button>
       <button type="button" data-lang="en" aria-pressed="false">EN</button>
@@ -481,10 +485,15 @@ footer p { max-width: 95ch; }
 
   <section class="close">
     <h2><span lang="de">Einmal den Plan scannen. Jede Tablette kennen.</span><span lang="en">Scan the plan once. Know every pill.</span></h2>
-    <a class="btn" href="#install">
-      <img class="btn-mascot" src="../pwa/icons/mascot-install.png" alt="" width="44" height="44" decoding="async">
-      <span lang="de">App installieren</span><span lang="en">Install the app</span>
-    </a>
+    <div class="close-actions">
+      <a class="btn" href="#install">
+        <img class="btn-mascot" src="../pwa/icons/mascot-install.png" alt="" width="44" height="44" decoding="async">
+        <span lang="de">App installieren</span><span lang="en">Install the app</span>
+      </a>
+      <a class="btn ghost" href="https://github.com/Rebell-Leader/BlisterKompass">
+        <span lang="de">Open Source auf GitHub</span><span lang="en">Open source on GitHub</span>
+      </a>
+    </div>
   </section>
 
   <section id="partner" class="partner" aria-labelledby="partner-h">
@@ -655,7 +664,7 @@ footer p { max-width: 95ch; }
   </section>
 
   <footer>
-    <nav aria-label="Rechtliches / Legal"><span>© 2026 BlisterKompass</span><a href="impressum.html">Impressum</a><a href="datenschutz.html"><span lang="de">Datenschutz</span><span lang="en">Privacy</span></a></nav>
+    <nav aria-label="Rechtliches / Legal"><span>© 2026 BlisterKompass</span><a href="impressum.html">Impressum</a><a href="datenschutz.html"><span lang="de">Datenschutz</span><span lang="en">Privacy</span></a><a href="https://github.com/Rebell-Leader/BlisterKompass"><span lang="de">Quellcode auf GitHub (MIT)</span><span lang="en">Source code on GitHub (MIT)</span></a></nav>
   </footer>
 </div>
 
