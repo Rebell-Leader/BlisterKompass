@@ -25,6 +25,8 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+        // ML Kit's OCR library is ~11 MB per ABI; phones are ARM (and Apple-silicon emulators arm64), so no x86 copies.
+        ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
     }
 
     buildTypes {
@@ -47,4 +49,8 @@ tasks.named("preBuild") { dependsOn(syncPwa) }
 
 dependencies {
     implementation("androidx.core:core:1.13.1")
+    // Imprint OCR, on the phone: the Latin model is bundled in the APK, nothing is downloaded.
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+    // ML Kit pulls kotlin-stdlib-jdk7/8 1.6 next to androidx's stdlib 1.8 (duplicate classes): align them.
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.22"))
 }

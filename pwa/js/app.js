@@ -215,9 +215,11 @@ function Analyzing({ photo: blob, mode }) {
     await settle(); if (!alive) return;
     if (!cues?.found || !cues.colors.length) return go({ name: "result", answer: local("retake", [], "no_pill"), photo: blob });
     // No imprint OCR in the browser (v1): ask what is printed on it; the matcher takes the typed text.
+    // The Android app reads it on the phone (ML Kit) and fills the field in; the person checks or corrects it.
     set(status, icon("text"), h("span", null, "Was steht auf der Tablette?"));
     status.classList.add("asking");
     const input = h("input.field", { type: "text", inputmode: "text", autocomplete: "off", autocapitalize: "characters", spellcheck: "false", placeholder: "z. B. A20", "aria-label": "Aufdruck auf der Tablette", maxlength: "12" });
+    if (cues.imprint) input.value = cues.imprint;
     const done = (imprint) => go({ name: "result", answer: store.identify({ ...cues, imprint: imprint || null }), photo: blob });
     set(below, 
       seenChips(cues),

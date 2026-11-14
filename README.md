@@ -24,7 +24,7 @@ yet assessed. Synthetic demo data only.** Identity comes from the plan's PZN, a 
 | Code | [`ios/`](ios/) (SwiftUI) | [`pwa/`](pwa/README.md) (plain ES modules, no build step) |
 | Get it | Xcode 26 → simulator or your iPhone ([below](#install-the-iphone-app)) | open the [web app](https://blisterkompass.vercel.app/pwa/) → "Zum Home-Bildschirm" |
 | Tests | `ios/checks/run.sh` (86 checks, macOS) | `cd pwa && npm install && npm test` (141 tests, CI on every PR) |
-| Differs | imprint read by OCR; leaflet lookup online after consent | imprint typed; offline: the person opens the leaflet and picks the PDF, read on the phone; ahead on BMP 2.8 reading and the print sheet ([TODO](TODO.md) T-29…T-31) |
+| Differs | imprint read by OCR; leaflet lookup online after consent | imprint typed (the Android app reads it on the phone with ML Kit and fills it in); offline: the person opens the leaflet and picks the PDF, read on the phone; ahead on BMP 2.8 reading and the print sheet ([TODO](TODO.md) T-29…T-31) |
 
 Every feature and fix goes into both clients ([`AGENTS.md`](AGENTS.md) → “Two clients, one product”). The iOS ↔ PWA code map is in
 [ARCHITECTURE.md](ARCHITECTURE.md#code-map-ios--pwa); open work, each item with problem, fix and test, is in [TODO.md](TODO.md).
@@ -116,7 +116,7 @@ pwa/            web app: js/ modules paired with the Swift files, tests/ (node -
 docs/           PRDs, decisions, data provenance, landing page (DE/EN), screenshots, brand, research notes
 print/          example sheets: the BMP page and "Meine Medikamente mit Bildern" for plan A and the KBV sample
 tools/          generators: example plan and pack codes, leaflet looks, demo print (+ tests), test-photo download
-android/        Android app: the web app in an offline WebView (no internet permission); build-apk.sh → android/dist/, published as a release asset
+android/        Android app: the web app in an offline WebView (no internet permission) + on-device imprint OCR (ML Kit); build-apk.sh → android/dist/, published as a release asset
 deploy/         build.py → deploy/dist (landing page + web app), what Vercel publishes
 test-photos/    NLM ground truth (manifest.json) and RESULTS.md
 ```

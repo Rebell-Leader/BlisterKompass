@@ -4,13 +4,20 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintManager;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.Window;
@@ -28,6 +35,13 @@ import android.widget.FrameLayout;
 
 import androidx.core.content.FileProvider;
 
+import com.google.android.gms.tasks.Tasks;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,13 +51,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * BlisterKompass for Android: the PWA from ../pwa, bundled as assets and served offline from
  * https://appassets.androidplatform.net/pwa/ (a secure origin, so ES modules, workers and WASM work).
  * The app has no INTERNET permission; nothing leaves the phone.
  *
- * Native pieces the WebView lacks: the camera for the file input, a German voice (TextToSpeech) and printing.
+ * Native pieces the WebView lacks: the camera for the file input, a German voice (TextToSpeech), printing and
+ * imprint OCR (ML Kit text recognition with the bundled model, on the phone; the port of iOS's Vision OCR).
  */
 public class MainActivity extends Activity {
     private static final String HOST = "appassets.androidplatform.net";
@@ -78,6 +95,8 @@ public class MainActivity extends Activity {
     private boolean ttsReady;
     private ValueCallback<Uri[]> pendingFiles;
     private Uri photoUri;
+    private TextRecognizer ocr;
+    private final ExecutorService ocrThread = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle state) {
@@ -168,6 +187,8 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         clearPhotos(); // T-55: no capture outlives the app
         if (tts != null) tts.shutdown();
+        ocrThread.shutdownNow();
+        if (ocr != null) ocr.close();
         web.destroy();
         super.onDestroy();
     }
@@ -314,5 +335,72 @@ public class MainActivity extends Activity {
                         new PrintAttributes.Builder().setMediaSize(PrintAttributes.MediaSize.ISO_A4).build());
             });
         }
+
+        /** JPEG data URL of the pill → window.__bkImprint(id, text|null). Off the UI thread; the image stays in memory. */
+        @JavascriptInterface
+        public void readImprint(int id, String dataUrl) {
+            ocrThread.execute(() -> {
+                String text = null;
+                try { text = readImprintText(dataUrl); } catch (Exception | OutOfMemoryError e) {
+                    android.util.Log.w("BlisterKompass", "imprint OCR failed", e);
+                }
+                String js = "window.__bkImprint && window.__bkImprint(" + id + "," + (text == null ? "null" : "\"" + text + "\"") + ")";
+                web.post(() -> web.evaluateJavascript(js, null));
+            });
+        }
+    }
+
+    // ---- imprint OCR (port of PillRecognizer.readImprint) -------------------------------------
+
+    private String readImprintText(String dataUrl) throws Exception {
+        int comma = dataUrl.indexOf(',');
+        byte[] jpeg = Base64.decode(comma >= 0 ? dataUrl.substring(comma + 1) : dataUrl, Base64.DEFAULT);
+        Bitmap photo = BitmapFactory.decodeByteArray(jpeg, 0, jpeg.length);
+        if (photo == null) return null;
+        if (ocr == null) ocr = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+        // Embossed imprints are low contrast: grey + contrast boost first (as iOS: saturation 0, contrast 2.2);
+        // the plain photo as a second try, where the boost burns out a printed imprint.
+        Bitmap boosted = boost(photo, 2.2f);
+        try {
+            for (Bitmap b : new Bitmap[]{boosted, photo}) {
+                String t = imprintOf(Tasks.await(ocr.process(InputImage.fromBitmap(b, 0))));
+                if (t != null) return t;
+            }
+            return null;
+        } finally {
+            boosted.recycle();
+            photo.recycle();
+        }
+    }
+
+    /** Same filter as iOS: words with confidence > 0.3, joined, upper case, letters and digits only, 1–8 characters. */
+    static String imprintOf(Text result) {
+        StringBuilder sb = new StringBuilder();
+        for (Text.TextBlock block : result.getTextBlocks())
+            for (Text.Line line : block.getLines())
+                for (Text.Element el : line.getElements())
+                    if (el.getConfidence() > 0.3f) sb.append(el.getText());
+        StringBuilder out = new StringBuilder();
+        String up = sb.toString().toUpperCase(Locale.ROOT);
+        for (int i = 0; i < up.length(); ) {
+            int c = up.codePointAt(i);
+            if (Character.isLetterOrDigit(c)) out.appendCodePoint(c);
+            i += Character.charCount(c);
+        }
+        int n = out.codePointCount(0, out.length());
+        return n >= 1 && n <= 8 ? out.toString() : null;
+    }
+
+    /** Greyscale with contrast around mid-grey, like CIColorControls(saturation 0, contrast c). */
+    private static Bitmap boost(Bitmap src, float c) {
+        ColorMatrix m = new ColorMatrix();
+        m.setSaturation(0);
+        float t = 128f * (1 - c);
+        m.postConcat(new ColorMatrix(new float[]{c, 0, 0, 0, t, 0, c, 0, 0, t, 0, 0, c, 0, t, 0, 0, 0, 1, 0}));
+        Bitmap out = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
+        Paint p = new Paint();
+        p.setColorFilter(new ColorMatrixColorFilter(m));
+        new Canvas(out).drawBitmap(src, 0, 0, p);
+        return out;
     }
 }

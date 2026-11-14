@@ -65,8 +65,10 @@ codes decoded through zxing-wasm (`codes.test.js`), the print sheet, the code wr
   otherwise); free-text `t` is shown as written; units from `du` (KBV S_BMP_DOSIEREINHEIT) or `dud`; the plan's own dose
   notation (½, ¾, 1,5); the plan's reason `r` instead of the catalog purpose; `i` and `x` on the card; block headings 411–425;
   pages of one plan (`MP/@U`, `@a`/`@z`) are merged, a missing page is named.
-- **No imprint OCR (v1).** After the photo, the app asks "Was steht auf der Tablette?" with a short text field (also in
-  "Aussehen antippen"). The matcher takes the typed text as it took the OCR text, look-alike glyphs included.
+- **No imprint OCR in the browser (v1).** After the photo, the app asks "Was steht auf der Tablette?" with a short text field (also in
+  "Aussehen antippen"). The matcher takes the typed text as it took the OCR text, look-alike glyphs included. In the Android app,
+  `js/vision.js` hands the pill crop to ML Kit text recognition on the phone (`window.BKReadImprint`, same filter as iOS) and
+  the field comes pre-filled; the person confirms or corrects it.
 - **Leaflet lookup by a PDF the person picks, not by download.** The leaflet hosts send no CORS headers, so the browser can't fetch a
   leaflet as the iPhone app does. For a PZN without picture data (pack screen, plan import), the app links to the leaflet PDF
   ("Beipackzettel öffnen" → save the PDF; fallback: the PZN's page at Apotheken Umschau), and "PDF wählen" reads the file on the phone

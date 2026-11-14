@@ -74,5 +74,32 @@ export async function scanCode(blob) {
 /** PillCues of the largest object in the photo. */
 export async function analyzePill(blob) {
   const b = await bitmap(blob);
-  return (await run("pill", pixels(b, 320))).cues;
+  const small = pixels(b, 320);
+  const { cues, box } = await run("pill", small);
+  if (cues?.found && box && typeof self.BKReadImprint === "function") cues.imprint = await nativeImprint(b, small.width, box);
+  return cues;
+}
+
+/** Android app only: on-device text recognition (ML Kit, see android-bridge.js) on the pill, like iOS's Vision OCR:
+ *  the pill's box from the 320 px analysis, 15 % margin, on a 1600 px image; the whole photo if the crop reads nothing. */
+async function nativeImprint(src, smallWidth, box) {
+  try {
+    const sw = src.width || src.naturalWidth, sh = src.height || src.naturalHeight;
+    const k = Math.min(1, 1600 / Math.max(sw, sh));
+    const W = Math.round(sw * k), H = Math.round(sh * k), f = W / smallWidth;
+    const mx = box.width * f * 0.15, my = box.height * f * 0.15;
+    const x = Math.max(0, Math.floor(box.x * f - mx)), y = Math.max(0, Math.floor(box.y * f - my));
+    const crop = { x, y, w: Math.min(W, Math.ceil((box.x + box.width) * f + mx)) - x, h: Math.min(H, Math.ceil((box.y + box.height) * f + my)) - y };
+    const jpeg = (r) => {
+      const c = document.createElement("canvas");
+      c.width = r.w; c.height = r.h;
+      c.getContext("2d").drawImage(src, r.x / k, r.y / k, r.w / k, r.h / k, 0, 0, r.w, r.h);
+      return c.toDataURL("image/jpeg", 0.92);
+    };
+    return (crop.w > 8 && crop.h > 8 ? await self.BKReadImprint(jpeg(crop)) : null)
+      ?? await self.BKReadImprint(jpeg({ x: 0, y: 0, w: W, h: H }));
+  } catch (e) {
+    console.warn("imprint OCR", e);
+    return null;
+  }
 }

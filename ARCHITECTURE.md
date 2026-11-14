@@ -201,7 +201,7 @@ Every change goes into both columns (`AGENTS.md` → “Two clients, one product
 | Matcher: score, rank, question, warnings | `Matcher.swift` | `js/matcher.js` | both |
 | Dosage forms, BMP units | `DoseForm.swift` | `js/dose-form.js` (+ KBV forms, Anhang 4 units; iOS: T-29) | both |
 | Code reading | `Bmp.swift` (zxing-cpp + Vision) | `js/code-reader.js` (zxing-wasm), `js/vision.js`, `js/vision-worker.js` | both |
-| Pill pixels | `PillRecognizer.swift` (+ Vision OCR) | `js/recognizer.js` (no OCR: the imprint is typed) | PWA (`recognizer.test.js`), iOS (`ios/eval/`) |
+| Pill pixels | `PillRecognizer.swift` (+ Vision OCR) | `js/recognizer.js` (no OCR: the imprint is typed; Android app: ML Kit OCR via `js/vision.js` → `MainActivity.readImprint`, pre-fills the field) | PWA (`recognizer.test.js`), iOS (`ios/eval/`) |
 | State (`myMeds`, `unknownPZNs`, learned leaflet looks) | `Store.swift` (UserDefaults) | `js/store.js` (localStorage, + `learnedLeaflets`) | PWA (`pwa.test.js`) |
 | Meal tags | `MealTiming.swift` (iOS: T-31) | `js/bmp-writer.js` `meal()` | both |
 | Plan drucken | `PlanPrint.swift`, `BmpWriter.swift` (iOS: T-30) | `js/print-sheet.js` ("Meine Medikamente mit Bildern", no code); `bmp-writer.js` / `code-writer.js` unused for print (D-09) | PWA (`print.test.js`) |

@@ -19,4 +19,20 @@
   Object.defineProperty(window, "speechSynthesis", { value: synth, configurable: true });
   Object.defineProperty(window, "SpeechSynthesisUtterance", { value: Utterance, configurable: true, writable: true });
   window.print = function () { bridge.print(); };
+
+  // Imprint OCR on the phone (ML Kit, bundled model, no network), used by pwa/js/vision.js. JPEG data URL → text or null.
+  var ocrSeq = 0, ocrPending = {};
+  window.__bkImprint = function (id, text) {
+    var p = ocrPending[id];
+    if (!p) return;
+    delete ocrPending[id];
+    p(text || null);
+  };
+  window.BKReadImprint = function (dataUrl) {
+    return new Promise(function (resolve) {
+      var id = ++ocrSeq;
+      ocrPending[id] = resolve;
+      try { bridge.readImprint(id, String(dataUrl)); } catch (e) { delete ocrPending[id]; resolve(null); }
+    });
+  };
 })();
