@@ -515,6 +515,20 @@ struct BmpImportView: View {
 
 // MARK: - Building blocks
 
+/// Illustrated icons (Assets: ui-*) for the main actions, keyed by the SF Symbol they replace. Paired with `PICTURES`
+/// in pwa/js/icons.js. A button with a picture shows no word: its title stays the accessibility label.
+enum ActionPicture {
+    static let byIcon = ["qrcode.viewfinder": "ui-plan", "barcode.viewfinder": "ui-pack",
+                         "printer.fill": "ui-print", "hand.tap.fill": "ui-lookup"]
+
+    static func view(_ icon: String, size: CGFloat) -> some View {
+        Image(byIcon[icon] ?? icon).resizable().interpolation(.high).scaledToFit()
+            .frame(width: size, height: size)
+            .clipShape(RoundedRectangle(cornerRadius: size * 0.22, style: .continuous))
+            .accessibilityHidden(true)
+    }
+}
+
 struct BigButtonLabel: View {
     let icon: String
     let title: String
@@ -529,7 +543,9 @@ struct BigButtonLabel: View {
 
     var body: some View {
         VStack(spacing: compact ? 8 : 10) {
-            if compact {
+            if mascot == nil, ActionPicture.byIcon[icon] != nil {
+                ActionPicture.view(icon, size: height * 0.8)
+            } else if compact {
                 Image(systemName: icon).font(.system(size: 34, weight: .semibold))
                 Text(title).font(.system(.title3, design: .rounded, weight: .bold))
                     .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.7)
@@ -574,7 +590,10 @@ struct TileLabel: View {
 
     var body: some View {
         Group {
-            if wide {
+            if ActionPicture.byIcon[icon] != nil {
+                ActionPicture.view(icon, size: 92).frame(height: wide ? 100 : 120)
+                    .accessibilityElement().accessibilityLabel(title.replacingOccurrences(of: "\n", with: " "))
+            } else if wide {
                 HStack(spacing: 16) { Image(systemName: icon).font(.system(size: 32)); Text(title).font(.title2.weight(.bold)); Spacer() }
                     .padding(.horizontal, 22).frame(height: 80)
             } else {
