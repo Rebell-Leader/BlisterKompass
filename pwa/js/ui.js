@@ -1,7 +1,7 @@
 // Small DOM helpers and the building blocks of every screen (port of the SwiftUI views' pieces).
 // No innerHTML with data: every text goes in through textContent.
 
-import { icon, purpose } from "./icons.js";
+import { icon, hasPicture, purpose } from "./icons.js";
 import { SLOTS, hasScore, colorText, shapeName, whenText, capitalizedFirst, fmt, doseSymbol, dayName } from "./model.js";
 import { ICON as FORM_ICON, doseForm } from "./dose-form.js";
 
@@ -50,13 +50,14 @@ export function bigButton({ icon: ic, title, onClick, color = "accent", height =
   // compact: three in a row, smaller title on up to two lines ("\n" breaks it).
   return h(`button.big.fill-${color}${compact ? ".compact" : ""}`, { type: "button", onclick: onClick, disabled, "aria-label": title.replace(/\n/g, " "), style: { "--h": `${height}px` } },
     m ? mascot(m) : icon(ic, { cls: iconOnly ? "icon big-only" : "icon" }),
-    iconOnly ? null : h("span", null, ...title.split("\n").flatMap((t, i) => (i ? [h("br"), t] : [t]))));
+    iconOnly || (!m && hasPicture(ic)) ? null : h("span", null, ...title.split("\n").flatMap((t, i) => (i ? [h("br"), t] : [t]))));
 }
 
 /** Light tile: icon over (multi-line) word. */
 export function tile({ icon: ic, title, onClick, wide = false }) {
-  return h(`button.tile${wide ? ".wide" : ""}`, { type: "button", onclick: onClick },
-    icon(ic), h("span", null, ...title.split("\n").flatMap((t, i) => (i ? [h("br"), t] : [t]))));
+  const pic = hasPicture(ic);
+  return h(`button.tile${wide ? ".wide" : ""}`, { type: "button", onclick: onClick, "aria-label": pic ? title.replace(/\n/g, " ") : null },
+    icon(ic), pic ? null : h("span", null, ...title.split("\n").flatMap((t, i) => (i ? [h("br"), t] : [t]))));
 }
 
 export function backBar({ title = "", onBack, onSpeak }) {

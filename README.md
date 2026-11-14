@@ -149,7 +149,7 @@ Code: [MIT](LICENSE). Details on every dataset and what was cut for this public 
 | Barcode reading | [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp) 3.1.1 (iOS), [zxing-wasm](https://github.com/Sec-ant/zxing-wasm) 3.1.6 (web) | Apache-2.0, MIT |
 | PDF reading (web, leaflet the person picks) | [pdf.js](https://github.com/mozilla/pdf.js) 4.10.38, `pwa/vendor/pdfjs/` | Apache-2.0 |
 | Font | Atkinson Hyperlegible | SIL OFL 1.1 |
-| Mascot art (`pwa/icons/mascot-*.png`) | © Anna P. (AnnXQP) | used with permission for this project |
+| Mascot and action-icon art (`pwa/icons/mascot-*.png`, `pwa/icons/ui-*.png`) | © Anna P. (AnnXQP) | used with permission for this project |
 | Pill mascot states (`pwa/img/mascot/`, `ios/PillSnap/Assets.xcassets/mascot-*`) | generated with ChatGPT for this project, cut and drawn by `docs/brand/pill-mascot/*.py` | project asset |
 
 No real patient data anywhere.
