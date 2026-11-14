@@ -251,8 +251,11 @@ extension Med {
         }
     }
 
-    var spoken: String {
-        var parts = ["Das ist \(substance) \(spokenStrength)."]
+    var spoken: String { spoken(check: false) }
+
+    /// Read aloud on a med card. After a photo match (`check`) it says "Sieht aus wie …", never "Das ist …" (INV-15).
+    func spoken(check: Bool) -> String {
+        var parts = [check ? "Sieht aus wie \(substance) \(spokenStrength). Bitte prüfen." : "Das ist \(substance) \(spokenStrength)."]
         if let i = indication { parts.append("Wofür: \(i.de).") }
         if !whenText.isEmpty { parts.append("Einnehmen: \(whenText).") }
         if let note = schedule?.note { parts.append("Hinweis: \(note).") }

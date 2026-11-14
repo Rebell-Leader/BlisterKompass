@@ -182,8 +182,10 @@ export function whenText(med) {
 
 export const spokenStrength = (med) => (med.strength ?? "").replaceAll("mg", "Milligramm").replaceAll("µg", "Mikrogramm");
 
-export function spoken(med) {
-  const parts = [`Das ist ${title(med).replace(med.strength ?? "\u0000", spokenStrength(med))}.`];
+/** Read aloud on a med card. After a photo match (`check`) it says "Sieht aus wie …", never "Das ist …" (INV-15). */
+export function spoken(med, { check = false } = {}) {
+  const name = title(med).replace(med.strength ?? "\u0000", spokenStrength(med));
+  const parts = [check ? `Sieht aus wie ${name}. Bitte prüfen.` : `Das ist ${name}.`];
   if (med.indication) parts.push(`Wofür: ${med.indication.de}.`);
   const w = whenText(med);
   if (w) parts.push(`Einnehmen: ${w}.`);
@@ -195,7 +197,7 @@ export function spoken(med) {
 /** "eine Tablette", "eine halbe Tablette", "zwei Kapseln" – spelled out for the voice. */
 export function spokenCount(a, look, unit = null) {
   if (unit && unit !== "Stück") return `${german(a)} ${unit}`;
-  if (!look) return amountText(a).replace(/^eine\b/, "ein") + " Stück";
+  if (!look) return amountText(a).replace(/^eine halbe\b/, "ein halbes").replace(/^eine\b/, "ein") + " Stück";
   const capsule = ["capsule", "softgel"].includes(look.shape);
   const noun = capsule ? (a > 1 ? "Kapseln" : "Kapsel") : (a > 1 ? "Tabletten" : "Tablette");
   return `${amountText(a)} ${noun}`;

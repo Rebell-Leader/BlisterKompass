@@ -2,7 +2,7 @@
 // Port of RootView, ResultViews, PackViews, PlanInput, OtherViews and ExamplesView (ios/PillSnap).
 
 import { Store } from "./store.js";
-import { h, set, bigButton, tile, backBar, statusBanner, mascot, infoRow, tip, chip, purposeRow, scheduleBlock, photo, pillTile, doseFormTile, medPic, medForm, sheet } from "./ui.js";
+import { h, set, bigButton, tile, backBar, statusBanner, mascot, infoRow, chip, purposeRow, scheduleBlock, photo, pillTile, doseFormTile, medPic, medForm, sheet } from "./ui.js";
 import { icon } from "./icons.js";
 import { SLOTS, SHAPES, sections, title, sourceText, dayName, countText, spoken, spokenLines, capitalizedFirst, adding, nextText, NOT_RECORDED } from "./model.js";
 import { doseForm } from "./dose-form.js";
@@ -99,7 +99,36 @@ function onboarding() {
     h("h1", null, "Willkommen!"),
     h("p.lead", null, "Lesen Sie zuerst Ihren ", h("strong", null, "Medikationsplan"), " ein – per Kamera, aus den Beispielen oder selbst eingeben."),
     bigButton({ icon: "qr", mascot: "scan-plan", title: "Plan einlesen", height: 230, onClick: planSourceSheet }),
-    tip({ text: [h("strong", null, "Den Code oben rechts"), " auf dem Plan ganz ins Bild nehmen."] }));
+    planCodeHint());
+}
+
+/** Welcome screen: where the plan code is, as a small picture of an example plan (tools/make-plan-hint.py). A tap opens it
+ *  large with a close-up of the code. Same texts as PlanCodeHint in ios/PillSnap/RootView.swift. */
+function planCodeHint() {
+  return h("button.plan-hint", { type: "button", "aria-label": "Den Code oben rechts fotografieren. Beispiel ansehen", onclick: planCodeHintPopup },
+    h("img", { src: "img/plan-hint.png", alt: "", width: 1600, height: 1131, decoding: "async" }),
+    h("span.plan-hint-text", null,
+      h("span", null, "Den ", h("strong", null, "Code oben rechts"), " fotografieren"),
+      h("span.plan-hint-zoom", null, icon("search"), "Antippen zum Vergrößern")));
+}
+
+/** The example plan large, the code framed, then the code alone as it should fill the camera picture. */
+function planCodeHintPopup() {
+  const dlg = h("dialog.sheet.plan-hint-popup", { "aria-label": "So finden Sie den Code" });
+  const close = () => dlg.close();
+  dlg.append(
+    h("button.link.popup-close", { type: "button", onclick: close }, icon("x"), "Schließen"),
+    h("h2", null, "So finden Sie den Code"),
+    h("img.plan-hint-page", { src: "img/plan-hint.png", width: 1600, height: 1131,
+      alt: "Beispiel eines Medikationsplans, der Code oben rechts ist gelb umrandet" }),
+    h("p", null, "Der Code steht ", h("strong", null, "oben rechts"), " auf dem Medikationsplan."),
+    h("img.plan-hint-code", { src: "img/plan-hint-code.png", width: 600, height: 600, alt: "Der Code füllt das Bild" }),
+    h("p", null, "So nah heran: Der Code ", h("strong", null, "füllt das Bild"), "."),
+    h("p.plan-hint-note", null, "Beispiel mit erfundenen Daten."));
+  dlg.addEventListener("close", () => dlg.remove());
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) close(); });
+  document.body.append(dlg);
+  dlg.showModal();
 }
 
 function scanPill() {
@@ -435,7 +464,7 @@ function medCard(med, blob, banner) {
   const b = BANNER[banner];
   if (banner !== "confirmed") say(`${med.substance ?? med.name}. ${med.indication?.de ?? ""}`);
   return h("main.screen", null,
-    backBar({ onBack: home, onSpeak: () => say(spoken(med)) }),
+    backBar({ onBack: home, onSpeak: () => say(spoken(med, { check: banner === "sure" || banner === "likely" })) }),
     statusBanner(b),
     h("div.compare-row", null,
       blob ? [photo(blob, "photo-sq"), h("span.muted.equal", null, icon("equal"))] : null,
@@ -732,7 +761,7 @@ function PackResult({ result: r, photo: blob }) {
     Pack.expired(r) && exp ? statusBanner({ icon: "calendarAlert", text: `Abgelaufen seit ${exp}`, color: "bad" }) : null,
     middle,
     r.kind === "sameSubstance" && r.mine ? infoRow({ icon: "alert", title: "Gleicher Wirkstoff wie auf Ihrem Plan", value: `${title(r.mine)} – ${r.difference ?? "anderes Präparat"}. Bitte in der Apotheke fragen.`, tone: "warn" }) : null,
-    r.kind === "onPlan" && r.mine ? scheduleBlock(r.mine) : null,
+    (r.kind === "onPlan" || r.kind === "onPlanNoLook") && r.mine ? scheduleBlock(r.mine) : null,
     purposeRow(shownMed),
     h("div.chips", null,
       exp ? chip("calendar", `Haltbar bis ${exp}`, Pack.expired(r) ? "bad" : "accent") : null,
@@ -809,8 +838,9 @@ function Examples({ kind }) {
   const el = h("main.screen", null,
     h("div.backbar", null,
       h("button.back", { type: "button", onclick: home }, icon("back"), "Abbrechen"),
-      h("span.bar-title", null, EXAMPLE_TITLES[kind]),
       h("button.round", { type: "button", "aria-label": "Eigene Fotos", title: "Eigene Fotos", onclick: () => takePhoto("library", kind) }, icon("photos"))),
+    // The title on its own line: next to "Abbrechen" and the photo button it pushed the screen wider than a phone.
+    h("h1.examples-title", null, EXAMPLE_TITLES[kind]),
     grid);
   (examplesIndex ??= fetch("examples/examples.json").then((r) => r.json())).then((all) => {
     set(grid, ...all.filter((f) => f.kind === kind).map((f) =>

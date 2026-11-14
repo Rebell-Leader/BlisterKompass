@@ -150,6 +150,7 @@ Code: [MIT](LICENSE). Details on every dataset and what was cut for this public 
 | PDF reading (web, leaflet the person picks) | [pdf.js](https://github.com/mozilla/pdf.js) 4.10.38, `pwa/vendor/pdfjs/` | Apache-2.0 |
 | Font | Atkinson Hyperlegible | SIL OFL 1.1 |
 | Mascot art (`pwa/icons/mascot-*.png`) | © Anna P. (AnnXQP) | used with permission for this project |
+| Plan-code hint pictures (`pwa/img/plan-hint*.png`, `ios/PillSnap/Assets.xcassets/plan-hint*`) | drawn by `tools/make-plan-hint.py` from example plan A (synthetic) | project asset |
 | Pill mascot states (`pwa/img/mascot/`, `ios/PillSnap/Assets.xcassets/mascot-*`) | generated with ChatGPT for this project, cut and drawn by `docs/brand/pill-mascot/*.py` | project asset |
 
 No real patient data anywhere.
