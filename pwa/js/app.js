@@ -435,7 +435,7 @@ function medCard(med, blob, banner) {
   const b = BANNER[banner];
   if (banner !== "confirmed") say(`${med.substance ?? med.name}. ${med.indication?.de ?? ""}`);
   return h("main.screen", null,
-    backBar({ onBack: home, onSpeak: () => say(spoken(med)) }),
+    backBar({ onBack: home, onSpeak: () => say(spoken(med, { check: banner === "sure" || banner === "likely" })) }),
     statusBanner(b),
     h("div.compare-row", null,
       blob ? [photo(blob, "photo-sq"), h("span.muted.equal", null, icon("equal"))] : null,
@@ -732,7 +732,7 @@ function PackResult({ result: r, photo: blob }) {
     Pack.expired(r) && exp ? statusBanner({ icon: "calendarAlert", text: `Abgelaufen seit ${exp}`, color: "bad" }) : null,
     middle,
     r.kind === "sameSubstance" && r.mine ? infoRow({ icon: "alert", title: "Gleicher Wirkstoff wie auf Ihrem Plan", value: `${title(r.mine)} – ${r.difference ?? "anderes Präparat"}. Bitte in der Apotheke fragen.`, tone: "warn" }) : null,
-    r.kind === "onPlan" && r.mine ? scheduleBlock(r.mine) : null,
+    (r.kind === "onPlan" || r.kind === "onPlanNoLook") && r.mine ? scheduleBlock(r.mine) : null,
     purposeRow(shownMed),
     h("div.chips", null,
       exp ? chip("calendar", `Haltbar bis ${exp}`, Pack.expired(r) ? "bad" : "accent") : null,
@@ -809,8 +809,9 @@ function Examples({ kind }) {
   const el = h("main.screen", null,
     h("div.backbar", null,
       h("button.back", { type: "button", onclick: home }, icon("back"), "Abbrechen"),
-      h("span.bar-title", null, EXAMPLE_TITLES[kind]),
       h("button.round", { type: "button", "aria-label": "Eigene Fotos", title: "Eigene Fotos", onclick: () => takePhoto("library", kind) }, icon("photos"))),
+    // The title on its own line: next to "Abbrechen" and the photo button it pushed the screen wider than a phone.
+    h("h1.examples-title", null, EXAMPLE_TITLES[kind]),
     grid);
   (examplesIndex ??= fetch("examples/examples.json").then((r) => r.json())).then((all) => {
     set(grid, ...all.filter((f) => f.kind === kind).map((f) =>

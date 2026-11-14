@@ -57,7 +57,7 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 | T-24 | P1 | Hinweise and meal tags missing in day view and read-aloud | physician | open |
 | T-25 | P1 | Contrast below 4.5:1 (morning slot, "off" slots, dark slot buttons) | accessibility | open |
 | T-26 | P1 | 200% zoom: sideways scroll, names cut to "M…" | accessibility | open |
-| T-27 | P1 | "Eigene Fotos" off-screen; the only gallery path on Android | skilled user, accessibility | open |
+| T-27 | P1 | "Eigene Fotos" off-screen; the only gallery path on Android | skilled user, accessibility | partly fixed (web): Examples title on its own line; "Aus Fotos wählen" tile open |
 | T-29 | P1 | iOS: `PlanReader.swift` needs the PWA BMP 2.8 reading fixes | physician, pharmacist | partly fixed (iOS): no substance fallback, all `<W>`, weekly dose, BMP checks |
 | T-30 | P1 | iOS: print writes a BMP 2.8 code from the patient list; old layout | pharmacist, physician | open |
 | T-31 | P1 | iOS: `MealTiming.swift` inverts negations | pharmacist, physician | fixed (iOS) |
@@ -86,6 +86,14 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 | T-55 | P1 | Android: camera capture stays in the app cache | site, privacy | fixed in source; APK not rebuilt |
 | T-56 | P0 | Site: unqualified "Kein Medizinprodukt", certainty and photo-identity claims, privacy notice gaps | site | fixed (texts) |
 | T-57 | P1 | Printed row numbers are not a stable medicine reference | physician, pharmacist | open |
+| T-58 | P0 | Pill photo card read aloud "Das ist …" under a "bitte prüfen" banner | pre-pitch QA | fixed (web + iOS) |
+| T-59 | P0 | Plan line with PZN and its own `<W>` strength shows the catalog strength | pre-pitch QA | open |
+| T-60 | P0 | Pill photo: "Wahrscheinlich" without a minimum score; a contradicting typed imprint is ignored | pre-pitch QA | open |
+| T-61 | P1 | A candidate picked from the photo list opens as a green "Auf Ihrem Plan" with photo "="; no "Keine davon" | pre-pitch QA | open |
+| T-62 | P1 | GS1 pack code with "9N" in batch or serial is refused; an unknown GS1 field drops the expiry | pre-pitch QA | open |
+| T-63 | P1 | Real plans: day rows show "PZN 0…" without the plan's reason; a time-limited line (424, `x`) shows as due | pre-pitch QA | open (pack screen times: fixed, web) |
+| T-64 | P2 | Other-maker read-aloud: "Ramipril 5 mg hat denselben Wirkstoff und dieselbe Stärke wie Ramipril 5 mg" | pre-pitch QA | open |
+| T-65 | P1 | Decision: drug database for real plans (93 public PZN names; BMP lines carry no names) | pre-pitch QA | open |
 
 ---
 
@@ -854,3 +862,98 @@ card id set at adoption and printed with the sheet date.
 
 **Test.** Print, add an entry, print again: the PRD and pitch don't promise stable numbers.
 
+## Added by the pre-pitch QA (14 Nov 2026)
+
+Measured on `main` @ fd4077f (live = main): BMP codes in 388 simulated photos plus 54 BMP 2.8 edge cases, pack codes in 3,040
+simulated decodes plus 82 parser cases and 19 real generic PZNs, the pill recogniser on 15 NLM C3PI photos, and an end-to-end run on
+the live site in Chromium at 390×844. Code reading never misread a code: it decodes exactly or finds nothing.
+
+### T-58 Pill photo card read aloud "Das ist …" under a "bitte prüfen" banner (pre-pitch QA, verified)
+
+**Problem.** After a photo match the banner says "Wahrscheinlich – bitte prüfen", but the speaker button read `spoken(med)`: "Das ist
+Diclofenac-Natrium 75 Milligramm …". With plan A, the NLM Allopurinol photo (not on the plan) and "Kein Aufdruck" got exactly that.
+
+**Fix (done, web + iOS).** `spoken(med, { check })` / `Med.spoken(check:)` say "Sieht aus wie … Bitte prüfen." on a `sure` or `likely`
+card; a card opened from the day list still says "Das ist …".
+
+**Test.** `pwa/tests/checks.test.js` "photo match read aloud: 'Sieht aus wie … Bitte prüfen', never 'Das ist' (INV-15)". iOS: `Theme.swift`
+is not in the checks build, so the text was checked once on Linux with Swift 6.0.3; `ResultViews.swift` (SwiftUI) not compiled here.
+
+### T-59 Plan line with PZN and its own `<W>` strength shows the catalog strength (pre-pitch QA, verified)
+
+**Problem.** `resolve()` spreads the catalog product over a PZN line and keeps only schedule, reason and notes from the plan
+(`plan-reader.js` `resolve`, iOS `PlanReader.swift` `resolve`). A line `<M p="3159468"><W w="Methotrexat" s="2,5 mg"/></M>` shows
+"Methotrexat 10 mg" with the MTX HEXAL 10 mg picture; HCT 12,5 mg becomes 25 mg. Rare in real plans, high risk when it happens.
+
+**Fix.** Take the catalog look only when the plan's own substance and strength (if given) agree with the product; otherwise keep the
+plan's name and strength with `look: null`. Same rule on both clients.
+
+**Test.** Paired check "PZN line with its own other strength keeps the plan's strength and no picture"; all example plans unchanged.
+
+### T-60 Pill photo: "Wahrscheinlich" without a minimum score; a contradicting typed imprint is ignored (pre-pitch QA, verified)
+
+**Problem.** On 15 NLM photos against plan A with "Kein Aufdruck", 5 got a wrong "Wahrscheinlich" (any red round pill → Diclofenac
+75 mg; white pills → Atorvastatin) and 3 showed the right medicine. `likely` has no score floor (`matcher.js` ~:102–107, `Matcher.swift`
+~:113–115), and a typed imprint that contradicts the single candidate ("XYZ" on red round → still Diclofenac; "PGN 300" → Pregabalin
+75 mg) doesn't stop it. Typing only one part of a multi-part imprint never matches. With the plan's true looks and the full imprint
+typed, 10 of 10 found pills were right.
+
+**Fix.** A known imprint that contradicts the typed one → `unknown`, not `likely` (simulated: wrong confident answers 26 → 12 of 70
+runs). Token-subset imprint match ("PGN 75" ⊂ "VTRS PGN 75"; never plain substring: "10" ⊂ "M 1000"). Rename "Kein Aufdruck" to "Kein
+Aufdruck / nicht lesbar".
+
+**Test.** Paired checks for both rules; re-run the NLM photo set.
+
+### T-61 A candidate picked from the photo list opens as a green "Auf Ihrem Plan" with photo "=" (pre-pitch QA, verified)
+
+**Problem.** Tapping a candidate in the `choose` grid opens the card with the photo, the "=" sign and the green "Auf Ihrem Plan"
+banner, which reads like a confirmation (`app.js` choose screen, `ResultViews.swift` ~:369). There is no "Keine davon"; "Nein" lists
+all plan entries.
+
+**Fix.** Open a picked candidate without the photo and "=" (or with a neutral banner), and add "Keine davon" → "Mit Apotheke klären".
+
+**Test.** E2E: Metformin example photo → pick a candidate → no photo, no "=".
+
+### T-62 GS1 pack code with "9N" in batch or serial is refused; an unknown GS1 field drops the expiry (pre-pitch QA, verified)
+
+**Problem.** `pack-code.js:21` / `PackCode.swift:21` send any text containing "9N" or "[)>" to the IFA parser and never fall back to GS1:
+`(01)04150123456782(17)281231(10)AB12(21)X9N4K2QX4M8Z` → "Ich finde keinen Code". A raw GS1 code with an unexpected AI (11, 710) stops
+parsing at `:70` and silently loses expiry and batch.
+
+**Fix.** `(isIFA ? parseIFA(s) : null) ?? parseGS1(s)` (safe: GS1 still needs 01 + 04150 + a valid PZN); skip unknown AIs by their
+GS1 length table instead of stopping.
+
+**Test.** Paired parser checks with both repro codes.
+
+### T-63 Real plans: day rows show "PZN 0…" without the plan's reason; a time-limited line shows as due (pre-pitch QA, verified)
+
+**Problem.** A BMP line with a PZN carries no name; outside the 93 public PZN names the day row is "PZN 00544786 · 20 IE · Aussehen
+unbekannt" (KBV sample: 3 of 7 lines), read aloud as digits. The plan's reason (`r`, "Diabetes") and extra line (`x`) are only on the
+detail screen. KBV Cefaclor in section 424 ("für 10 Tage (bis 10.07.2026)") shows under "Jetzt" with no end date. The pack screen
+showed no times for a plan line without a picture (`onPlanNoLook`).
+
+**Fix.** Day row: show the plan's reason under a name-less line and the section label / `x` for 424 lines (template text, plan data
+only). Pack screen times for `onPlanNoLook`: done (web); iOS keeps no schedule for such lines yet (T-29).
+
+**Test.** E2E with the KBV sample: insulin row shows "Diabetes"; Cefaclor row shows "zeitlich befristet" and its `x` text.
+
+### T-64 Other-maker read-aloud repeats the same title (pre-pitch QA, verified)
+
+**Problem.** For demo products the other-maker text says "Ramipril 5 mg hat denselben Wirkstoff und dieselbe Stärke wie Ramipril
+5 mg" (`app.js` ~:711, `PackViews.swift` ~:32): it sounds like "the same medicine".
+
+**Fix.** Name the products with maker or PZN ("Ramipril Medivia 5 mg … wie Ihr Ramipril Nordapharm 5 mg").
+
+**Test.** Paired check on the spoken text for the Ramipril Medivia example.
+
+### T-65 Decision: drug database for real plans (pre-pitch QA, verified)
+
+**Problem.** The public repo ships 93 PZN names (`docs/DATA.md`). 19 of 19 realistic generic boxes give "Packung nicht in der
+Datenbank"; a realistic 10-line plan shows 1 picture and 9 bare PZNs. The full BfArM Festbetrag list (no open licence) would name 18 of
+19, but 52 % of its rows have no substance (Metformin, L-Thyroxin, Ibuprofen …), so switch detection would still fail for those, and
+insulin, sprays and patented drugs are not in it.
+
+**Fix.** Decision request: a licensed drug database with name, substance, strength and ATC per PZN (e.g. the ABDA-Artikelstamm), compared
+on ATC rather than substance strings.
+
+**Test.** Re-run the 19-PZN coverage set once a source is decided.
