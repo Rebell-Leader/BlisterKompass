@@ -143,6 +143,20 @@ div.info { display: flex; align-items: center; gap: 14px; padding: 14px; border-
 .hero-icon .mascot { width: min(60vw, 240px); height: auto; }
 .lead { font-size: 21px; }
 .onboarding .tip { text-align: left; }
+.plan-hint {
+  display: flex; gap: 14px; align-items: center; width: 100%; padding: 14px; border: 0; border-radius: var(--r);
+  background: var(--card); color: var(--text); font: inherit; text-align: left; cursor: pointer;
+}
+.plan-hint img { width: 132px; height: auto; flex: none; border-radius: 6px; border: 1px solid rgba(128, 128, 128, .35); background: #fff; }
+.plan-hint-text { display: flex; flex-direction: column; gap: 8px; font-size: 17px; }
+.plan-hint-zoom { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: var(--accent); }
+.plan-hint-zoom .icon { width: 18px; height: 18px; }
+dialog.plan-hint-popup { max-height: 94dvh; overflow-y: auto; }
+dialog.plan-hint-popup h2 { text-align: left; }
+.popup-close { align-self: flex-end; display: inline-flex; align-items: center; gap: 6px; }
+.plan-hint-page { width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(128, 128, 128, .35); background: #fff; }
+.plan-hint-code { width: 220px; height: auto; align-self: center; border-radius: 8px; image-rendering: pixelated; }
+.plan-hint-note { font-size: 15px; color: var(--muted); }
 
 .install {
   display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 14px; border-radius: var(--r);

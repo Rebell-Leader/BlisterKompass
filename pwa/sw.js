@@ -43,6 +43,8 @@ const PRECACHE = [
   "icons/apple-touch-icon.png",
   "icons/favicon-32.png",
   "icons/favicon.ico",
+  "img/plan-hint.png",
+  "img/plan-hint-code.png",
   "img/mascot/base.png",
   "img/mascot/scanning.png",
   "img/mascot/found.png",
