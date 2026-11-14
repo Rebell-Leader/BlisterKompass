@@ -91,14 +91,7 @@ final class Store: ObservableObject {
         PackResult.evaluate(code, myMeds: myMeds, unknownPZNs: unknownPZNs, catalog: products, names: pznNames)
     }
 
-    /// The pharmacy switched maker: keep the plan entry (schedule) but take the new product and look.
-    func takeOver(_ product: Med, replacing old: Med) {
-        guard let i = myMeds.firstIndex(where: { $0.pzn == old.pzn }) else { return }
-        var new = product
-        new.schedule = old.schedule
-        myMeds[i] = new
-        save()
-    }
+    // No "take over the new pack" here: a person's tap must not replace the plan's PZN and look (INV-15, T-15).
 
     func identify(_ cues: PillCues) -> Answer {
         Matcher.answer(myMeds: myMeds, catalog: products, cues: cues)

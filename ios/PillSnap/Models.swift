@@ -28,6 +28,7 @@ struct Look: Codable, Hashable {
     /// Shown under the picture, so nobody takes reference data for their own pill.
     var sourceText: String? {
         guard let s = source else { return nil }
+        if s.hasPrefix("leaflet:pdf:") { return "Aussehen laut der Packungsbeilage, die Sie gewählt haben" }
         if s.hasPrefix("leaflet:") { return "Aussehen laut Packungsbeilage" }
         if s.hasPrefix("ema") { return "Aussehen laut EMA-Produktinformation" }
         if s.hasPrefix("dailymed") { return "Aussehen: US-Referenzdaten" }
@@ -89,6 +90,9 @@ extension Array where Element == Med {
 enum Day {
     static let order = ["morning", "noon", "evening", "night"]
 
+    /// Shown and spoken with the day list: the app never knows what was taken.
+    static let notRecorded = "Die App merkt sich nicht, was Sie schon genommen haben."
+
     /// Time of day → plan slot: morning 4–11, noon 11–15, evening 15–21, night 21–4.
     static func slot(at date: Date, calendar: Calendar = .current) -> String {
         switch calendar.component(.hour, from: date) {
@@ -110,12 +114,18 @@ enum Day {
         let kind: Kind
         let entries: [Entry]
         let now: Bool
+        /// Always false: a slot of today is never shown as tomorrow (T-06). Kept for older callers.
         let tomorrow: Bool
+        /// Today's slot, already past ("Heute vorbei").
+        var past = false
+        /// 00:00–04:00: the night slot is last night's bedtime dose, never "now" again.
+        var lastNight = false
         var id: String { "\(kind)" }
     }
 
-    /// Now first, then the rest of the day in order (slots already past come back as tomorrow),
-    /// weekly meds due today, as-needed last. Empty sections are left out.
+    /// Now first, then the rest of the day in order, then today's slots already past (`past`, never "tomorrow", so nobody
+    /// skips a morning dose at 11:05), weekly meds due today, as-needed last. Empty sections are left out. The day runs
+    /// 04:00–04:00: between midnight and 04:00 the night slot is last night's (`lastNight`), never "now" again (T-06).
     static func sections(_ meds: [Med], at date: Date, calendar: Calendar = .current) -> [Section] {
         let current = slot(at: date, calendar: calendar)
         let start = order.firstIndex(of: current)!
@@ -131,7 +141,9 @@ enum Day {
                 return Entry(med: m, amount: s.amounts[slot])
             }
             guard !entries.isEmpty else { continue }
-            out.append(Section(kind: .slot(slot), entries: entries, now: k == 0, tomorrow: start + k >= order.count && !afterMidnight))
+            let past = start + k >= order.count && !afterMidnight
+            let lastNight = k == 0 && afterMidnight
+            out.append(Section(kind: .slot(slot), entries: entries, now: k == 0 && !afterMidnight, tomorrow: false, past: past, lastNight: lastNight))
         }
         // The current slot leads, even before weekly meds.
         if let i = out.firstIndex(where: { $0.kind == .slot(current) }), i > 0 { out.insert(out.remove(at: i), at: 0) }

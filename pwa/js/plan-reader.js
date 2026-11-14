@@ -25,21 +25,45 @@ export const SECTIONS = {
 const int = (v) => (/^\d+$/.test(v ?? "") ? Number(v) : null);
 const clean = (v) => { const t = (v ?? "").trim(); return t === "" ? null : t; };
 
+/** The one BMP version this reader is written for (bmp_V2.8.xsd: MP/@v fixed "028"). */
+export const VERSION = "028";
+
+/** Why a plan code was refused: shown as a plain reason, never read half-way. */
+export const INVALID = {
+  version: "Diese Plan-Version kennt die App nicht (erwartet: BMP 2.8).",
+  pzn: "Eine PZN auf dem Plan ist ungültig.",
+  dose: "Eine Dosierung auf dem Plan ist ungültig.",
+  weekday: "Ein Wochentag auf dem Plan ist ungültig.",
+  page: "Die Seitenangabe auf dem Plan ist ungültig.",
+};
+
 /**
- * The whole plan code: { version, id (MP/@U), page (MP/@a), pages (MP/@z), items, notes } – or null if it is not a plan.
+ * The whole plan code: { version, id (MP/@U), page (MP/@a), pages (MP/@z), items, notes } – or null if it is not a plan,
+ * or { invalid: key of INVALID, version } if it breaks the BMP 2.8 contract: another version, a PZN that isn't 1–99999999,
+ * a dose outside the dose notation (never read as 0), a weekday outside 1–7, or pages outside a 1–5 of z 2–5.
  * items: { kind: "med"|"recipe", pzn, name, substances: [{w, s}], substance, strength, formCode, formText, reason, extra,
  *          section, sectionLabel, schedule }; notes: [{ section, text }] from <X> lines.
  */
 export function read(xml) {
   if (typeof xml !== "string" || !xml.includes("<MP")) return null;
   const items = [], notes = [];
-  let meta = null, sec = null, med = null, subs = [];
+  let meta = null, sec = null, med = null, subs = [], invalid = null;
+  const refuse = (why) => { invalid ??= why; };
   const ok = walk(xml, {
     start(name, a) {
       switch (name) {
-        case "MP": meta = { version: a.v ?? null, id: a.U ?? null, page: int(a.a) ?? 1, pages: int(a.z) ?? 1 }; break;
+        case "MP":
+          meta = { version: a.v ?? null, id: a.U ?? null, page: int(a.a) ?? 1, pages: int(a.z) ?? 1 };
+          if (a.v !== VERSION) refuse("version");
+          if ((a.a != null && !(int(a.a) >= 1 && int(a.a) <= 5)) || (a.z != null && !(int(a.z) >= 2 && int(a.z) <= 5)) || meta.page > meta.pages) refuse("page");
+          break;
         case "S": sec = section(a); break;
-        case "M": med = a; subs = []; break;
+        case "M":
+          med = a; subs = [];
+          if (a.p != null && !(/^\d+$/.test(a.p) && Number(a.p) >= 1 && Number(a.p) <= 99999999)) refuse("pzn");
+          if (a.wo != null && !(int(a.wo) >= 1 && int(a.wo) <= 7)) refuse("weekday");
+          if (["m", "d", "v", "h"].some((k) => dose(a[k]) === null)) refuse("dose");
+          break;
         case "W": if (med) subs.push(a); break;
         case "X": if (clean(a.t)) notes.push({ section: sec?.label ?? null, text: clean(a.t) }); break;
         case "R": items.push(recipe(a, sec)); break;
@@ -53,7 +77,8 @@ export function read(xml) {
       med = null;
     },
   });
-  return ok && meta ? { ...meta, items, notes } : null;
+  if (!ok || !meta) return null;
+  return invalid ? { invalid, version: meta.version } : { ...meta, items, notes };
 }
 
 /** Plan items only (see read), or null if the text is not a medication plan. */
@@ -128,10 +153,22 @@ const strictNumber = (s) => (/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(s) ?
 const GLYPHS = { "½": 1 / 2, "¼": 1 / 4, "¾": 3 / 4, "⅓": 1 / 3, "⅔": 2 / 3, "⅛": 1 / 8 };
 const round4 = (x) => Math.round(x * 1e4) / 1e4;
 
-/** BMP dose → number. The spec's pattern: whole numbers, decimals with a comma ("0,5", "1,5") and the fractions 1/8, 1/4,
- *  1/3, 1/2, 2/3, 3/4. Also read leniently: "½" and other glyphs, and mixed numbers "1½" / "1 1/2" (= 1.5). */
-export function num(v) {
+/** BMP dose → number, or null when the text is no dose at all ("abc"). Empty or absent = 0 (the spec's default). */
+export function dose(v) {
   const s = (v ?? "").replace(/^[ \t]+|[ \t]+$/g, "");
+  if (s === "") return 0;
+  const n = parse(s);
+  return n != null && n >= 0 ? n : null;
+}
+
+/** BMP dose → number. The spec's pattern: whole numbers, decimals with a comma ("0,5", "1,5") and the fractions 1/8, 1/4,
+ *  1/3, 1/2, 2/3, 3/4. Also read leniently: "½" and other glyphs, and mixed numbers "1½" / "1 1/2" (= 1.5).
+ *  Not a dose → 0 here; read() refuses such a plan first (see dose()). */
+export function num(v) {
+  return parse((v ?? "").replace(/^[ \t]+|[ \t]+$/g, "")) ?? 0;
+}
+
+function parse(s) {
   if (s in GLYPHS) return round4(GLYPHS[s]);
   const mixedGlyph = /^(\d+)\s*([½¼¾⅓⅔⅛])$/.exec(s);
   if (mixedGlyph) return round4(Number(mixedGlyph[1]) + GLYPHS[mixedGlyph[2]]);
@@ -142,7 +179,7 @@ export function num(v) {
     const a = strictNumber(frac[0]), b = strictNumber(frac[1]);
     if (a != null && b != null && b > 0) return round4(a / b);
   }
-  return strictNumber(s.replaceAll(",", ".")) ?? 0;
+  return strictNumber(s.replaceAll(",", "."));
 }
 
 /** Sub-heading of a block: key code c, or free text t (the KBV sample plan writes <S t="Bedarfsmedikation">).

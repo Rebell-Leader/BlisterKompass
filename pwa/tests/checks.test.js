@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import * as PlanReader from "../js/plan-reader.js";
 import * as Pack from "../js/pack-code.js";
 import * as Matcher from "../js/matcher.js";
-import { product, adding, sections, spokenLines, pznName, nameStrength, countText, doseSymbol } from "../js/model.js";
+import { product, adding, sections, spokenLines, spokenWhen, whenText, pznName, nameStrength, countText, doseSymbol, NOT_RECORDED } from "../js/model.js";
 import { doseForm, unitOf, bmpForm } from "../js/dose-form.js";
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
@@ -130,7 +130,8 @@ const at = (h, weekday = 3) => new Date(2026, 10, 7 + weekday, h, 30); // 2026-1
 const evening = sections(planA.meds, at(18));
 const slotOf = (secs, s) => secs.find((x) => x.kind === "slot" && x.slot === s);
 check("18:30 → first section is evening, marked now", () => evening[0]?.kind === "slot" && evening[0].slot === "evening" && evening[0].now === true);
-check("18:30 → night later today, morning tomorrow", () => slotOf(evening, "night")?.tomorrow === false && slotOf(evening, "morning")?.tomorrow === true);
+// Changed with T-06: at 18:30 the morning slot is today's, already past – never "tomorrow" (a patient could skip it at 11:05).
+check("18:30 → night later today, morning earlier today (past, never tomorrow)", () => slotOf(evening, "night")?.past === false && slotOf(evening, "morning")?.past === true && evening.every((s) => s.tomorrow === false));
 check("18:30 → Metformin due now with 1", () => evening[0]?.entries.find((e) => e.med.substance === "Metformin")?.amount === 1);
 check("as-needed last, never now", () => { const l = evening.at(-1); return l?.kind === "prn" && l.now === false && l.entries.some((e) => e.med.substance === "Ibuprofen"); });
 const monday = sections(planA.meds, at(8, 2));
@@ -144,7 +145,7 @@ check("02:30 → morning is today, not tomorrow", () => slotOf(late, "morning")?
 const said = spokenLines(evening);
 check("readout starts with 'Jetzt, heute Abend.' and a count", () => /^Jetzt, heute Abend\. \S+ Medikamente?\.$/.test(said[0]));
 check("readout names Metformin with amount and look", () => said.some((l) => /^Metformin, eine Tablette, .+\.$/.test(l)));
-check("readout goes on with 'Heute zur Nacht' and 'Morgen früh'", () => said.some((l) => l.startsWith("Heute zur Nacht.")) && said.some((l) => l.startsWith("Morgen früh.")));
+check("readout goes on with 'Heute zur Nacht' and 'Heute früh, schon vorbei'", () => said.some((l) => l.startsWith("Heute zur Nacht.")) && said.some((l) => l.startsWith("Heute früh, schon vorbei.")) && !said.some((l) => l.startsWith("Morgen")));
 check("readout has no symbols or units the voice stumbles over", () => said.every((l) => !/[½¼·]|\bmg\b/.test(l)));
 
 // BMP 2.8 (Anlage 3, bmp_V2.8.xsd): what the plan says is kept as it says it – PWA only for now (TODO.md: iOS counterpart)
@@ -180,3 +181,35 @@ check("31 leaflet products, each with its package-leaflet source link", () => le
 const naratriptan = Pack.evaluate(code("09321616"), ctx([]));
 check("non-prescription pack outside the Festbetrag list (Naratriptan-ratiopharm 09321616) → green, round, \"NT 2,5\" from its leaflet", () => { const l = naratriptan.product?.look; return l?.color === "green" && l.shape === "round" && l.imprint === "NT 2,5" && Pack.canAdd(naratriptan); });
 check("found automatically by PZN: Bisoprolol 5 – 1 A Pharma is yellow, round, cross score", () => { const l = product(all, "03820206")?.look; return l?.color === "yellow" && l.shape === "round" && l.score === "cross"; });
+
+// Submission review 13 Nov 2026 (docs/review in the lab): fixes, paired with ios/checks/main.swift under the same names.
+
+// T-04: a look-alike in another strength is never "another maker" of the plan entry.
+const pregabalin300 = all.find((m) => m.substance === "Pregabalin" && m.strength === "300 mg" && m.market !== "US");
+const p300 = Matcher.answer(planA.meds, all, cues(pregabalin300.look, pregabalin300.look.imprint ?? null));
+check("Pregabalin 300 mg look on plan A (75 mg) → other_strength, shown with its own title", () => p300.state === "other_strength" && p300.candidates[0]?.strength === "75 mg" && p300.notOnPlan?.strength === "300 mg");
+check("no catalog look of another strength of a plan A drug gives other_maker", () => all
+  .filter((m) => planA.meds.some((x) => x.substance === m.substance && x.strength !== m.strength))
+  .every((m) => Matcher.answer(planA.meds, all, cues(m.look, m.look.imprint ?? null)).state !== "other_maker"));
+// T-05: without a read imprint and a size, every colour-fitting plan pill stays a candidate.
+const offwhiteOval = Matcher.answer(planA.meds, all, { found: true, colors: ["offwhite"], shape: "oval", imprint: null });
+check("off-white oval, no imprint, size unknown → choose, Metformin among the candidates", () => offwhiteOval.state === "choose" && offwhiteOval.candidates.some((m) => m.substance === "Metformin") && offwhiteOval.candidates.length >= 3);
+check("score-line question says nothing about splitting (INV-14)", () => !Matcher.question(planA.meds.filter((m) => m.look), { colors: ["white"], shape: "round" })?.question.includes("Teilen"));
+// T-06: 11:05 and 00:30
+const elevenOFive = sections(planA.meds, new Date(2026, 10, 13, 11, 5));
+check("11:05 → morning drugs are today's, past – not tomorrow", () => slotOf(elevenOFive, "morning")?.past === true && slotOf(elevenOFive, "morning")?.entries.length === 7 && elevenOFive.every((s) => !s.tomorrow));
+const halfPastMidnight = sections(planA.meds, new Date(2026, 10, 14, 0, 30));
+check("00:30 → night slot is last night's, never 'now' again", () => slotOf(halfPastMidnight, "night")?.lastNight === true && slotOf(halfPastMidnight, "night")?.now === false && !halfPastMidnight.some((s) => s.now));
+check("readout says the app records no intake; past and last-night slots are spoken as such", () => spokenLines(evening).at(-1) === NOT_RECORDED
+  && spokenWhen("morning", { past: true }) === "Heute früh, schon vorbei" && spokenWhen("night", { lastNight: true }) === "Zur Nacht, seit gestern Abend");
+// T-13: an amount nobody gave stays unknown.
+check("no amount on the plan → no number in the dosing text", () => { const t = whenText({ schedule: { kind: "daily", slots: ["morning"], amounts: {}, days: [] } }); return t === "morgens (Menge nicht angegeben)" && !/eine|\d/.test(t); });
+// BMP 2.8 contract: refused with a reason, never read half-way (also "do not turn malformed doses into zero").
+const bmp = (attrs, m) => PlanReader.read(`<MP ${attrs}><S>${m}</S></MP>`);
+check("plan code of another version (v=999) → refused: version", () => bmp('v="999" U="0" l="de-DE"', '<M p="1" m="1"/>')?.invalid === "version");
+check("plan code with a 13-digit PZN → refused: pzn", () => bmp('v="028" U="0" l="de-DE"', '<M p="1234567890123" m="1"/>')?.invalid === "pzn" && PlanReader.items('<MP v="028" U="0" l="de-DE"><S><M p="1234567890123" m="1"/></S></MP>') === null);
+check("plan code with a dose that is no number (m=wrong) → refused: dose, never 0", () => bmp('v="028" U="0" l="de-DE"', '<M p="1" m="wrong"/>')?.invalid === "dose" && PlanReader.dose("wrong") === null && PlanReader.dose("") === 0);
+check("plan code with weekday 9 or page 3 of 2 → refused", () => bmp('v="028" U="0" l="de-DE"', '<M p="1" m="1" wo="9"/>')?.invalid === "weekday" && bmp('v="028" U="0" l="de-DE" a="3" z="2"', '<M p="1" m="1"/>')?.invalid === "page");
+check("the review's sample <MP v=999><M p=1234567890123 m=wrong> is refused", () => PlanReader.read('<MP v="999"><S><M p="1234567890123" m="wrong"/></S></MP>')?.invalid != null);
+check("all example plans still read (v=028, valid PZNs and doses)", () => ["plan-a", "plan-b", "plan-c", "plan-kbv-beispiel"].every((n) => PlanReader.read(plan(n))?.items?.length > 0));
+

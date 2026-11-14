@@ -15,7 +15,6 @@ struct PackResultView: View {
     /// No picture yet for this PZN → it can be looked up online (asked once).
     private var canLookUp: Bool { scanned.product == nil && scanned.mine == nil && LeafletOnline.url(pzn: scanned.code.pzn) != nil }
     /// The take-over button only appears once the user says the pharmacy confirmed the switch.
-    @State private var pharmacyConfirmed = false
 
     private var banner: (text: String, icon: String, color: Color, mascot: String) {
         switch result.kind {
@@ -33,7 +32,7 @@ struct PackResultView: View {
         case .onPlan, .onPlanNoLook: s = "Diese Packung steht auf Ihrem Plan: \(result.title)."
         case .otherMaker: s = "\(result.title) hat denselben Wirkstoff und dieselbe Stärke wie \(result.mine?.title ?? "ein Medikament auf Ihrem Plan"). Ob diese Packung Ihre bisherige ersetzt, sagt Ihnen Ihre Apotheke."
         case .sameSubstance: s = "Achtung. \(result.title) enthält denselben Wirkstoff wie \(result.mine?.title ?? "ein Medikament auf Ihrem Plan"), \(result.difference ?? "aber nicht dasselbe Präparat"). Bitte in der Apotheke fragen."
-        case .notOnPlan: s = "Achtung. \(result.title) steht nicht auf Ihrem Plan. Neu verordnet? Dann fügen Sie es hinzu. Sonst bitte in der Apotheke nachfragen."
+        case .notOnPlan: s = "Achtung. \(result.title) steht nicht auf Ihrem Plan. Bitte in der Apotheke oder Praxis nachfragen."
         case .unknown: s = "Diese Packung kenne ich nicht. Bitte in der Apotheke nachfragen."
         }
         if result.expired, let e = result.code.expiryText { s += " Achtung, abgelaufen seit \(e)." }
@@ -95,22 +94,8 @@ struct PackResultView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 Spacer(minLength: 0)
-                if result.kind == .otherMaker, let mine = result.mine, let product = result.product {
-                    if pharmacyConfirmed {
-                        BigButton(icon: "arrow.triangle.2.circlepath", title: "Neues Aussehen übernehmen", height: 96, color: Theme.okFill, iconOnly: true) {
-                            store.takeOver(product, replacing: mine)
-                            Speaker.shared.say("Übernommen. \(product.substance) sieht ab jetzt so aus.")
-                            go(.home)
-                        }
-                    } else {
-                        Button { pharmacyConfirmed = true } label: {
-                            Label("Apotheke hat bestätigt: ersetzt meine Packung", systemImage: "cross.case.fill")
-                                .font(.headline).multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(14).background(Theme.card, in: RoundedRectangle(cornerRadius: 16))
-                        }
-                    }
-                }
+                // No take-over button for the new look: a person's tap must not replace the plan's PZN and look (INV-15,
+                // T-15). Whether the pack replaces the plan entry is for the pharmacy to say.
                 if result.canAdd {
                     BigButton(icon: "plus", title: "Zu meinem Plan hinzufügen", height: 96, color: Theme.accentFill, iconOnly: true) {
                         if let product = result.product {

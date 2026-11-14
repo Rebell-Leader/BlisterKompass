@@ -147,7 +147,8 @@ def look(p):
         "lengthMm": size[0] if size else None, "widthMm": size[1] if size else None,
         "score": l.get("score"),            # null = the leaflet does not say
         "imprint": l.get("imprint"),
-        "coating": l["coating"], "finish": "matte" if l["coating"] == "uncoated" else "glossy",
+        "coating": l["coating"],
+        "finish": None,                     # the leaflet names a coating, not how the surface looks (INV-05)
         "source": "leaflet:" + p["url"], "leaflet": p["quote"],
         "colorHex": hexv, "color2Hex": c2[0] if c2 else None, "colorName": {"en": en, "de": de},
         "color2Name": {"en": c2[1], "de": c2[2]} if c2 else None,

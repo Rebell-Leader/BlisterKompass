@@ -4,7 +4,7 @@
 import { Store } from "./store.js";
 import { h, set, bigButton, tile, backBar, statusBanner, mascot, infoRow, tip, chip, purposeRow, scheduleBlock, photo, pillTile, doseFormTile, medPic, medForm, sheet } from "./ui.js";
 import { icon } from "./icons.js";
-import { SLOTS, SHAPES, sections, title, sourceText, dayName, countText, spoken, spokenLines, capitalizedFirst, adding, nextText } from "./model.js";
+import { SLOTS, SHAPES, sections, title, sourceText, dayName, countText, spoken, spokenLines, capitalizedFirst, adding, nextText, NOT_RECORDED } from "./model.js";
 import { doseForm } from "./dose-form.js";
 import { local } from "./matcher.js";
 import * as Pack from "./pack-code.js";
@@ -80,14 +80,18 @@ function planSourceSheet() {
 // Home -----------------------------------------------------------------------
 
 function Home() {
-  const el = h("main.screen.home", null,
+  return h("main.screen.home", null,
     h("p.privacy", null, icon("shield"), "Offline · keine Daten verlassen das Handy"),
     installCard(),
     store.hasPlan ? scanPill() : onboarding());
-  const timer = setInterval(() => { if (route.name === "home") render(); }, 60_000);
-  cleanup.push(() => clearInterval(timer));
-  return el;
 }
+
+// One clock for the whole app (T-01): every minute it redraws only the day list, in place, so the scroll position stays and
+// no screen ever starts a second timer.
+setInterval(() => {
+  const day = route.name === "home" ? root.querySelector("section.day") : null;
+  if (day) day.replaceWith(dayPlanList());
+}, 60_000);
 
 function onboarding() {
   return h("section.onboarding", null,
@@ -113,8 +117,11 @@ function scanPill() {
 function sectionHeader(s) {
   switch (s.kind) {
     case "slot": {
+      // Past slots of today say so – never "Morgen" (T-06); after midnight the night slot is last night's.
       const slot = SLOTS.find((x) => x.id === s.slot);
-      return { text: `${s.now ? "Jetzt" : s.tomorrow ? "Morgen" : "Später"} · ${slot.label}`, icon: slot.icon, fill: slot.hex };
+      if (s.lastNight) return { text: `${slot.label} · seit gestern Abend`, icon: slot.icon, fill: "var(--gray-fill)" };
+      if (s.past) return { text: `Heute vorbei · ${slot.label}`, icon: slot.icon, fill: "var(--gray-fill)" };
+      return { text: `${s.now ? "Jetzt" : "Später"} · ${slot.label}`, icon: slot.icon, fill: slot.hex };
     }
     case "weeklyToday": return { text: "Heute · 1× pro Woche", icon: "calendarAlert", fill: "var(--bad-fill)" };
     case "weeklyLater": return { text: "Einmal pro Woche", icon: "calendar", fill: "var(--bad-fill)" };
@@ -131,6 +138,7 @@ function dayPlanList() {
     h("div.day-head", null,
       h("h2", null, "Meine Tabletten"), h("span.muted", null, `${time} Uhr`),
       h("button.round", { type: "button", "aria-label": "Vorlesen", title: "Vorlesen", onclick: () => sayLines(spokenLines(secs)) }, icon("speaker"))),
+    h("p.muted.small.with-icon", null, icon("info"), NOT_RECORDED),
     secs.map((s) => {
       const hd = sectionHeader(s);
       return h(`div.day-section${s.now ? ".now" : ""}`, null,
@@ -143,7 +151,8 @@ function dayPlanList() {
             h("div.day-text", null,
               h("div.day-name", null, e.med.substance),
               e.med.strength ? h("div.muted", null, e.med.strength) : null,
-              e.amount != null ? h("div.day-count", null, countText(e.amount, e.med.look, sch?.unit, e.dose)) : null,
+              e.amount != null ? h("div.day-count", null, countText(e.amount, e.med.look, sch?.unit, e.dose))
+                : s.kind === "slot" && sch?.kind === "daily" ? h("div.day-count.tone-warn", null, "Menge nicht angegeben") : null,
               mealLine(e.med),
               s.kind === "weeklyLater" ? h("div.day-count.tone-bad", null, nextText(day, e.next))
                 : day ? h("div.day-count.tone-bad", null, `nur am ${dayName(day)}`) : null,
@@ -186,6 +195,7 @@ function Analyzing({ photo: blob, mode }) {
       // Plan code → read the medication lines (nothing else) on the phone.
       await settle(); if (!alive) return;
       const plan = store.readPlan(found.xml);
+      if (plan?.invalid) return go({ name: "result", answer: local("not_a_plan", [], `invalid_${plan.invalid}`), photo: blob });
       return plan ? go({ name: "bmpImport", plan, photo: blob }) : go({ name: "result", answer: local("not_a_plan"), photo: blob });
     }
     if (mode === "pack") {
@@ -232,7 +242,8 @@ function seenChips(cues) {
 // Pages of a multi-page plan read in this session, by MP/@U. Memory only: nothing of a page is stored until "Übernehmen".
 const planPages = new Map();
 
-/** A plan page was read. One page of several: keep it, and ask for the others (or take this page alone, marked incomplete). */
+/** A plan page was read. One page of several: keep it and ask for the others. A plan with missing pages is never adopted:
+ *  the saved list couldn't say it is incomplete, so medicines would silently be missing from the day view and the print. */
 function BmpImport({ plan: page, photo: blob }) {
   let plan = page;
   if ((page.pages ?? 1) > 1 && page.code) {
@@ -254,8 +265,9 @@ function pagesMissing(plan, key) {
     backBar({ title: "Medikationsplan", onBack: home }),
     statusBanner({ icon: "seal", text: `Seite erkannt – Seite ${missing} fehlt noch`, color: "warn" }),
     h("p.lead", null, `Dieser Plan hat ${plan.pages} Seiten. Bitte lesen Sie auch Seite ${missing} ein, dann ist die Liste vollständig.`),
+    h("p.muted.with-icon", null, icon("info"), "Ohne alle Seiten kann der Plan nicht übernommen werden – sonst fehlen Medikamente in Ihrer Liste. Ihre bisherige Liste bleibt, wie sie ist."),
     bigButton({ icon: "camera", title: `Seite ${plan.missing[0]} einlesen`, height: 104, onClick: () => takePhoto("camera", "plan") }),
-    bigButton({ icon: "doc", title: "Nur diese Seiten übernehmen", height: 86, color: "gray", onClick: () => { planPages.delete(key); go({ name: "bmpImport", plan: { ...plan, pages: 1, incomplete: plan.missing } }); } }));
+    bigButton({ icon: "x", title: "Abbrechen", height: 86, color: "gray", onClick: () => { planPages.delete(key); home(); } }));
 }
 
 function planLookup(plan) {
@@ -297,12 +309,12 @@ function notesBlock(notes) {
 
 function bmpResult(plan, rerender) {
   // Entries without picture data: their look can still come from the leaflet PDF the person picks.
-  const pickable = plan.unknownPZNs.filter((p) => leafletWanted(doseForm(store.pznName(p)?.form)));
+  // Only for PZNs the official list names: without an official name a picked leaflet can't be tied to the pack.
+  const pickable = plan.unknownPZNs.filter((p) => store.pznName(p) && leafletWanted(doseForm(store.pznName(p)?.form)));
   const reread = () => { if (plan.code) rerender(store.resolvePlan(plan.code)); };
   return [
     backBar({ title: "Medikationsplan", onBack: home }),
     statusBanner({ icon: "seal", text: "Plan erkannt", color: "ok", mascot: "found" }),
-    plan.incomplete?.length ? statusBanner({ icon: "question", text: `Unvollständig: Seite ${plan.incomplete.join(" und ")} fehlt`, color: "warn", mascot: "check" }) : null,
     h("h2", null, plan.meds.length === 1 ? "1 Medikament" : `${plan.meds.length} Medikamente`),
     plan.unknown.length ? h("p.tone-warn.with-icon", null, icon("question"), `${plan.unknown.length} ohne Bilddaten: ${plan.unknown.join(", ")}`) : null,
     h("div.grid3", null, plan.meds.map((m) => h("div.card.mini", null, medPic(m, 50), h("strong", null, m.substance)))),
@@ -310,7 +322,7 @@ function bmpResult(plan, rerender) {
     pickable.length && plan.code ? [leafletHint(), pickable.map((p) => leafletPicker(p, store.nameOf(p), reread))] : null,
     store.hasPlan ? h("p.muted.with-icon.center", null, icon("refresh"), "Ersetzt Ihren bisherigen Plan.") : null,
     bigButton({ icon: "check", title: "Übernehmen", height: 96, color: "ok", onClick: () => {
-      store.adopt(plan);
+      if (!store.adopt(plan)) return;
       say(`${plan.meds.length} Medikamente übernommen. Sie können jetzt eine Tablette scannen.`);
       home();
     } }),
@@ -357,6 +369,7 @@ const leafletHint = () => h("p.muted.small.with-icon", null, icon("info"),
 
 const LEAFLET_FAIL = {
   wrong: (t, other) => `Diese Packungsbeilage gehört zu einem anderen Medikament${other ? ` (${other})` : ""}. Bitte die Beilage zu ${t} wählen.`,
+  unbound: (t) => `Diese Packungsbeilage lässt sich ${t} nicht sicher zuordnen: Produktname, Hersteller oder Stärke der Packung fehlen darin. Das Aussehen bleibt unbekannt.`,
   unclear: () => "Die Packungsbeilage beschreibt das Aussehen nicht eindeutig. Es bleibt unbekannt.",
   notPdf: () => "Das ist keine lesbare PDF-Datei.",
 };
@@ -400,6 +413,8 @@ function Result({ answer, photo: blob }) {
       return choose("Welche ist es?", answer.candidates ?? [], answer.question, blob);
     case "other_maker":
       return otherMaker(answer.candidates[0], answer.notOnPlan, blob);
+    case "other_strength":
+      return otherStrength(answer.candidates[0], answer.notOnPlan, blob);
     case "not_on_plan":
       return notOnPlan(answer.notOnPlan, blob);
     default:
@@ -408,7 +423,7 @@ function Result({ answer, photo: blob }) {
 }
 
 const BANNER = {
-  sure: { text: "Ihre Tablette", icon: "seal", color: "ok", mascot: "found" },
+  sure: { text: "Passt zu Ihrem Plan – bitte prüfen", icon: "seal", color: "ok", mascot: "found" }, // a look, never proof (INV-15)
   likely: { text: "Wahrscheinlich – bitte prüfen", icon: "question", color: "warn", mascot: "check" },
   confirmed: { text: "Auf Ihrem Plan", icon: "seal", color: "ok", mascot: "found" }, // opened from the list: a plan entry, not a photo match
 };
@@ -438,7 +453,7 @@ function medCard(med, blob, banner) {
 }
 
 function otherMaker(mine, other, blob) {
-  const text = `Achtung. Diese Tablette sieht anders aus als auf Ihrem Plan. Wahrscheinlich ist es ${mine.substance} von einem anderen Hersteller. Bitte in der Apotheke prüfen und nicht doppelt einnehmen.`;
+  const text = `Achtung. Diese Tablette sieht anders aus als auf Ihrem Plan. Sie sieht aus wie ${mine.substance} von einem anderen Hersteller. Bitte mit Apotheke oder Praxis klären, bevor Sie etwas ändern.`;
   say(text);
   return h("main.screen", null,
     backBar({ onBack: home, onSpeak: () => say(text) }),
@@ -447,8 +462,28 @@ function otherMaker(mine, other, blob) {
       h("div.side", null, h("div.muted.strong", null, "Ihr Foto"), blob ? photo(blob, "photo-sq") : pillTile(other.look, 120), h("strong.small", null, other.manufacturer ?? "")),
       h("span.muted.arrows", null, icon("arrowsLR")),
       h("div.side", null, h("div.muted.strong", null, "Auf Ihrem Plan"), pillTile(mine.look, 120, "card"), h("strong.small", null, mine.manufacturer ?? ""))),
-    infoRow({ icon: "question", title: "Wahrscheinlich", value: `${title(mine)} – anderer Hersteller`, tone: "warn" }),
-    infoRow({ icon: "pharmacy", title: "Bitte", value: "In der Apotheke prüfen lassen. Nicht doppelt einnehmen.", tone: "bad" }),
+    infoRow({ icon: "question", title: "Sieht aus wie", value: `${title(mine)} – anderer Hersteller`, tone: "warn" }),
+    infoRow({ icon: "pharmacy", title: "Bitte", value: "Mit Apotheke oder Praxis klären, bevor Sie etwas ändern.", tone: "bad" }),
+    h("div.row.bottom", null,
+      bigButton({ icon: "camera", title: "Nochmal", height: 92, color: "gray", onClick: home }),
+      bigButton({ icon: "check", title: "Verstanden", height: 92, color: "warn", onClick: home })));
+}
+
+/** The photo looks like the same substance in another strength (or a related product): shown with its own title next to the
+ *  plan's, never as the plan entry (T-04). Unresolved: only the pharmacy or practice can say what it is. */
+function otherStrength(mine, other, blob) {
+  const text = `Achtung. Diese Tablette sieht aus wie ${title(other)}. Auf Ihrem Plan steht ${title(mine)}. Bitte mit Apotheke oder Praxis klären, bevor Sie etwas ändern.`;
+  say(text);
+  return h("main.screen", null,
+    backBar({ onBack: home, onSpeak: () => say(text) }),
+    statusBanner({ icon: "alert", text: "Andere Stärke als auf Ihrem Plan?", color: "warn", mascot: "other-maker" }),
+    h("div.compare", null,
+      h("div.side", null, h("div.muted.strong", null, "Ihr Foto"), blob ? photo(blob, "photo-sq") : pillTile(other.look, 120)),
+      h("span.muted.arrows", null, icon("arrowsLR")),
+      h("div.side", null, h("div.muted.strong", null, "Auf Ihrem Plan"), mine.look ? pillTile(mine.look, 120, "card") : h("span.muted.unknown", null, icon("question", { size: 44 })))),
+    infoRow({ icon: "question", title: "Sieht aus wie", value: title(other), tone: "warn" }),
+    infoRow({ icon: "doc", title: "Auf Ihrem Plan", value: title(mine), tone: "accent" }),
+    infoRow({ icon: "pharmacy", title: "Bitte", value: "Mit Apotheke oder Praxis klären, bevor Sie etwas ändern.", tone: "bad" }),
     h("div.row.bottom", null,
       bigButton({ icon: "camera", title: "Nochmal", height: 92, color: "gray", onClick: home }),
       bigButton({ icon: "check", title: "Verstanden", height: 92, color: "warn", onClick: home })));
@@ -490,7 +525,7 @@ function notOnPlan(med, blob) {
     statusBanner({ icon: "octagon", text: "Nicht auf Ihrem Plan!", color: "bad", mascot: "not-on-plan" }),
     h("div.card.row-start", null, blob ? photo(blob, "photo-sq") : null,
       med ? h("div", null, h("div.muted.small", null, "Sieht aus wie"), h("h2", null, title(med)), med.indication ? h("div.muted.small", null, med.indication.de) : null) : null),
-    infoRow({ icon: "noEntry", title: "Bitte", value: "Nicht einnehmen, bevor Apotheke oder Arzt Bescheid wissen.", tone: "bad" }),
+    infoRow({ icon: "noEntry", title: "Bitte", value: "Mit Apotheke oder Praxis klären, bevor Sie etwas ändern.", tone: "bad" }),
     infoRow({ icon: "pharmacy", title: "Tipp", value: "Tablette mit Packung in die Apotheke mitnehmen.", tone: "accent" }),
     h("div.row.bottom", null,
       bigButton({ icon: "camera", title: "Nochmal", height: 92, color: "gray", onClick: home }),
@@ -506,6 +541,8 @@ const HINTS = {
   pack_not_plan: "Das ist ein Packungs-Code, kein Medikationsplan.",
   plan_not_pack: "Das ist ein Medikationsplan. Dafür bitte „Plan neu einlesen“ wählen.",
   code_not_pill: "Auf dem Foto ist ein Code, keine Tablette. Für Packungen bitte „Packung“ wählen.",
+  // A plan code that breaks BMP 2.8 is refused with its reason (plan-reader.js INVALID); the old list stays.
+  ...Object.fromEntries(Object.entries(PlanReader.INVALID).map(([k, v]) => [`invalid_${k}`, `${v} Der Plan wurde nicht übernommen – bitte in der Praxis nachfragen.`])),
 };
 
 function notRecognized(answer, blob) {
@@ -599,8 +636,9 @@ function ManualPlan({ adding: addingMed }) {
     if (special === "prn") schedule = { kind: "prn", slots: [], amounts: {}, days: [], note: null, text: "bei Bedarf" };
     else if (special === "weekly") schedule = { kind: "weekly", slots: [], amounts: {}, days: [], note: null, text: "einmal pro Woche" };
     else {
+      // The time of day is what the person chose; the amount wasn't asked, so it stays unknown (INV-05, T-13).
       const ordered = SLOTS.map((s) => s.id).filter((id) => slots.has(id));
-      schedule = { kind: "daily", slots: ordered, amounts: Object.fromEntries(ordered.map((id) => [id, 1])), days: [], note: null, text: null };
+      schedule = { kind: "daily", slots: ordered, amounts: {}, days: [], note: null, text: null };
     }
     const m = { ...med, schedule };
     if (addingMed) {
@@ -644,7 +682,7 @@ function ManualPlan({ adding: addingMed }) {
       backBar({ title: "Selbst eingeben", onBack: home }),
       input, results,
       bigButton({ icon: "check", title: `Fertig (${meds.length})`, height: 86, color: meds.length ? "ok" : "disabled", disabled: !meds.length, onClick: () => {
-        store.adopt({ meds, unknown: [], unknownPZNs: [] });
+        if (!store.adopt({ meds, unknown: [], unknownPZNs: [] })) return;
         say(`${meds.length} Medikamente gespeichert.`);
         home();
       } }));
@@ -670,7 +708,7 @@ function packSpoken(r) {
     onPlanNoLook: `Diese Packung steht auf Ihrem Plan: ${t}.`,
     otherMaker: `${t} hat denselben Wirkstoff und dieselbe Stärke wie ${mine}. Ob diese Packung Ihre bisherige ersetzt, sagt Ihnen Ihre Apotheke.`,
     sameSubstance: `Achtung. ${t} enthält denselben Wirkstoff wie ${mine}, ${r.difference ?? "aber nicht dasselbe Präparat"}. Bitte in der Apotheke fragen.`,
-    notOnPlan: `Achtung. ${t} steht nicht auf Ihrem Plan. Neu verordnet? Dann fügen Sie es hinzu. Sonst bitte in der Apotheke nachfragen.`,
+    notOnPlan: `Achtung. ${t} steht nicht auf Ihrem Plan. Bitte in der Apotheke oder Praxis nachfragen.`,
     unknown: "Diese Packung kenne ich nicht. Bitte in der Apotheke nachfragen.",
   }[r.kind];
   const e = Pack.expiryText(r.code);
@@ -704,7 +742,7 @@ function PackResult({ result: r, photo: blob }) {
       shownMed?.look?.leaflet ? h("p.muted.small.with-icon.clamp3", null, icon("doc"), `„${shownMed.look.leaflet}“`) : null,
       // No picture data for this PZN: read its look from the leaflet PDF the person picks (counterpart of the
       // iPhone app's online lookup; the browser can't download it itself).
-      !shownMed && leafletWanted(form) ? [leafletHint(), leafletPicker(r.code.pzn, Pack.resultTitle(r),
+      !shownMed && r.name && leafletWanted(form) ? [leafletHint(), leafletPicker(r.code.pzn, Pack.resultTitle(r),
         () => go({ name: "pack", result: store.check(r.code), photo: blob }))] : null);
   };
   if (r.kind === "otherMaker" && r.mine) {
@@ -721,19 +759,9 @@ function PackResult({ result: r, photo: blob }) {
 }
 
 function packActions(r) {
+  // No take-over button for the new look: a person's tap must not replace the plan's PZN and look (INV-15, T-15). Whether the pack
+  // replaces the plan entry is for the pharmacy to say; the plan stays as the practice wrote it.
   const out = [];
-  if (r.kind === "otherMaker" && r.mine && r.product) {
-    // The take-over button only appears once the user says the pharmacy confirmed the switch.
-    const slot = h("div");
-    const confirm = h("button.card.confirm", { type: "button", onclick: () => set(slot, 
-      bigButton({ icon: "refresh", title: "Neues Aussehen übernehmen", height: 96, color: "ok", onClick: () => {
-        store.takeOver(r.product, r.mine);
-        say(`Übernommen. ${r.product.substance} sieht ab jetzt so aus.`);
-        home();
-      } })) }, icon("pharmacy"), "Apotheke hat bestätigt: ersetzt meine Packung");
-    slot.append(confirm);
-    out.push(slot);
-  }
   if (Pack.canAdd(r)) {
     out.push(bigButton({ icon: "plus", title: "Zu meinem Plan hinzufügen", height: 96, onClick: () => {
       if (r.product) go({ name: "addToPlan", adding: r.product });

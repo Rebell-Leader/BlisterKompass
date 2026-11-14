@@ -120,3 +120,34 @@ test("data and examples are byte-identical to the iPhone app's (ios/PillSnap is 
     same(path.join(ios, "Examples", sub, f.file), path.join(root, "examples", f.file));
   }
 });
+
+// Submission review 13 Nov 2026: rules checked on the source (PWA only; the iPhone strings are in ios/checks/main.swift).
+
+test("one timer for the day list (T-01): Home() starts none, app.js starts exactly one", () => {
+  const src = text("js/app.js");
+  const home = src.slice(src.indexOf("function Home()"), src.indexOf("function onboarding()"));
+  assert.ok(!home.includes("setInterval(") || home.indexOf("setInterval(") > home.indexOf("\n}\n"), "Home() must not start a timer");
+  assert.equal([...src.matchAll(/setInterval\(/g)].length, 1);
+});
+
+test("no tablet handling, sameness or splitting wording in app texts (INV-14/15/16, T-08, T-15, T-36)", () => {
+  const banned = [/nicht einnehmen/i, /doppelt einnehmen/i, /Neu verordnet/, /dasselbe Medikament/, /zum Teilen/, /text: "Ihre Tablette"/, /Neues Aussehen übernehmen/];
+  for (const p of walk("js")) for (const re of banned) assert.ok(!re.test(text(p)), `${p}: ${re}`);
+});
+
+test("a person's tap never replaces the plan's product (T-15): no take-over in the store or the app", () => {
+  assert.ok(!/takeOver/.test(text("js/store.js") + text("js/app.js")));
+});
+
+test("a plan with missing pages is never adopted; the old list stays", async () => {
+  const { Store } = await import("../js/store.js");
+  const store = new Store();
+  const old = [{ pzn: "00000001", substance: "Alt", look: null, schedule: null }];
+  store.myMeds = old;
+  assert.equal(store.adopt({ meds: [{ pzn: "00000002" }], unknownPZNs: [], missing: [2] }), false);
+  assert.equal(store.adopt({ meds: [{ pzn: "00000002" }], unknownPZNs: [], incomplete: [2] }), false);
+  assert.deepEqual(store.myMeds, old);
+  assert.equal(store.adopt({ meds: [{ pzn: "00000002" }], unknownPZNs: [], missing: [] }), true);
+  assert.equal(store.myMeds[0].pzn, "00000002");
+});
+

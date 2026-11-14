@@ -80,6 +80,15 @@ export function trimmed(sentence, subject) {
 const num = (x) => Number(x.replace(",", "."));
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+/** Finish only when the leaflet says it ("glänzend", "matt"). A film or gelatin coating alone doesn't say how the surface
+ *  looks, so it gives null: unknown stays unknown (INV-05). */
+export function finishIn(text) {
+  const low = text.toLowerCase();
+  if (/glänzend/u.test(low)) return "glossy";
+  if (/(?<!\p{L})matt(?:e|en|er|es)?(?!\p{L})/u.test(low)) return "matte";
+  return null;
+}
+
 /** Section 6 → [look, quote], or null if it doesn't say it clearly. */
 export function parseSection6(s6, strength, source, subject = []) {
   const halves = capsuleHalves(s6);
@@ -89,7 +98,7 @@ export function parseSection6(s6, strength, source, subject = []) {
     const quote = matches("((?:Kapsel)?[Oo]berteil[^.]*\\.?\\s*(?:Kapsel)?[Uu]nterteil[^.]*)", s6)[0]
       ?? matches("((?:Kapsel)?[Uu]nterteil[^.]*\\.?\\s*(?:Kapsel)?[Oo]berteil[^.]*)", s6)[0] ?? s6;
     const look = { shape: "capsule", color: body, color2: two ? cap : null, lengthMm: null, widthMm: null, score: null, imprint: null,
-      finish: "glossy", colorHex: hex(body), color2Hex: two ? hex(cap) : null, colorName: localName(body),
+      finish: finishIn(quote), colorHex: hex(body), color2Hex: two ? hex(cap) : null, colorName: localName(body),
       color2Name: two ? localName(cap) : null, source, leaflet: quote };
     return [look, quote];
   }
@@ -128,9 +137,8 @@ export function parseSection6(s6, strength, source, subject = []) {
     const d = matches("[Dd]urchmesser (?:von )?(?:ca\\. )?(\\d+(?:,\\d+)?)\\s*mm", first)[0];
     if (d) { lengthMm = num(d); widthMm = lengthMm; }
   }
-  const coating = capsule ? "gelatin" : low.includes("magensaftresistent") ? "enteric" : low.includes("film") ? "film" : "uncoated";
   const quote = `${trimmed(first, subject)}.`;
-  const look = { shape, color, color2, lengthMm, widthMm, score, imprint, finish: coating === "uncoated" ? "matte" : "glossy",
+  const look = { shape, color, color2, lengthMm, widthMm, score, imprint, finish: finishIn(first),
     colorHex: hex(color), color2Hex: color2 ? hex(color2) : null, colorName: localName(color),
     color2Name: color2 ? localName(color2) : null, source, leaflet: quote };
   return [look, quote];

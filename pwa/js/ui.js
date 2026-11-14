@@ -101,11 +101,13 @@ export function scheduleBlock(med) {
   const s = med.schedule;
   if (!s) return null;
   const unit = s.unit && s.unit !== "Stück" ? s.unit : null;
+  // A slot that is on the plan but has no amount shows "?": the amount stays unknown, never a default (INV-05).
   const boxes = () => h("div.slots", null, SLOTS.map((slot) => {
     const amount = s.amounts?.[slot.id];
-    return h(`div.slot${amount == null ? ".off" : ""}`, amount == null ? null : { style: { background: slot.hex } },
+    const on = amount != null || (s.slots ?? []).includes(slot.id);
+    return h(`div.slot${on ? "" : ".off"}`, on ? { style: { background: slot.hex }, "aria-label": amount == null ? `${slot.label}: Menge nicht angegeben` : null } : null,
       icon(slot.icon), h("span.slot-label", null, slot.label),
-      h("span.slot-amount", null, amount == null ? "–" : doseSymbol(s.doses?.[slot.id], amount)),
+      h("span.slot-amount", null, !on ? "–" : amount == null ? "?" : doseSymbol(s.doses?.[slot.id], amount)),
       amount != null && unit ? h("span.slot-unit", null, unit) : null);
   }));
   if (s.kind === "weekly") {

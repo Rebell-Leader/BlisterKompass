@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import * as LeafletParser from "../js/leaflet-parser.js";
-import { pdfText, fromText } from "../js/leaflet-pdf.js";
+import { pdfText, fromText, productWords, namesProduct } from "../js/leaflet-pdf.js";
 // The PDF → text tests need pdf.js for Node (devDependency pdfjs-dist: `npm install` once). Without it they are skipped,
 // so `npm test` still runs with no install; CI installs it and runs them.
 const pdfjs = await import("../node_modules/pdfjs-dist/legacy/build/pdf.mjs").catch(() => null);
@@ -59,13 +59,15 @@ function pdf(lines) {
   return new Uint8Array(Buffer.concat(parts));
 }
 
-// A tablet PZN of the official list (any one; the test only needs its substance and strength).
+// A tablet PZN of the official list: HCT 1A PHARMA 25MG TABL. The synthetic leaflet below names that product (name, maker
+// and strength), as a real leaflet for the pack does. Changed with the review fix: it used to say "HCT Muster 25 mg", and a
+// leaflet that names another product is now refused ("unbound", test below), so the fixture names the pack's own product.
 const [pzn, row] = Object.entries(names).find(([, r]) => r[1] === "Hydrochlorothiazid" && / 25MG /.test(r[0]) && r[2] === "TABL");
 const leafletLines = [
   "Gebrauchsinformation: Information für Patienten",
   "6. Inhalt der Packung und weitere Informationen",
-  "Wie HCT Muster 25 mg aussieht und Inhalt der Packung",
-  "HCT Muster 25 mg sind weiße, runde Tabletten mit einer Bruchkerbe und der Prägung „H 25“.",
+  "Wie HCT - 1 A Pharma 25 mg aussieht und Inhalt der Packung",
+  "HCT - 1 A Pharma 25 mg sind weiße, runde Tabletten mit einer Bruchkerbe und der Prägung „H 25“.",
   "Packungen mit 100 Tabletten.",
   "Pharmazeutischer Unternehmer",
   "Der Wirkstoff ist Hydrochlorothiazid.",
@@ -84,13 +86,29 @@ pdfTest("PDF → pdf.js text → look: white, round, score, imprint H 25, for th
 });
 
 pdfTest("a leaflet of another medicine is refused, not read (identity = PZN, never appearance)", async () => {
-  const other = leafletLines.map((l) => l.replaceAll("Hydrochlorothiazid", "Naratriptan").replaceAll("HCT Muster 25 mg", "Naratriptan Muster 2,5 mg"));
+  const other = leafletLines.map((l) => l.replaceAll("Hydrochlorothiazid", "Naratriptan").replaceAll("HCT - 1 A Pharma 25 mg", "Naratriptan Muster 2,5 mg"));
   const r = fromText(await pdfText(pdf(other), pdfjs), pzn, names);
   assert.equal(r.state, "wrong");
   assert.equal(r.leafletSubstance, "Naratriptan");
 });
 
 pdfTest("a leaflet that doesn't state the look stays unclear (unknown stays unknown)", async () => {
-  const vague = leafletLines.map((l) => (l.startsWith("HCT Muster 25 mg sind") ? "HCT Muster 25 mg ist in Packungen erhältlich." : l));
+  const vague = leafletLines.map((l) => (l.startsWith("HCT - 1 A Pharma 25 mg sind") ? "HCT - 1 A Pharma 25 mg ist in Packungen erhältlich." : l));
   assert.equal(fromText(await pdfText(pdf(vague), pdfjs), pzn, names).state, "unclear");
 });
+
+// Submission review: a picked leaflet must name the scanned pack's product, not only its substance (PWA only: the iPhone app
+// downloads the leaflet by the pack's PZN and has no picked-file path).
+const lisinoprilPuren = "13706285"; // LISINOPRIL PUREN 10MG
+const otherProduct = "Gebrauchsinformation: Information für Anwender Anderes-Produkt 10 mg Tabletten Der Wirkstoff ist Lisinopril. "
+  + "Wie Anderes-Produkt aussieht und Inhalt der Packung Anderes-Produkt 10 mg sind rosa, runde Tabletten mit einer Bruchkerbe. "
+  + "Pharmazeutischer Unternehmer Fremdfirma GmbH";
+check("leaflet of another product with the same substance (Anderes-Produkt for LISINOPRIL PUREN) → unbound, not found", () => fromText(otherProduct, lisinoprilPuren, names).state === "unbound");
+check("same leaflet text naming Lisinopril PUREN 10 mg → found", () => fromText(otherProduct.replaceAll("Anderes-Produkt", "Lisinopril PUREN"), lisinoprilPuren, names).state === "found");
+check("…but in another strength (20 mg) → unbound", () => fromText(otherProduct.replaceAll("Anderes-Produkt 10 mg", "Lisinopril PUREN 20 mg").replaceAll("Anderes-Produkt", "Lisinopril PUREN"), lisinoprilPuren, names).state === "unbound");
+check("PZN without an official name → unbound (nothing to tie the leaflet to)", () => fromText(otherProduct, "99999999", names).state === "unbound");
+check("product words leave out strength and dose form", () => productWords("HCT 1A PHARMA 25MG TABL").join() === "hct,1a,pharma" && productWords("METFORMIN HEXAL 500MG DO").join() === "metformin,hexal" && productWords("L THYROX HEXAL 50").join() === "thyrox,hexal");
+check("product match folds umlauts and joins words: 'HCT - 1 A Pharma' names HCT 1A PHARMA", () => namesProduct("HCT - 1 A Pharma 25 mg Tabletten", { name: "HCT 1A PHARMA 25MG TABL" }));
+// Finish only when stated (the parser used to infer matte/glossy from the coating).
+check("leaflet: finish only when the text states it; a film coating alone gives none", () => leaf("Weiße, runde Filmtabletten.", null)?.finish == null && leaf("Weiße, runde, glänzende Filmtabletten.", null)?.finish === "glossy" && LeafletParser.finishIn("matte, weiße Tabletten") === "matte");
+

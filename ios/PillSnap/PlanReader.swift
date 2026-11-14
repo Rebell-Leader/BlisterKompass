@@ -16,28 +16,40 @@ enum PlanReader {
         var label: String { [substance ?? pzn.map { "PZN \($0)" } ?? "?", strength].compactMap { $0 }.joined(separator: " ") }
     }
 
-    /// nil if the text is not a medication plan.
+    /// The one BMP version this reader is written for (bmp_V2.8.xsd: MP/@v fixed "028").
+    static let version = "028"
+
+    /// nil if the text is not a medication plan, or if it breaks the BMP 2.8 contract (another version, a PZN outside
+    /// 1–99999999, a dose that is no number, a weekday outside 1–7) – refused, never read half-way or as dose 0. Multi-page
+    /// plans (MP/@a, @z) are refused too: the iPhone app can't merge pages yet (the web app can), and one page alone would
+    /// look like the whole plan.
     static func items(in xml: String) -> [Item]? {
         guard xml.contains("<MP") else { return nil }
         let delegate = Collector()
         let parser = XMLParser(data: Data(xml.utf8))
         parser.delegate = delegate
-        guard parser.parse(), delegate.sawPlan else { return nil }
+        guard parser.parse(), delegate.sawPlan, !delegate.invalid else { return nil }
         return delegate.items
     }
 
-    /// Plan items → the user's meds (looks from the bundled catalog). Unknown PZNs stay unknown (no guessing).
+    /// A dose the BMP notation allows, or none. "abc", "-1" or a mixed "1½" is no dose: the plan is refused, not read as 0.
+    static func validDose(_ v: String?) -> Bool {
+        let s = (v ?? "").trimmingCharacters(in: .whitespaces)
+        if s.isEmpty || ["½", "¼", "¾"].contains(s) { return true }
+        if s.contains(where: { "½¼¾⅓⅔⅛".contains($0) }) { return false }
+        let frac = s.split(separator: "/")
+        if frac.count == 2 { return Double(frac[0]) != nil && (Double(frac[1]) ?? 0) > 0 }
+        return (Double(s.replacingOccurrences(of: ",", with: ".")) ?? -1) >= 0
+    }
+
+    /// Plan items → the user's meds (looks from the bundled catalog). A line takes a picture only from the catalog product
+    /// with its own PZN – never one found by substance (INV-05, INV-15). Every other line stays unknown (no guessing).
     static func resolve(_ items: [Item], catalog: [Med], names: [String: PZNName] = [:]) -> ScannedPlan {
         var meds: [Med] = []
         var unknown: [String] = []
         var unknownPZNs: [String] = []
         for it in items {
-            let byPzn = it.pzn.flatMap { catalog.product(pzn: $0) }
-            let bySubstance = it.substance.flatMap { s in
-                catalog.filter { $0.substance.caseInsensitiveCompare(s) == .orderedSame && (it.strength == nil || $0.strength == it.strength) }
-                    .sorted { ($0.market == "US" ? 1 : 0) < ($1.market == "US" ? 1 : 0) }.first
-            }
-            if var med = byPzn ?? bySubstance {
+            if var med = it.pzn.flatMap({ catalog.product(pzn: $0) }) {
                 med.schedule = it.schedule
                 meds.append(med)
             } else {
@@ -75,15 +87,19 @@ enum PlanReader {
             return Schedule(kind: "prn", slots: [], amounts: [:], days: [], note: note, text: text ?? "bei Bedarf")
         }
         let days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+        // Weekly keeps the plan's dose and slot (wo goes with m/d/v/h); only the weekday makes it weekly.
+        var weeklyAmounts: [String: Double] = [:]
+        for (attr, slot) in [("m", "morning"), ("d", "noon"), ("v", "evening"), ("h", "night")] where num(a[attr]) > 0 { weeklyAmounts[slot] = num(a[attr]) }
+        let weeklySlots = Slot.all.map(\.id).filter { weeklyAmounts[$0] != nil }
         if let wo = a["wo"].flatMap(Int.init), (1...7).contains(wo) {
-            return Schedule(kind: "weekly", slots: [], amounts: [:], days: [days[wo - 1]], note: note, text: text ?? "einmal pro Woche")
+            return Schedule(kind: "weekly", slots: weeklySlots, amounts: weeklyAmounts, days: [days[wo - 1]], note: note, text: text ?? "einmal pro Woche")
         }
         // Free text like "1x wöchentl. Montag" or "einmal pro Woche" (both "woch" and "wöch").
         let lower = text?.lowercased() ?? ""
         if section == "425" || lower.contains("woch") || lower.contains("wöch") {
             let names = ["montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag"]
             let day = names.firstIndex { lower.contains($0) }.map { days[$0] }
-            return Schedule(kind: "weekly", slots: [], amounts: [:], days: day.map { [$0] } ?? [], note: note, text: text)
+            return Schedule(kind: "weekly", slots: weeklySlots, amounts: weeklyAmounts, days: day.map { [$0] } ?? [], note: note, text: text)
         }
         var amounts: [String: Double] = [:]
         for (attr, slot) in [("m", "morning"), ("d", "noon"), ("v", "evening"), ("h", "night")] where num(a[attr]) > 0 { amounts[slot] = num(a[attr]) }
@@ -94,16 +110,25 @@ enum PlanReader {
     private final class Collector: NSObject, XMLParserDelegate {
         var items: [Item] = []
         var sawPlan = false
+        /// The plan breaks the BMP 2.8 contract (see items(in:)).
+        var invalid = false
         private var section: String?
         private var med: [String: String]?
-        private var substance: [String: String] = [:]
+        /// All <W> of the line: combination products carry several.
+        private var substances: [[String: String]] = []
 
         func parser(_ p: XMLParser, didStartElement name: String, namespaceURI: String?, qualifiedName: String?, attributes a: [String: String] = [:]) {
             switch name {
-            case "MP": sawPlan = true
+            case "MP":
+                sawPlan = true
+                if a["v"] != PlanReader.version || a["a"] != nil || a["z"] != nil { invalid = true }
             case "S": section = PlanReader.sectionCode(a)
-            case "M": med = a; substance = [:]
-            case "W" where med != nil: substance = a
+            case "M":
+                med = a; substances = []
+                if let pzn = a["p"], !((Int(pzn).map { (1...99_999_999).contains($0) }) ?? false) { invalid = true }
+                if let wo = a["wo"], !((Int(wo).map { (1...7).contains($0) }) ?? false) { invalid = true }
+                for k in ["m", "d", "v", "h"] where !PlanReader.validDose(a[k]) { invalid = true }
+            case "W" where med != nil: substances.append(a)
             default: break // P, A, O, … : personal or practice data – ignored
             }
         }
@@ -112,7 +137,11 @@ enum PlanReader {
             if name == "S" { section = nil }
             guard name == "M", let a = med else { return }
             let pzn = a["p"].map { String(repeating: "0", count: max(0, 8 - $0.count)) + $0 }
-            items.append(Item(pzn: pzn, substance: substance["w"], strength: substance["s"], schedule: PlanReader.schedule(a, section: section)))
+            // Combination products: all ingredients in plan order ("Valsartan / Hydrochlorothiazid", "160 mg / 25 mg").
+            let ws = substances.filter { !($0["w"] ?? "").isEmpty }
+            let substance: String? = ws.isEmpty ? nil : ws.compactMap { $0["w"] }.joined(separator: " / ")
+            let strength: String? = ws.contains { $0["s"] != nil } ? ws.map { $0["s"] ?? "?" }.joined(separator: " / ") : nil
+            items.append(Item(pzn: pzn, substance: substance, strength: strength, schedule: PlanReader.schedule(a, section: section)))
             med = nil
         }
     }

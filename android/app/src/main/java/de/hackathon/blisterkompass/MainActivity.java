@@ -109,7 +109,14 @@ public class MainActivity extends Activity {
         });
 
         if (state != null) web.restoreState(state);
+        else clearPhotos(); // a capture left over from an earlier run
         if (web.getUrl() == null) web.loadUrl(START);
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearPhotos();
+        super.onDestroy();
     }
 
     /** Edge-to-edge is forced from Android 15; keep the page clear of the bars and the keyboard instead. */
@@ -231,6 +238,7 @@ public class MainActivity extends Activity {
             if (pendingFiles != null) pendingFiles.onReceiveValue(null);
             pendingFiles = callback;
             photoUri = null;
+            clearPhotos(); // the previous capture has been read by now (camera and gallery alike)
             Intent intent;
             if (params.isCaptureEnabled()) {
                 intent = cameraIntent();
@@ -248,13 +256,19 @@ public class MainActivity extends Activity {
         }
     }
 
+    /** A camera capture lives only in the app's cache, and only until it has been read: it is deleted before the next photo,
+     *  when the capture is cancelled, when another file is picked and when the app closes. The WebView reads the content://
+     *  URI after onActivityResult, so the latest capture can't be deleted right there. */
+    private void clearPhotos() {
+        File[] old = new File(getCacheDir(), "photos").listFiles();
+        if (old != null) for (File f : old) //noinspection ResultOfMethodCallIgnored
+            f.delete();
+    }
+
     private Intent cameraIntent() {
         try {
             File dir = new File(getCacheDir(), "photos");
             if (!dir.exists() && !dir.mkdirs()) return null;
-            File[] old = dir.listFiles();
-            if (old != null) for (File f : old) //noinspection ResultOfMethodCallIgnored
-                f.delete(); // photos are never kept
             File file = new File(dir, "photo-" + System.currentTimeMillis() + ".jpg");
             photoUri = FileProvider.getUriForFile(this, getPackageName() + ".photos", file);
             Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -276,6 +290,7 @@ public class MainActivity extends Activity {
             if (data != null && data.getData() != null) picked = new Uri[]{data.getData()};
             else if (photoUri != null) picked = new Uri[]{photoUri};
         }
+        if (picked == null || picked[0] != photoUri) clearPhotos(); // cancelled, or a gallery pick: no capture to keep
         pendingFiles.onReceiveValue(picked);
         pendingFiles = null;
     }

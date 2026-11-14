@@ -31,7 +31,8 @@ export function rows(store) {
     const s = m.schedule;
     let doses = null, free = null, when = null;
     if (s?.kind === "daily" || (s?.kind === "weekly" && s.slots?.length)) {
-      doses = SLOT_ORDER.map((id) => (s.amounts?.[id] ? doseSymbol(s.doses?.[id], s.amounts[id]) : "0"));
+      // A slot on the plan without an amount prints "?" (amount not given), never "0" or a default.
+      doses = SLOT_ORDER.map((id) => (s.amounts?.[id] ? doseSymbol(s.doses?.[id], s.amounts[id]) : (s.slots ?? []).includes(id) ? "?" : "0"));
       if (s.kind === "weekly") when = `nur ${s.days?.[0] ? dayName(s.days[0]).toLowerCase() + "s" : "einmal pro Woche"} · 1× pro Woche`;
     } else if (s?.kind === "weekly") free = `1× pro Woche${s.days?.[0] ? ", " + dayName(s.days[0]) : ""}${s.text ? " · " + s.text : ""}`;
     else if (s?.kind === "prn") free = s.text && s.text.toLowerCase() !== "bei bedarf" ? `bei Bedarf · ${s.text}` : "bei Bedarf";
