@@ -1,7 +1,7 @@
 // Service worker: precaches the whole app on the first visit, then serves it from the cache, so BlisterKompass
 // works in flight mode. Nothing is fetched from anywhere else. Bump VERSION when any file changes.
 
-const VERSION = "blisterkompass-v15";
+const VERSION = "blisterkompass-v16";
 
 const PRECACHE = [
   "./",
@@ -62,8 +62,9 @@ const PRECACHE = [
   "icons/ui-pack.png",
   "icons/ui-print.png",
   "icons/ui-lookup.png",
+  "icons/ui-pill.png",
   "icons/mascot-install.png",
-    "examples/examples.json",
+  "examples/examples.json",
   "examples/plan-a.png",
   "examples/plan-b.png",
   "examples/plan-c.png",

@@ -166,7 +166,7 @@ never stored.
 
 | File | Role |
 |---|---|
-| `RootView.swift` | app entry, routing (`Route`), home (scan buttons + day plan) / onboarding with the plan-code hint (`PlanCodeHint`), analyzing, plan import, building blocks |
+| `RootView.swift` | app entry, routing (`Route`), home (scan buttons + day plan; voice advisor link top right) / onboarding with the plan-code hint (`PlanCodeHint`), analyzing, plan import, building blocks |
 | `PlanReader.swift` | BMP XML → plan items → `ScannedPlan` (privacy boundary: only medication lines) |
 | `PillRecognizer.swift` | on-device image analysis + OCR → `PillCues` |
 | `Matcher.swift` | scoring, ranking, question, other-maker / not-on-plan warnings → `Answer` |

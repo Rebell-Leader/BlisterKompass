@@ -132,6 +132,8 @@ struct HomeView: View {
     @State private var examples: ExampleKind?
     @State private var libraryItem: PhotosPickerItem?
     @State private var showPlanSource = false
+    @State private var showVoice = false
+    @Environment(\.openURL) private var openURL
     @State private var showPillSource = false
     @State private var showPackSource = false
     /// Set by the button that opened the camera, photo library or examples.
@@ -197,7 +199,7 @@ struct HomeView: View {
                 BigButton(icon: "printer.fill", title: "Plan\ndrucken", height: 120, compact: true) { go(.printPlan) }
             }
             DayPlanList(go: go)
-            Tile(icon: "camera.fill", title: "Tablette", wide: true) { showPillSource = true }
+            Tile(icon: "tablette", title: "Tablette", wide: true) { showPillSource = true }
                 .padding(.top, 6)
             Label(Day.notRecorded, systemImage: "info.circle").font(.footnote).foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -214,12 +216,35 @@ struct HomeView: View {
         }
     }
 
-    /// No account, no name, no settings – just a privacy note.
+    /// Bonus: the voice advisor is a separate web app (prototypes/voice_module in the hackathon repo); it opens in the browser.
+    /// Same URL as VOICE_URL in pwa/js/app.js.
+    static let voiceURL = URL(string: "https://blister-kompass-voice.vercel.app/voice")!
+
+    /// No account, no name, no settings – a privacy note, and top right the voice advisor (bonus).
     private var header: some View {
-        Label(store.onlineLeaflets == true ? "Nur die PZN geht online · keine persönlichen Daten" : "Offline · keine Daten verlassen das Smartphone",
-              systemImage: "lock.shield.fill")
-            .font(.footnote.weight(.semibold)).foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity)
+        HStack(alignment: .center, spacing: 10) {
+            Label(store.onlineLeaflets == true ? "Nur die PZN geht online · keine persönlichen Daten" : "Offline · keine Daten verlassen das Smartphone",
+                  systemImage: "lock.shield.fill")
+                .font(.footnote.weight(.semibold)).foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Button { showVoice = true } label: {
+                VStack(spacing: 2) {
+                    Image(systemName: "mic.fill").font(.system(size: 20, weight: .semibold))
+                    Text("Sprachberater").font(.system(.caption, design: .rounded, weight: .bold))
+                }
+                .padding(.horizontal, 10).padding(.vertical, 5)
+                .overlay(RoundedRectangle(cornerRadius: 16).stroke(Theme.accent, lineWidth: 2))
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(Theme.accent)
+            .accessibilityLabel("Sprachberater (Bonus)")
+            .confirmationDialog("Sprachberater (Bonus)", isPresented: $showVoice, titleVisibility: .visible) {
+                Button("Öffnen") { openURL(Self.voiceURL) }
+                Button("Abbrechen", role: .cancel) {}
+            } message: {
+                Text("Eine eigene Web-App: Sie beschreiben ein Medikament mit Worten, sie zeigt mögliche Treffer zum Prüfen – kein Nachweis, keine Beratung. Braucht Internet. Mit Mikrofon geht Ihre Stimme an einen Sprachdienst im Internet. BlisterKompass selbst bleibt offline.")
+            }
+        }
     }
 }
 
@@ -519,7 +544,7 @@ struct BmpImportView: View {
 /// in pwa/js/icons.js. A button with a picture shows no word: its title stays the accessibility label.
 enum ActionPicture {
     static let byIcon = ["qrcode.viewfinder": "ui-plan", "barcode.viewfinder": "ui-pack",
-                         "printer.fill": "ui-print", "hand.tap.fill": "ui-lookup"]
+                         "printer.fill": "ui-print", "hand.tap.fill": "ui-lookup", "tablette": "ui-pill"]
 
     static func view(_ icon: String, size: CGFloat) -> some View {
         Image(byIcon[icon] ?? icon).resizable().interpolation(.high).scaledToFit()

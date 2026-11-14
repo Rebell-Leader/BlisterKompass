@@ -44,7 +44,7 @@ only the medication lines: name, birth date, insurance number and practice are n
 1. **Plan einlesen.** **Kamera** (photo of the 2D code on the plan), **Beispiele** (bundled example plan codes, plus the phone's own
    photos) or **Selbst eingeben** (type a name, tap the match, tap the times of day). Works with any BMP 2.8 code; entries without a
    picture keep their dose and times and show a grey outline. Plans over several pages are merged. A new plan replaces the old list.
-2. **Home = my day.** The plan by the clock: **Jetzt** first with big pill pictures, then **Später** and **Morgen**, weekly medicines in
+2. **Home = my day.** The plan by the clock: **Jetzt** first with big pill pictures, then **Später** and today's past slots as **Heute vorbei** (never "Morgen"), weekly medicines in
    their slot on their day (otherwise "Einmal pro Woche" with the next date), free-text dosing as written, as-needed last. The speaker
    button reads out what is due now. Tap a pill for its card: dose, unit, reason and notes as the plan states them.
 3. **Tablette.** One pill on a dark, plain surface, photographed from above. Answers: probably yours (with "Ja, stimmt" / "Nein"),
@@ -55,6 +55,9 @@ only the medication lines: name, birth date, insurance number and practice are n
    not on your plan (can be put on your own list) · not in the database. Best-before date and batch from the code, **Abgelaufen** when expired.
 5. **Plan drucken.** The sheet "Meine Medikamente mit Bildern" for the older person (A4 landscape, large print, no 2D code of its own).
    The paper BMP from the practice stays the valid plan.
+6. **Sprachberater (bonus).** The button top right opens the voice advisor, a separate web app
+   (<https://blister-kompass-voice.vercel.app/voice>), in the browser after a short note: describe a medicine in words, it shows possible
+   matches to check. With the microphone the voice goes to an online speech service; BlisterKompass itself stays offline.
 
 No settings, no account, nothing personal. Big buttons with icon and word, read-aloud, light and dark mode. German UI.
 
@@ -150,6 +153,7 @@ Code: [MIT](LICENSE). Details on every dataset and what was cut for this public 
 | PDF reading (web, leaflet the person picks) | [pdf.js](https://github.com/mozilla/pdf.js) 4.10.38, `pwa/vendor/pdfjs/` | Apache-2.0 |
 | Font | Atkinson Hyperlegible | SIL OFL 1.1 |
 | Mascot and action-icon art (`pwa/icons/mascot-*.png`; the blister in `scan-plan`; `pwa/icons/ui-*.png`) | © Anna P. (AnnXQP) | used with permission for this project |
+| Pill-camera action icon for "Tablette" (`pwa/icons/ui-pill.png`, `ios/PillSnap/Assets.xcassets/ui-pill`; source `docs/brand/tablette-scan.jpeg`) | supplied by the team, 14 Nov 2026 | project asset |
 | Plan-code hint pictures (`pwa/img/plan-hint*.png`, `ios/PillSnap/Assets.xcassets/plan-hint*`) | drawn by `tools/make-plan-hint.py` from example plan A (synthetic) | project asset |
 | Pill mascot states (`pwa/img/mascot/`, `ios/PillSnap/Assets.xcassets/mascot-*`) | generated with ChatGPT for this project, cut and drawn by `docs/brand/pill-mascot/*.py` | project asset |
 

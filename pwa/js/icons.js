@@ -7,6 +7,7 @@ const P = {
   qr: "M3 7V4h3 M18 4h3v3 M21 17v3h-3 M6 20H3v-3 M8 8h3v3H8z M13 8h3v3h-3z M8 13h3v3H8z M14 14h2v2h-2z",
   back: "M15 5l-7 7 7 7",
   speaker: "M4 9h4l5-4v14l-5-4H4z M16.5 8.5a5 5 0 0 1 0 7 M19 6a8.5 8.5 0 0 1 0 12",
+  mic: "M12 3.5a3 3 0 0 0-3 3V12a3 3 0 0 0 6 0V6.5a3 3 0 0 0-3-3z M5.5 11.5a6.5 6.5 0 0 0 13 0 M12 18v3 M8.5 21h7",
   check: "M5 12.5l4.5 4.5L19 7",
   x: "M6 6l12 12 M18 6L6 18",
   plus: "M12 5v14 M5 12h14",
@@ -69,7 +70,7 @@ const NS = "http://www.w3.org/2000/svg";
 
 /** Illustrated icons (PNG) for the main actions; every other name stays a line-drawn SVG. Paired with
  *  `ActionPicture` in ios/PillSnap/RootView.swift. A button with a picture shows no word: its title is the accessible label. */
-const PICTURES = { qr: "ui-plan", barcode: "ui-pack", printer: "ui-print", tap: "ui-lookup" };
+const PICTURES = { qr: "ui-plan", barcode: "ui-pack", printer: "ui-print", tap: "ui-lookup", tablette: "ui-pill" };
 export const hasPicture = (name) => name in PICTURES;
 
 /** <svg> icon (or the illustrated <img> for the main actions); size in px (default 1em via CSS). */

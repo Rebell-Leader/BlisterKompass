@@ -79,11 +79,25 @@ function planSourceSheet() {
 
 // Home -----------------------------------------------------------------------
 
+// Bonus: the voice advisor is a separate web app (prototypes/voice_module in the hackathon repo). BlisterKompass only links
+// to it; it opens in the browser, never inside this app. Same URL as HomeView.voiceURL in ios/PillSnap/RootView.swift.
+const VOICE_URL = "https://blister-kompass-voice.vercel.app/voice";
+
 function Home() {
   return h("main.screen.home", null,
-    h("p.privacy", null, icon("shield"), "Offline · keine Daten verlassen das Smartphone"),
+    h("div.topbar", null,
+      h("p.privacy", null, icon("shield"), "Offline · keine Daten verlassen das Smartphone"),
+      h("button.voice-btn", { type: "button", "aria-label": "Sprachberater (Bonus)", onclick: voiceSheet }, icon("mic"), h("span", null, "Sprachberater"))),
     installCard(),
     store.hasPlan ? scanPill() : onboarding());
+}
+
+/** Before the voice advisor opens: what it is and what leaves the phone there. Same texts as the iPhone dialog. */
+function voiceSheet() {
+  sheet("Sprachberater (Bonus)", (close) => h("div.stack", null,
+    h("p.lead", null, "Eine eigene Web-App: Sie beschreiben ein Medikament mit Worten, sie zeigt mögliche Treffer zum Prüfen – kein Nachweis, keine Beratung."),
+    h("p.muted.with-icon", null, icon("info"), "Braucht Internet. Mit Mikrofon geht Ihre Stimme an einen Sprachdienst im Internet. BlisterKompass selbst bleibt offline."),
+    h("a.big.fill-accent", { href: VOICE_URL, target: "_blank", rel: "noopener noreferrer", style: { "--h": "96px" }, onclick: () => close() }, icon("mic"), h("span", null, "Öffnen"))));
 }
 
 // One clock for the whole app (T-01): every minute it redraws only the day list, in place, so the scroll position stays and
@@ -141,7 +155,7 @@ function scanPill() {
       bigButton({ icon: "printer", title: "Plan\ndrucken", height: 120, compact: true, onClick: () => go({ name: "printPlan" }) })),
     dayPlanList(),
     h("div.row.top-gap", null,
-      tile({ icon: "camera", title: "Tablette", onClick: () => photoSourceSheet("Tablette prüfen", "photo") }),
+      tile({ icon: "tablette", title: "Tablette", onClick: () => photoSourceSheet("Tablette prüfen", "photo") }),
       tile({ icon: "tap", title: "Aussehen\nantippen", onClick: () => go({ name: "picker" }) })),
     h("p.muted.small.with-icon", null, icon("info"), NOT_RECORDED));
 }

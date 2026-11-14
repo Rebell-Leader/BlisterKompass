@@ -142,6 +142,12 @@ div.info { display: flex; align-items: center; gap: 14px; padding: 14px; border-
 /* Home */
 .privacy { display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); font: 600 15px var(--font); }
 .privacy .icon { width: 18px; height: 18px; }
+/* Home top row: privacy note left, the voice advisor (bonus, a separate web app) top right. */
+.topbar { display: flex; align-items: center; gap: 10px; }
+.topbar .privacy { flex: 1; min-width: 0; justify-content: flex-start; text-align: left; }
+.voice-btn { flex: none; display: inline-flex; flex-direction: column; align-items: center; gap: 2px; min-width: 44px; min-height: 44px; padding: 5px 10px; border: 2px solid var(--accent); border-radius: 16px; background: var(--card); color: var(--accent); font: 700 14px/1.1 var(--round); cursor: pointer; }
+.voice-btn .icon { width: 22px; height: 22px; }
+a.big { text-decoration: none; box-sizing: border-box; }
 .onboarding { display: flex; flex-direction: column; align-items: stretch; gap: 18px; text-align: center; }
 .hero-icon { color: var(--accent); display: flex; justify-content: center; padding-top: 8px; }
 .hero-icon .mascot { width: min(60vw, 240px); height: auto; }
