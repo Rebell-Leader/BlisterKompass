@@ -73,16 +73,24 @@ test("service worker precaches every app file, and only files that exist", () =>
   assert.ok(precache.includes("./"));
 });
 
-// The only other hosts in the code are links the person opens themselves (the leaflet page at Apotheken Umschau and
-// the leaflet PDF the iPhone app downloads, js/leaflet-parser.js); the app never fetches them: connect-src stays 'self' (CSP test above).
-const LINK_ONLY = ["https://www.apotheken-umschau.de/", "https://cdn.shop-apotheke.com/"];
-test("no network at runtime: app code names no other host, apart from the leaflet link the person opens", () => {
+// The only other hosts in the code are links the person opens themselves: the leaflet page at Apotheken Umschau and the leaflet
+// PDF the iPhone app downloads (js/leaflet-parser.js), and the voice advisor, a separate web app (js/app.js, bonus). The app never
+// fetches them: connect-src stays 'self' (CSP test above).
+const LINK_ONLY = { "js/leaflet-parser.js": ["https://www.apotheken-umschau.de/", "https://cdn.shop-apotheke.com/"], "js/app.js": ["https://blister-kompass-voice.vercel.app/"] };
+test("no network at runtime: app code names no other host, apart from the links the person opens", () => {
   for (const p of ["index.html", "app.css", "sw.js", "manifest.webmanifest", ...walk("js")]) {
     const src = text(p).replace(/http:\/\/www\.w3\.org\/2000\/svg/g, "");
     const hosts = [...src.matchAll(/https?:\/\/[^/"'`\s]+\//g)].map((m) => m[0]);
-    assert.ok(hosts.every((u) => LINK_ONLY.includes(u) && p === "js/leaflet-parser.js"), `${p}: ${hosts.join(", ")}`);
+    assert.ok(hosts.every((u) => (LINK_ONLY[p] ?? []).includes(u)), `${p}: ${hosts.join(", ")}`);
   }
-  assert.ok(!/fetch\(\s*leaflet(Page|Pdf)|fetch\([^)]*(apotheken-umschau|shop-apotheke)/.test(walk("js").map(text).join("\n")), "the leaflet page is never fetched");
+  assert.ok(!/fetch\(\s*(leaflet(Page|Pdf)|VOICE_URL)|fetch\([^)]*(apotheken-umschau|shop-apotheke|blister-kompass-voice)/.test(walk("js").map(text).join("\n")), "the linked pages are never fetched");
+});
+
+test("voice advisor (bonus): a link that opens in the browser, after the note on the microphone", () => {
+  const src = text("js/app.js");
+  assert.match(src, /const VOICE_URL = "https:\/\/blister-kompass-voice\.vercel\.app\/voice";/);
+  assert.match(src, /href: VOICE_URL, target: "_blank", rel: "noopener noreferrer"/);
+  assert.match(src, /Mit Mikrofon geht Ihre Stimme an einen Sprachdienst im Internet\. BlisterKompass selbst bleibt offline\./);
 });
 
 test("pdf.js loads from this folder, with eval off (strict CSP)", () => {
