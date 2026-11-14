@@ -257,6 +257,9 @@ h2.with-icon .icon { color: var(--accent); }
 .slot .icon { width: 28px; height: 28px; }
 .slot-label { font: 600 16px var(--font); }
 .slot-amount { font: 700 28px var(--round); }
+.slot-pills { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 4px; max-width: 72px; min-height: 34px; }
+.tile-pill { display: block; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .compare { display: flex; align-items: flex-start; gap: 8px; }
 .side { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .side .photo-sq { width: 120px; height: 120px; }

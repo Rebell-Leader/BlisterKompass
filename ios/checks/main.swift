@@ -214,5 +214,10 @@ check("all example plans still read (v=028, valid PZNs and doses)", ["plan-a", "
 check("multi-page plan page (a=1, z=2) → refused on iPhone, never taken for the whole plan", bmp(#"v="028" U="ABC" l="de-DE" a="1" z="2""#, #"<M p="1" m="1"/>"#) == nil)
 check("leaflet: finish only when the text states it; a film coating alone gives none", leaf("Weiße, runde Filmtabletten.", nil).map { $0.finish == nil } == true && leaf("Weiße, runde, glänzende Filmtabletten.", nil)?.finish == "glossy" && LeafletParser.finish(in: "matte, weiße Tabletten") == "matte")
 
+// Time-slot tiles: the plan's amount as pills
+check("slot tile: a whole dose draws the pills without a number", DoseGlyph(1, family: "tablet").map { $0.whole == 1 && $0.part == 0 && !$0.showNumber } == true && DoseGlyph(2, family: "capsule", unit: "Stück").map { $0.whole == 2 && !$0.showNumber } == true)
+check("slot tile: a part tablet draws a part pill and keeps the number", DoseGlyph(0.5, family: "tablet").map { $0.whole == 0 && $0.part == 0.5 && $0.showNumber } == true && DoseGlyph(1.5, family: "tablet").map { $0.whole == 1 && $0.part == 0.5 } == true && DoseGlyph(0.25, family: "tablet")?.part == 0.25)
+check("slot tile: number alone for units, unknown forms, part capsules and more than 4 pills", DoseGlyph(20, family: "tablet", unit: "IE") == nil && DoseGlyph(1, family: nil) == nil && DoseGlyph(1, family: "drops") == nil && DoseGlyph(0.5, family: "capsule") == nil && DoseGlyph(5, family: "tablet") == nil && DoseGlyph(3.5, family: "tablet")?.whole == 3 && DoseGlyph(nil, family: "tablet") == nil)
+
 print("\n\(passed) passed, \(failed) failed")
 exit(failed == 0 ? 0 : 1)
