@@ -131,8 +131,9 @@ h2 { font-size: clamp(28px, 3.6vw, 38px); margin: 8px 0 32px; }
 
 /* mascot: the blister pack from pwa/icons */
 .mascot { display: block; height: auto; }
-.shots .hero-mascot { position: absolute; left: -18px; bottom: -8px; width: 170px; z-index: 3; filter: drop-shadow(0 10px 14px rgba(0, 30, 45, .25)); }
-@media (max-width: 860px) { .shots .hero-mascot { width: 120px; left: 0; } }
+/* Peeks out from behind the front phone, top right; mirrored so the waving hand is on the open side */
+.shots .hero-mascot { position: absolute; right: -14px; top: 4px; width: 160px; z-index: 0; transform: scaleX(-1); filter: drop-shadow(0 10px 14px rgba(0, 30, 45, .25)); }
+@media (max-width: 860px) { .shots .hero-mascot { width: 120px; right: 0; top: 4px; } }
 
 /* problem: four checked figures from the pitch */
 .why-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
