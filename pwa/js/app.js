@@ -879,29 +879,35 @@ function mealLine(med) {
 function PrintPlan() {
   const rows = PrintSheet.rows(store);
   const count = rows.main.length + rows.prn.length;
-  // A div with a button role: the sheet holds a table, which a <button> may not contain.
-  const preview = h("div.ps-preview", { role: "button", tabindex: "0", "aria-label": `Vorschau: Meine Medikamente mit Bildern, ${count} Medikamente – groß anzeigen` });
+  // One preview per printed page – every page, not only the first, so each medicine can be seen before printing.
+  // The pages are laid out once (measured page breaks); each preview, the full screen and the print get a copy.
+  let laidOut = null;
+  const sheets = () => (laidOut ??= PrintSheet.pages(rows)).map((s) => s.cloneNode(true));
+  const n = sheets().length;
+  // The preview is a picture of the page (hidden from screen readers); a tap anywhere opens it large. Keyboard and
+  // screen-reader users get the round "groß anzeigen" button in its corner, whose label names the page.
+  const previews = Array.from({ length: n }, (_, i) => {
+    const p = h("div.ps-preview");
+    p.addEventListener("click", () => fullScreen(sheets()[i]));
+    const page = sheets()[i];
+    page.setAttribute("aria-hidden", "true");
+    set(p, page, h("button.ps-expand", { type: "button", "aria-label": `Meine Medikamente mit Bildern, ${count} Medikamente${n > 1 ? `, Seite ${i + 1} von ${n}` : ""} – groß anzeigen` }, icon("expand")));
+    return p;
+  });
   const printBtn = bigButton({ icon: "printer", title: "Drucken", height: 96, onClick: () => printSheet() });
-  const fit = () => preview.style.setProperty("--scale", String(preview.clientWidth / mm(297)));
-  const draw = () => { set(preview, PrintSheet.sheet(rows), h("span.ps-expand", null, icon("expand"))); fit(); };
-  const open = () => fullScreen(PrintSheet.sheet(rows));
-  preview.addEventListener("click", open);
-  preview.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
-  const pagesCount = PrintSheet.pages(rows).length;
+  const fit = () => { for (const p of previews) p.style.setProperty("--scale", String(p.clientWidth / mm(297))); };
   const el = h("main.screen", null,
     backBar({ title: "Plan drucken", onBack: home }),
     h("p.lead", null, h("strong", null, "Meine Medikamente mit Bildern"), " – Ihre Liste mit einem Bild jeder Tablette. Maßgeblich bleibt der Medikationsplan Ihrer Praxis."),
-    preview,
-    pagesCount > 1 ? h("p.muted", null, `${pagesCount} Seiten`) : null,
+    h("div.stack", null, previews.map((p, i) => [n > 1 ? h("p.muted.ps-pg", null, `Seite ${i + 1} von ${n}`) : null, p])),
     h("p.privacy.left", null, icon("shield"), "Ohne Namen und Geburtsdatum – bitte von Hand eintragen. Kein 2D-Code: Den bekommen Sie mit dem Plan Ihrer Praxis."),
     printBtn);
-  draw();
   addEventListener("resize", fit);
   cleanup.push(() => removeEventListener("resize", fit));
   requestAnimationFrame(fit);
 
   function printSheet() {
-    const holder = h("div.print-root", null, PrintSheet.pages(rows));
+    const holder = h("div.print-root", null, sheets());
     document.body.append(holder);
     const done = () => { holder.remove(); removeEventListener("afterprint", done); };
     addEventListener("afterprint", done);
