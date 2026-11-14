@@ -29,7 +29,7 @@ yet assessed. Synthetic demo data only.** Identity comes from the plan's PZN, a 
 Every feature and fix goes into both clients ([`AGENTS.md`](AGENTS.md) → “Two clients, one product”). The iOS ↔ PWA code map is in
 [ARCHITECTURE.md](ARCHITECTURE.md#code-map-ios--pwa); open work, each item with problem, fix and test, is in [TODO.md](TODO.md).
 
-Screens (iPhone, taken before the rename and the new mascot icons, see T-46):
+Screens (web app at iPhone size, example plan A, 14 Nov 2026):
 
 | Home: now / later | Welcome | Example codes | Plan read | Your pill | Different maker | Not on plan |
 |---|---|---|---|---|---|---|
