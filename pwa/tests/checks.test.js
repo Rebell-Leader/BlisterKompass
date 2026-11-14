@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import * as PlanReader from "../js/plan-reader.js";
 import * as Pack from "../js/pack-code.js";
 import * as Matcher from "../js/matcher.js";
-import { product, adding, sections, spokenLines, spokenWhen, whenText, pznName, nameStrength, countText, doseSymbol, NOT_RECORDED } from "../js/model.js";
+import { product, adding, sections, spokenLines, spokenWhen, whenText, pznName, nameStrength, countText, doseSymbol, doseGlyph, NOT_RECORDED } from "../js/model.js";
 import { doseForm, unitOf, bmpForm } from "../js/dose-form.js";
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
@@ -213,3 +213,7 @@ check("plan code with weekday 9 or page 3 of 2 → refused", () => bmp('v="028" 
 check("the review's sample <MP v=999><M p=1234567890123 m=wrong> is refused", () => PlanReader.read('<MP v="999"><S><M p="1234567890123" m="wrong"/></S></MP>')?.invalid != null);
 check("all example plans still read (v=028, valid PZNs and doses)", () => ["plan-a", "plan-b", "plan-c", "plan-kbv-beispiel"].every((n) => PlanReader.read(plan(n))?.items?.length > 0));
 
+// Time-slot tiles: the plan's amount as pills
+check("slot tile: a whole dose draws the pills without a number", () => eq(doseGlyph(1, "tablet"), { whole: 1, part: 0, showNumber: false }) && eq(doseGlyph(2, "capsule", "Stück"), { whole: 2, part: 0, showNumber: false }));
+check("slot tile: a part tablet draws a part pill and keeps the number", () => eq(doseGlyph(0.5, "tablet"), { whole: 0, part: 0.5, showNumber: true }) && eq(doseGlyph(1.5, "tablet"), { whole: 1, part: 0.5, showNumber: true }) && doseGlyph(0.25, "tablet")?.part === 0.25);
+check("slot tile: number alone for units, unknown forms, part capsules and more than 4 pills", () => doseGlyph(20, "tablet", "IE") === null && doseGlyph(1, null) === null && doseGlyph(1, "drops") === null && doseGlyph(0.5, "capsule") === null && doseGlyph(5, "tablet") === null && doseGlyph(3.5, "tablet")?.whole === 3 && doseGlyph(null, "tablet") === null);

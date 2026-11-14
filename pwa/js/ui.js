@@ -2,7 +2,7 @@
 // No innerHTML with data: every text goes in through textContent.
 
 import { icon, purpose } from "./icons.js";
-import { SLOTS, hasScore, colorText, shapeName, whenText, capitalizedFirst, fmt, doseSymbol, dayName } from "./model.js";
+import { SLOTS, hasScore, colorText, shapeName, whenText, capitalizedFirst, fmt, doseSymbol, doseGlyph, dayName } from "./model.js";
 import { ICON as FORM_ICON, doseForm } from "./dose-form.js";
 
 const NS = "http://www.w3.org/2000/svg";
@@ -103,13 +103,21 @@ export function scheduleBlock(med) {
   const s = med.schedule;
   if (!s) return null;
   const unit = s.unit && s.unit !== "Stück" ? s.unit : null;
+  // Tablet or capsule from the look, else from the dosage form; the tile pill takes the look's outline (round or long).
+  const lookShape = med.look?.shape;
+  const family = lookShape ? (["capsule", "softgel"].includes(lookShape) ? "capsule" : "tablet") : medForm(med)?.family ?? null;
+  const kind = family === "capsule" ? "capsule" : lookShape === "round" ? "round" : "long";
   // A slot that is on the plan but has no amount shows "?": the amount stays unknown, never a default (INV-05).
   const boxes = () => h("div.slots", null, SLOTS.map((slot) => {
     const amount = s.amounts?.[slot.id];
     const on = amount != null || (s.slots ?? []).includes(slot.id);
+    const shown = !on ? "–" : amount == null ? "?" : doseSymbol(s.doses?.[slot.id], amount);
+    const g = on ? doseGlyph(amount, family, s.unit) : null;
     return h(`div.slot${on ? "" : ".off"}`, on ? { style: { background: slot.hex }, "aria-label": amount == null ? `${slot.label}: Menge nicht angegeben` : null } : null,
       icon(slot.icon), h("span.slot-label", null, slot.label),
-      h("span.slot-amount", null, !on ? "–" : amount == null ? "?" : doseSymbol(s.doses?.[slot.id], amount)),
+      g ? slotPills(g, kind) : null,
+      // A whole dose is the pills alone; screen readers still hear the amount.
+      g && !g.showNumber ? h("span.sr-only", null, `${shown} ${pillNoun(family, amount)}`) : h("span.slot-amount", null, shown),
       amount != null && unit ? h("span.slot-unit", null, unit) : null);
   }));
   if (s.kind === "weekly") {
@@ -119,6 +127,44 @@ export function scheduleBlock(med) {
   if (s.kind === "prn") return infoRow({ icon: "hand", title: "Wann", value: "Nur bei Bedarf" + (s.text && s.text.toLowerCase() !== "bei bedarf" ? ` · ${s.text}` : "") + (unit ? ` (${unit})` : ""), tone: "accent" });
   if (s.kind === "text") return infoRow({ icon: "doc", title: "Dosierung laut Plan", value: s.text ?? "Steht nicht auf dem Plan – bitte in der Praxis fragen", tone: "accent" });
   return boxes();
+}
+
+const pillNoun = (family, n) => family === "capsule" ? (n > 1 ? "Kapseln" : "Kapsel") : (n > 1 ? "Tabletten" : "Tablette");
+
+/** The plan's amount in a time-slot tile: whole pills, then the part pill (doseGlyph). */
+function slotPills(g, kind) {
+  const pills = Array.from({ length: g.whole }, () => tilePill(kind, 1));
+  if (g.part > 0) pills.push(tilePill(kind, g.part));
+  return h("span.slot-pills", { "aria-hidden": "true" }, ...pills);
+}
+
+/** One white tile pill: whole, or `part` of it filled and the rest a dashed outline. Round tablets fill like a pie from
+ *  twelve o'clock, long ones from the left. */
+export function tilePill(kind, part = 1) {
+  const round = kind === "round";
+  const [w, ht] = round ? [24, 24] : [32, 16];
+  const outline = () => (round ? svg("circle", { cx: 12, cy: 12, r: 11 }) : svg("rect", { x: 1, y: 1, width: 30, height: 14, rx: 7 }));
+  const parts = [];
+  if (part >= 1) {
+    const o = outline(); o.setAttribute("fill", "#fff"); parts.push(o);
+    if (kind === "capsule") parts.push(svg("line", { x1: 16, y1: 1.5, x2: 16, y2: 14.5, stroke: "rgba(0,0,0,.25)", "stroke-width": 1.2 }));
+  } else {
+    const ghost = outline();
+    for (const [k, v] of Object.entries({ fill: "none", stroke: "#fff", "stroke-width": 1.5, "stroke-dasharray": "3 2.5" })) ghost.setAttribute(k, v);
+    parts.push(ghost);
+    if (round) {
+      const a = part * 2 * Math.PI, x = 12 + 11 * Math.sin(a), y = 12 - 11 * Math.cos(a);
+      parts.push(svg("path", { d: `M12 12V1A11 11 0 ${part > 0.5 ? 1 : 0} 1 ${x.toFixed(2)} ${y.toFixed(2)}Z`, fill: "#fff", stroke: "#fff", "stroke-width": 1.5, "stroke-linejoin": "round" }));
+    } else {
+      // The filled part keeps a solid edge: the whole pill, stroke included, cut at `part` of its length.
+      const id = `tp${++uid}`;
+      parts.push(svg("defs", {}, svg("clipPath", { id }, svg("rect", { x: 0, y: 0, width: 1 + 30 * part, height: ht }))));
+      const fill = outline();
+      for (const [k, v] of Object.entries({ fill: "#fff", stroke: "#fff", "stroke-width": 1.5, "clip-path": `url(#${id})` })) fill.setAttribute(k, v);
+      parts.push(fill);
+    }
+  }
+  return svg("svg", { viewBox: `0 0 ${w} ${ht}`, width: w, height: ht, class: "tile-pill" }, parts);
 }
 
 /** Photo from a Blob, filling a fixed box. */
