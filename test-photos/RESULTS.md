@@ -24,3 +24,24 @@ Note: plan A holds synthetic German looks, the photos are US products, so "Answe
 | allopurinol-1.jpg | Allopurinol | ❌ brown (ORANGE) | ✅ round (ROUND) | ❌ O (DAN;DAN;5544) | likely | ❌ Diclofenac-Natrium | BPA2 Office Depot Copy Paper - standard white paper - item 420-283 |
 
 **15 photos:** colour 6/15 · shape 7/15 · imprint 4/15 · right medication shown 3/15
+
+## Android app (ML Kit)
+
+Same 15 photos through the Android app's real path (`pwa/js/vision.js` crop → `MainActivity.readImprint`), Pixel 7 emulator
+(Android 15, arm64, host GPU), 14 Nov 2026. Regenerate: debug build on a device, then `node tools/android-ocr-eval.mjs`.
+A hit means the read text contains a part of NLM's imprint (or is ≥ 2 characters of it).
+
+| Photo | Imprint (NLM) | Android read |
+|---|---|---|
+| ramipril-1.jpg | 54;145;54;145 | ✅ 54455445 |
+| ramipril-2.jpg | RP;5 | ✅ RP5 |
+| torasemid-2.jpg | PA;916 | ✅ PA |
+| pantoprazol-1.jpg | P;20 | ✅ P20 |
+| allopurinol-1.jpg | DAN;DAN;5544 | ✅ 554 |
+| methotrexat-1.jpg | 54;323 | ❌ 229 |
+| ibuprofen-2.jpg | IP;464 | ❌ 6 |
+| pregabalin-1.jpg | Pfizer;PGN;75 | ❌ P |
+| other 7 | | – (no pill found or nothing read) |
+
+**imprint 5/15** (iPhone Vision above: 4/15); 0.05–0.7 s per photo. Wrong reads happen, so the Android app only pre-fills the
+field and the person confirms or corrects it.

@@ -102,6 +102,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle state) {
         super.onCreate(state);
 
+        // Debug builds only: chrome://inspect for the eval (tools/android-ocr-eval.mjs). Release builds stay closed.
+        if ((getApplicationInfo().flags & android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+            WebView.setWebContentsDebuggingEnabled(true);
+
         root = new FrameLayout(this);
         web = new WebView(this);
         root.addView(web, new FrameLayout.LayoutParams(-1, -1));
@@ -355,17 +359,24 @@ public class MainActivity extends Activity {
     private String readImprintText(String dataUrl) throws Exception {
         int comma = dataUrl.indexOf(',');
         byte[] jpeg = Base64.decode(comma >= 0 ? dataUrl.substring(comma + 1) : dataUrl, Base64.DEFAULT);
-        Bitmap photo = BitmapFactory.decodeByteArray(jpeg, 0, jpeg.length);
-        if (photo == null) return null;
+        Bitmap decoded = BitmapFactory.decodeByteArray(jpeg, 0, jpeg.length);
+        if (decoded == null) return null;
+        // A pill crop is often ~150 px wide; ML Kit wants characters of ≥ 16 px, so small crops are scaled up.
+        int side = Math.max(decoded.getWidth(), decoded.getHeight());
+        Bitmap photo = side >= 640 ? decoded
+                : Bitmap.createScaledBitmap(decoded, decoded.getWidth() * 640 / side, decoded.getHeight() * 640 / side, true);
+        if (photo != decoded) decoded.recycle();
         if (ocr == null) ocr = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         // Embossed imprints are low contrast: grey + contrast boost first (as iOS: saturation 0, contrast 2.2);
-        // the plain photo as a second try, where the boost burns out a printed imprint.
+        // the plain photo as a second try, where the boost burns out a printed imprint. A pill lies at any angle:
+        // upright first, then turned a quarter either way, then upside down.
         Bitmap boosted = boost(photo, 2.2f);
         try {
-            for (Bitmap b : new Bitmap[]{boosted, photo}) {
-                String t = imprintOf(Tasks.await(ocr.process(InputImage.fromBitmap(b, 0))));
-                if (t != null) return t;
-            }
+            for (int deg : new int[]{0, 90, 270, 180})
+                for (Bitmap b : new Bitmap[]{boosted, photo}) {
+                    String t = imprintOf(Tasks.await(ocr.process(InputImage.fromBitmap(b, deg))));
+                    if (t != null) return t;
+                }
             return null;
         } finally {
             boosted.recycle();
