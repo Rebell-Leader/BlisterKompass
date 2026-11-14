@@ -74,7 +74,7 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 | T-42 | P2 | iOS checks and PWA tests are not paired one to one | skilled user, deploy | open |
 | T-43 | P2 | Xcode project, target and folder still named `PillSnap` | deploy | open |
 | T-45 | P1 | Verify Vercel deploys teammates' commits on the public repo | deploy | open |
-| T-46 | P2 | Screenshots in `docs/screens` predate the rename and the mascot | skilled user | open |
+| T-46 | P2 | Screenshots in `docs/screens` predate the rename and the mascot | skilled user | fixed (web screens) |
 | T-48 | P2 | PWA: tap a pill picture → popup with the pill large (iOS has `PillPopup`) | patient | open |
 | T-49 | P2 | PWA precaches pdf.js (~1.8 MB) for an optional feature | skilled user | open |
 | T-50 | P2 | Leaflet link points to a commercial pharmacy CDN: check its terms | pharmacist | open |
@@ -738,6 +738,9 @@ screen and the BMP 2.8 day view.
 landing page's screen section.
 
 **Test.** Visual check of README and `docs/landing.html`.
+
+**Status (14 Nov): fixed.** The eight screens (0–7) retaken from the web app at 390 × 847 @2x with Playwright and example plan A, clock at 19:05;
+landing alt texts updated (welcome button "Plan einlesen", pill photo matches Metformin 1000 mg).
 
 ### T-48 PWA: tap a pill picture → popup with the pill large (patient, iOS done)
 
