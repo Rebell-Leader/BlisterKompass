@@ -14,7 +14,6 @@ struct PackResultView: View {
     private var result: PackResult { live ?? scanned }
     /// No picture yet for this PZN → it can be looked up online (asked once).
     private var canLookUp: Bool { scanned.product == nil && scanned.mine == nil && LeafletOnline.url(pzn: scanned.code.pzn) != nil }
-    /// The take-over button only appears once the user says the pharmacy confirmed the switch.
 
     private var banner: (text: String, icon: String, color: Color, mascot: String) {
         switch result.kind {

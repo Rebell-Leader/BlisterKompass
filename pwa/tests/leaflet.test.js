@@ -62,7 +62,7 @@ function pdf(lines) {
 // A tablet PZN of the official list: HCT 1A PHARMA 25MG TABL. The synthetic leaflet below names that product (name, maker
 // and strength), as a real leaflet for the pack does. Changed with the review fix: it used to say "HCT Muster 25 mg", and a
 // leaflet that names another product is now refused ("unbound", test below), so the fixture names the pack's own product.
-const [pzn, row] = Object.entries(names).find(([, r]) => r[1] === "Hydrochlorothiazid" && / 25MG /.test(r[0]) && r[2] === "TABL");
+const [pzn, row] = Object.entries(names).find(([, r]) => r[0] === "HCT 1A PHARMA 25MG TABL");
 const leafletLines = [
   "Gebrauchsinformation: Information für Patienten",
   "6. Inhalt der Packung und weitere Informationen",
