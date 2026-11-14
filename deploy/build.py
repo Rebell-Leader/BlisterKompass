@@ -6,6 +6,7 @@
   /docs/screens/*     -> the screenshots the landing page shows
   /docs/fonts/*       -> self-hosted Atkinson Hyperlegible (no Google Fonts request, no IP sent to Google)
   /pwa/*              -> the PWA as it is, without tests, scripts and package files
+  /favicon.ico, /apple-touch-icon(-precomposed).png -> copies of the PWA icons at the root
 
 docs/landing.html stays an Artifact-style fragment (no doctype, head or charset), so the build adds them here.
 Run:  python3 deploy/build.py   (from the repo root)
@@ -26,8 +27,12 @@ HEAD = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0B6E8A">
+<meta name="apple-mobile-web-app-title" content="BlisterKompass">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="../pwa/icons/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="../pwa/icons/icon-192.png">
-<link rel="apple-touch-icon" href="../pwa/icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../pwa/icons/apple-touch-icon.png">
 <style>
 :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 body { margin: 0; font: 14px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -42,6 +47,8 @@ img { max-width: 100%; }
 
 PWA_SKIP = {"tests", "scripts", "node_modules", "package.json", "package-lock.json", "README.md", ".gitignore"}
 PAGES = ("landing.html", "impressum.html", "datenschutz.html")
+ROOT_ICONS = (("favicon.ico", "favicon.ico"), ("apple-touch-icon.png", "apple-touch-icon.png"),
+              ("apple-touch-icon.png", "apple-touch-icon-precomposed.png"))
 
 
 def page(name: str) -> str:
@@ -71,6 +78,9 @@ def main() -> None:
         shutil.copy2(ROOT / "docs" / "screens" / name, docs / "screens" / name)
     shutil.copytree(ROOT / "docs" / "fonts", docs / "fonts")
     shutil.copytree(ROOT / "pwa", DIST / "pwa", ignore=lambda d, names: [n for n in names if n in PWA_SKIP])
+    # Browsers, iOS and Android ask the site root for these when a page names no icon (or before "/" redirects).
+    for src, dst in ROOT_ICONS:
+        shutil.copy2(ROOT / "pwa" / "icons" / src, DIST / dst)
     files = [p for p in DIST.rglob("*") if p.is_file()]
     print(f"{len(files)} files, {sum(p.stat().st_size for p in files) / 1e6:.1f} MB in {DIST}")
 

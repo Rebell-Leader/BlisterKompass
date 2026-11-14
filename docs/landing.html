@@ -267,8 +267,8 @@ footer nav a { color: var(--muted); }
 
 /* install: iPhone = web app, Android = APK or web app; the visitor's own platform comes first */
 .install { scroll-margin-top: 16px; }
-.platforms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-@media (max-width: 760px) { .platforms { grid-template-columns: 1fr; } }
+.platforms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 960px) { .platforms { grid-template-columns: 1fr; } }
 .platform { display: grid; gap: 14px; align-content: start; padding: 24px; }
 .platform.mine { border: 2px solid var(--teal); order: -1; }
 .platform .head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -301,10 +301,11 @@ footer p { max-width: 95ch; }
   <symbol id="i-loose" viewBox="0 0 24 24"><rect x="3" y="11" width="11" height="6" rx="3" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-25 8.5 14)"/><circle cx="17" cy="8" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="17.5" r="2.6" fill="currentColor"/></symbol>
   <symbol id="i-apple" viewBox="0 0 24 24"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.2 1-4 2.5-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.2.8s2.1-1.2 2.9-2.4c.9-1.3 1.3-2.7 1.3-2.8 0 0-2.4-1-2.4-4zM14 5.6c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.6 2.8-1.4z"/></symbol>
   <symbol id="i-android" viewBox="0 0 24 24"><path fill="currentColor" d="M6 9h12v8.5a1.5 1.5 0 0 1-1.5 1.5H15v2.5a1.5 1.5 0 0 1-3 0V19h0v2.5a1.5 1.5 0 0 1-3 0V19H7.5A1.5 1.5 0 0 1 6 17.5zm-2.5 0A1.5 1.5 0 0 1 5 10.5v5a1.5 1.5 0 0 1-3 0v-5A1.5 1.5 0 0 1 3.5 9zm17 0a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-3 0v-5A1.5 1.5 0 0 1 20.5 9zM6 8a6 6 0 0 1 3.2-5.1L8.3 1.4a.4.4 0 0 1 .7-.4l.9 1.5a6.4 6.4 0 0 1 4.2 0l.9-1.5a.4.4 0 0 1 .7.4l-.9 1.5A6 6 0 0 1 18 8zm3.5-2.6a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8zm5 0a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c2.6 2.7 3.9 5.9 3.9 9.5s-1.3 6.8-3.9 9.5c-2.6-2.7-3.9-5.9-3.9-9.5S9.4 5.2 12 2.5z"/></g></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m-5-5 5 5 5-5M4 20h16"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m-5-5 5 5-5 5"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path fill="currentColor" opacity=".16" d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z"/><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
-  <symbol id="i-handshake" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" d="M2.5 9.5 6 6l4 1.5L13.5 6l8 3.5M2.5 9.5l7 7.5a1.6 1.6 0 0 0 2.3 0l.5-.5m-9.8-7L5 12m16.5-2.5L17 14m4.5-4.5-2 4.5M10 7.5 7.8 10a1.4 1.4 0 0 0 2 2l2.7-2.4 4.5 4.4a1.5 1.5 0 0 1-2.1 2.1l-1-1"/></symbol>
+  <symbol id="i-handshake" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></g></symbol>
   <radialGradient id="g-shine" cx="0.32" cy="0.28" r="0.8"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="0.55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></radialGradient>
   <symbol id="i-logo" viewBox="0 0 36 36"><rect x="1" y="1" width="34" height="34" rx="10" fill="#0B6E8A"/><path d="M8 8h5M8 8v5M28 8h-5M28 8v5M8 28h5M8 28v-5M28 28h-5M28 28v-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/><rect x="12" y="14.5" width="12" height="7" rx="3.5" fill="#fff"/><path d="M18 14.5v7" stroke="#0B6E8A" stroke-width="1.6"/></symbol>
 </svg>
@@ -456,8 +457,20 @@ footer p { max-width: 95ch; }
           <span lang="de">APK herunterladen</span><span lang="en">Download the APK</span>
         </a>
         <p class="meta"><span lang="de">4 MB, Android 8 oder neuer. Die App hat keine Internet-Berechtigung: sie kann nichts senden.</span><span lang="en">4 MB, Android 8 or later. The app has no internet permission: it cannot send anything.</span></p>
-        <p class="alt"><span lang="de">Lieber ohne APK? Web-App in <b>Chrome</b> öffnen und <b>„Installieren“</b> tippen.</span><span lang="en">Rather no APK? Open the web app in <b>Chrome</b> and tap <b>“Install”</b>.</span>
-          <a class="pwa-link" href="../pwa/"><span lang="de">Web-App öffnen</span><span lang="en">Open the web app</span></a></p>
+      </div>
+      <div class="card platform" data-platform="web">
+        <div class="head"><svg aria-hidden="true"><use href="#i-globe"/></svg><h3>Web-App</h3><span class="badge"><span lang="de">Ihr Gerät</span><span lang="en">Your device</span></span></div>
+        <ol>
+          <li><span lang="de">Web-App im Browser öffnen, z. B. <b>Chrome</b> oder <b>Edge</b>.</span><span lang="en">Open the web app in your browser, e.g. <b>Chrome</b> or <b>Edge</b>.</span></li>
+          <li><span lang="de">In der Adressleiste oder im Menü <b>„Installieren“</b> tippen.</span><span lang="en">Tap <b>“Install”</b> in the address bar or the menu.</span></li>
+          <li><span lang="de">Startet wie eine App und läuft ohne Internet.</span><span lang="en">Starts like an app and works offline.</span></li>
+        </ol>
+        <a class="btn pwa-btn" href="../pwa/">
+          <svg aria-hidden="true"><use href="#i-globe"/></svg>
+          <span class="lbl-go"><span lang="de">Web-App öffnen</span><span lang="en">Open the web app</span></span>
+          <span class="lbl-soon"><span lang="de">Web-App kommt bald</span><span lang="en">Web app coming soon</span></span>
+        </a>
+        <p class="meta"><span lang="de">Android ohne APK, Computer, Tablet. Kein Store, kein Konto.</span><span lang="en">Android without the APK, computer, tablet. No store, no account.</span></p>
       </div>
     </div>
   </section>
@@ -639,8 +652,6 @@ footer p { max-width: 95ch; }
 
   <footer>
     <nav aria-label="Rechtliches / Legal"><span>© 2026 BlisterKompass</span><a href="impressum.html">Impressum</a><a href="datenschutz.html"><span lang="de">Datenschutz</span><span lang="en">Privacy</span></a></nav>
-    <p><span lang="de">Hackathon-Prototyp, Healthcare Hackathon Bayern 2026, Erlangen. Anna und alle Patientendaten sind erfunden. Nicht für die Anwendung am Patienten; ob es ein Medizinprodukt ist, wurde noch nicht geprüft. Keine Beratung.</span><span lang="en">Hackathon prototype, Healthcare Hackathon Bayern 2026, Erlangen. Anna and all patient data are fictional. Not for clinical use; medical-device qualification not yet assessed. Not advice.</span></p>
-    <p><span lang="de">Aussehen aus Packungsbeilagen, EMA und DailyMed. PZN-Namen aus der BfArM-Festbetragsliste, Stand 01.11.2026. Plan nach KBV-Spezifikation.</span><span lang="en">Looks from package leaflets, EMA and DailyMed. PZN names from the BfArM reference-price list, as of 1 Nov 2026. Plan per the KBV specification.</span></p>
   </footer>
 </div>
 
@@ -661,13 +672,12 @@ var PARTNER_URL = '';
   }
   document.querySelectorAll('.partner-btn').forEach(function (a) { wire(a, PARTNER_URL); });
   document.querySelectorAll('.pwa-btn').forEach(function (a) { wire(a, url); });
-  document.querySelectorAll('.pwa-link').forEach(function (a) { if (url) a.href = url; else a.hidden = true; });
 
   // The visitor's own platform first, marked "Your device". iPadOS reports itself as a Mac with touch.
   var ua = navigator.userAgent;
   var mine = /android/i.test(ua) ? 'android'
-    : (/iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) ? 'ios' : '';
-  if (mine) document.querySelector('.platform[data-platform="' + mine + '"]').classList.add('mine');
+    : (/iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) ? 'ios' : 'web';
+  document.querySelector('.platform[data-platform="' + mine + '"]').classList.add('mine');
 })();
 
 (function () {
