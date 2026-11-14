@@ -176,25 +176,103 @@ struct ScheduleBlock: View {
             case "prn":
                 InfoRow(icon: "hand.raised.fill", tint: Theme.accent, title: "Wann", value: "Nur bei Bedarf")
             default:
+                let family = ["capsule", "softgel"].contains(med.look.shape) ? "capsule" : "tablet"
+                let kind = family == "capsule" ? "capsule" : med.look.shape == "round" ? "round" : "long"
                 HStack(spacing: 8) {
                     ForEach(Slot.all) { slot in
                         let amount = s.amounts[slot.id]
                         // A slot on the plan without an amount shows "?": the amount stays unknown, never a default (INV-05).
                         let on = amount != nil || s.slots.contains(slot.id)
-                        let shown: String = amount.map { $0 == 0.5 ? "½" : String(format: "%g", $0) } ?? (on ? "?" : "–")
+                        let shown: String = amount.map(ScheduleBlock.symbol) ?? (on ? "?" : "–")
+                        let glyph = on ? DoseGlyph(amount, family: family) : nil
+                        let noun = family == "capsule" ? ((amount ?? 0) > 1 ? "Kapseln" : "Kapsel") : ((amount ?? 0) > 1 ? "Tabletten" : "Tablette")
                         VStack(spacing: 4) {
                             Image(systemName: slot.icon).font(.system(size: 28))
                             Text(slot.label).font(.callout.weight(.semibold)).minimumScaleFactor(0.7).lineLimit(1)
-                            Text(shown).font(.title.bold())
+                            if let glyph { SlotPills(glyph: glyph, kind: kind) }
+                            // A whole dose is the pills alone; VoiceOver still hears the amount.
+                            if glyph?.showNumber ?? true { Text(shown).font(.title.bold()) }
                         }
                         .foregroundStyle(on ? Color.white : Color.secondary.opacity(0.5))
                         .frame(maxWidth: .infinity).padding(.vertical, 10)
                         .background(on ? slot.fill : Theme.card, in: RoundedRectangle(cornerRadius: 16))
-                        .accessibilityElement(children: .combine)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(!on ? "\(slot.label): keine" : amount == nil ? "\(slot.label): Menge nicht angegeben" : "\(slot.label): \(shown) \(noun)")
                     }
                 }
             }
         }
+    }
+}
+
+extension ScheduleBlock {
+    /// The plan's amount as written on a paper plan: the BMP fractions as their sign, decimals with a comma (A 2.6).
+    static func symbol(_ v: Double) -> String {
+        let signs: [Double: String] = [0.5: "½", 0.25: "¼", 0.75: "¾", 0.3333: "⅓", 0.6667: "⅔", 0.125: "⅛"]
+        return signs[(v * 1e4).rounded() / 1e4] ?? String(format: "%g", v).replacingOccurrences(of: ".", with: ",")
+    }
+}
+
+/// The plan's amount in a time-slot tile: whole pills, then the part pill (DoseGlyph), two per row.
+struct SlotPills: View {
+    let glyph: DoseGlyph
+    let kind: String
+
+    var body: some View {
+        let parts = Array(repeating: 1.0, count: glyph.whole) + (glyph.part > 0 ? [glyph.part] : [])
+        VStack(spacing: 4) {
+            ForEach(Array(stride(from: 0, to: parts.count, by: 2)), id: \.self) { i in
+                HStack(spacing: 4) {
+                    ForEach(i..<min(i + 2, parts.count), id: \.self) { TilePill(kind: kind, part: parts[$0]) }
+                }
+            }
+        }
+        .frame(minHeight: 34)
+        .accessibilityHidden(true)
+    }
+}
+
+/// One white tile pill: whole, or `part` of it filled and the rest a dashed outline. Round tablets fill like a pie from
+/// twelve o'clock, long ones from the left. Port of tilePill (ui.js).
+struct TilePill: View {
+    let kind: String   // round | long | capsule
+    let part: Double
+
+    var body: some View {
+        let round = kind == "round"
+        let size = round ? CGSize(width: 24, height: 24) : CGSize(width: 32, height: 16)
+        let outline = round ? AnyShape(Circle().inset(by: 1)) : AnyShape(Capsule().inset(by: 1))
+        ZStack {
+            if part >= 1 {
+                outline.fill(Color.white)
+                if kind == "capsule" { Rectangle().fill(Color.black.opacity(0.25)).frame(width: 1.2, height: 13) }
+            } else {
+                outline.stroke(Color.white, style: StrokeStyle(lineWidth: 1.5, dash: [3, 2.5]))
+                if round {
+                    PieSlice(part: part).fill(Color.white)
+                    PieSlice(part: part).stroke(Color.white, style: StrokeStyle(lineWidth: 1.5, lineJoin: .round))
+                } else {
+                    // The filled part keeps a solid edge: the whole pill, stroke included, cut at `part` of its length.
+                    ZStack { outline.fill(Color.white); outline.stroke(Color.white, lineWidth: 1.5) }
+                        .mask(Rectangle().frame(width: 1 + 30 * part).frame(maxWidth: .infinity, alignment: .leading))
+                }
+            }
+        }
+        .frame(width: size.width, height: size.height)
+    }
+}
+
+private struct PieSlice: Shape {
+    let part: Double
+
+    func path(in r: CGRect) -> Path {
+        let c = CGPoint(x: r.midX, y: r.midY), radius = min(r.width, r.height) / 2 - 1
+        var p = Path()
+        p.move(to: c)
+        p.addLine(to: CGPoint(x: c.x, y: c.y - radius))
+        p.addArc(center: c, radius: radius, startAngle: .degrees(-90), endAngle: .degrees(-90 + 360 * part), clockwise: false)
+        p.closeSubpath()
+        return p
     }
 }
 

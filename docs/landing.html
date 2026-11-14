@@ -131,12 +131,14 @@ h2 { font-size: clamp(28px, 3.6vw, 38px); margin: 8px 0 32px; }
 
 /* mascot: the blister pack from pwa/icons */
 .mascot { display: block; height: auto; }
-.shots .hero-mascot { position: absolute; left: -18px; bottom: -8px; width: 170px; z-index: 3; filter: drop-shadow(0 10px 14px rgba(0, 30, 45, .25)); }
-@media (max-width: 860px) { .shots .hero-mascot { width: 120px; left: 0; } }
+/* Peeks out from behind the front phone, top right; mirrored so the waving hand is on the open side */
+.shots .hero-mascot { position: absolute; right: -14px; top: 4px; width: 160px; z-index: 0; transform: scaleX(-1); filter: drop-shadow(0 10px 14px rgba(0, 30, 45, .25)); }
+@media (max-width: 860px) { .shots .hero-mascot { width: 120px; right: 0; top: 4px; } }
 
 /* problem: four checked figures from the pitch */
 .why-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
 .why-head .mascot { width: 150px; }
+.why-intro { color: var(--muted); font-size: 19px; max-width: 62ch; margin: 14px 0 20px; }
 @media (max-width: 640px) { .why-head { grid-template-columns: 1fr; } .why-head .mascot { width: 110px; grid-row: 1; } }
 .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -351,14 +353,15 @@ footer p { max-width: 95ch; }
     <div class="why-head">
       <div>
         <span class="label"><span lang="de">Das Problem</span><span lang="en">The problem</span></span>
-        <h2><span lang="de">Wer viele Tabletten nimmt, erkennt sie am Aussehen. Und das ändert sich.</span><span lang="en">People on many pills know them by their look. And the look keeps changing.</span></h2>
+        <h2><span lang="de">Patienten sagen „die kleine weiße“. Ärzte sagen „Metoprolol 47,5“.</span><span lang="en">Patients say “the small white one”. Doctors say “metoprolol 47.5”.</span></h2>
+        <p class="why-intro"><span lang="de">Wer viele Medikamente nimmt, erkennt sie an Farbe, Form und Prägung, nicht am Namen. Im Medikationsgespräch muss die Ärztin das erst übersetzen. Und nach jedem Herstellerwechsel sieht dieselbe Tablette anders aus. Glaubt ein Herzpatient, er nimmt die niedrige Dosis Betablocker, nimmt aber längst die höchste, wird womöglich weiter erhöht.</span><span lang="en">People on many medicines know them by colour, shape and imprint, not by name. In the medication review the doctor has to translate first. And after every maker switch the same pill looks different. If a heart patient believes he is on the low beta-blocker dose but is already on the highest, the doctor may raise it further.</span></p>
       </div>
       <img class="mascot" src="../pwa/icons/mascot-search.png" alt="" width="480" height="480" loading="lazy" decoding="async">
     </div>
     <div class="stats">
-      <div class="stat"><span class="n">47 %</span><p><span lang="de">Nur bei knapp der Hälfte ihrer Medikamente wissen ältere Hausarztpatienten, wofür sie sind.</span><span lang="en">Older GP patients know what fewer than half of their medicines are for.</span></p><small><span lang="de">Greifswald, n = 637, DMW 2018</span><span lang="en">Greifswald, n = 637, DMW 2018</span></small></div>
-      <div class="stat"><span class="n"><span lang="de">0 von 288</span><span lang="en">0 of 288</span></span><p><span lang="de">Medikationsplänen waren bei einer Apothekenprüfung vollständig richtig.</span><span lang="en">medication plans were fully correct in a pharmacy review.</span></p><small>Eickhoff 2023</small></div>
-      <div class="stat"><span class="n"><span lang="de">1 von 4</span><span lang="en">1 in 4</span></span><p><span lang="de">austauschbaren Rabatt-Paaren unterscheidet sich in Farbe oder Form.</span><span lang="en">interchangeable rebate pairs differ in colour or shape.</span></p><small><span lang="de">Pruszydlo 2008, 258.412 Paare</span><span lang="en">Pruszydlo 2008, 258,412 pairs</span></small></div>
+      <div class="stat"><span class="n">80 %</span><p><span lang="de">der Patienten beschreiben ihre Medikamente über das Aussehen. 70 % erinnern sich selten an die Namen.</span><span lang="en">of patients describe their medicines by how they look. 70 % rarely remember the names.</span></p><small><span lang="de">Projekt Rosetta 2025, Ärzteumfrage, n = 29</span><span lang="en">Project Rosetta 2025, physician survey, n = 29</span></small></div>
+      <div class="stat"><span class="n"><span lang="de">&gt; 15 Min.</span><span lang="en">&gt; 15 min</span></span><p><span lang="de">braucht ein Drittel der Ärzte für die Medikamentenanamnese, wenn Namen und Aussehen nicht zusammenpassen. Sonst 2 bis 5.</span><span lang="en">is what a third of doctors need for the medication history when names and looks don't match. Otherwise 2 to 5.</span></p><small><span lang="de">Projekt Rosetta 2025, Ärzteumfrage, n = 29</span><span lang="en">Project Rosetta 2025, physician survey, n = 29</span></small></div>
+      <div class="stat"><span class="n">51 %</span><p><span lang="de">der Menschen ab 50 mit Dauermedikation erlebten, dass ihre Tablette plötzlich anders aussah. 12 % von ihnen nahmen sie danach seltener oder gar nicht mehr.</span><span lang="en">of people 50+ on long-term generics saw their pill suddenly look different. 12 % of them then took it less often or stopped.</span></p><small><span lang="de">Barenie, AJMC 2020, USA, n = 1.000</span><span lang="en">Barenie, AJMC 2020, USA, n = 1,000</span></small></div>
       <div class="stat"><span class="n"><span lang="de">13,5 %</span><span lang="en">13.5 %</span></span><p><span lang="de">aller Arzneimittelprobleme am HV-Tisch: Unsicherheit nach einem Herstellerwechsel.</span><span lang="en">of all drug problems at the pharmacy counter: uncertainty after a maker switch.</span></p><small><span lang="de">ABDA, 143 Apotheken, 14.231 Patienten</span><span lang="en">ABDA, 143 pharmacies, 14,231 patients</span></small></div>
     </div>
   </section>

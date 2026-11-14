@@ -133,6 +133,20 @@ const FRACTION_WORDS = { 0.5: "eine halbe", 0.25: "eine viertel", 0.75: "drei vi
 export const amountText = (v) => FRACTION_WORDS[v] ?? (v === 1 ? "eine" : v === 2 ? "zwei" : v === 3 ? "drei" : v === 4 ? "vier" : german(v));
 const FRACTION_GLYPHS = { 0.5: "½", 0.25: "¼", 0.75: "¾", 0.3333: "⅓", 0.6667: "⅔", 0.125: "⅛", 1.5: "1½" };
 export const amountSymbol = (v) => FRACTION_GLYPHS[v] ?? german(v);
+
+/** What a time-slot tile draws for the plan's amount: `whole` pills and one `part` pill (0 < part < 1, the plan's own
+ *  fraction), or null for the number alone: unknown amount, a unit like "20 IE", a form that isn't a tablet or capsule,
+ *  a part capsule, or more than 4 pills. A whole dose is the pills alone; a part keeps the number below (`showNumber`).
+ *  Only the plan's amount is drawn: a part pill never says the tablet may be split (INV-14). */
+export function doseGlyph(amount, family, unit = null) {
+  if (amount == null || !(amount > 0) || (unit && unit !== "Stück")) return null;
+  if (family !== "tablet" && family !== "capsule") return null;
+  const whole = Math.floor(amount + 1e-6);
+  const part = Math.round((amount - whole) * 1e4) / 1e4;
+  if (part > 0 && family === "capsule") return null;
+  if (whole + (part > 0 ? 1 : 0) > 4) return null;
+  return { whole, part, showNumber: part > 0 };
+}
 /** Like Swift's String(format: "%g"): 1 → "1", 0.75 → "0.75". */
 export const fmt = (v) => String(Number(v.toPrecision(6)));
 /** German decimal comma: 2.5 → "2,5". */
