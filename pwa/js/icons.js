@@ -66,6 +66,20 @@ const P = {
   expand: "M14 4h6v6 M20 4l-7 7 M10 20H4v-6 M4 20l7-7",
 };
 
+// Meal timing as a little story read left to right, tablet and plate (36 × 24, drawn wider than the others):
+//   nüchtern = empty plate (nothing eaten yet) · vor = tablet → plate · zum = tablet on the plate · nach = plate → tablet.
+// Bold enough for a 4–5 mm label: the tablet is filled, the plate a ring, the arrow short and thick.
+const circle = (cx, r) => `M${cx - r} 12a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0z`;
+const tablet = (x, w = 11, h = 6.4) => { const r = h / 2, y = 12 - r;
+  return `M${x + r} ${y}h${w - h}a${r} ${r} 0 0 1 0 ${h}h${h - w}a${r} ${r} 0 0 1 0 ${-h}z`; };
+const arrow = (x1, x2) => `M${x1} 12h${x2 - x1} M${x2 - 3} 9l3 3-3 3`;
+const WIDE = {   // { s: stroked outline, f: filled shape }
+  mealFasting: { s: `${circle(18, 10)} ${circle(18, 5.5)}`, f: "" },
+  mealBefore: { s: `${arrow(13, 18.5)} ${circle(27.5, 7.5)}`, f: tablet(0.8) },
+  mealWith: { s: circle(18, 10.5), f: tablet(12.5) },
+  mealAfter: { s: `${circle(8.5, 7.5)} ${arrow(17.5, 23)}`, f: tablet(24.2) },
+};
+
 const NS = "http://www.w3.org/2000/svg";
 
 /** Illustrated icons (PNG) for the main actions; every other name stays a line-drawn SVG. Paired with
@@ -73,7 +87,7 @@ const NS = "http://www.w3.org/2000/svg";
 const PICTURES = { qr: "ui-plan", barcode: "ui-pack", printer: "ui-print", tap: "ui-lookup", tablette: "ui-pill" };
 export const hasPicture = (name) => name in PICTURES;
 
-/** <svg> icon (or the illustrated <img> for the main actions); size in px (default 1em via CSS). */
+/** <svg> icon (or the illustrated <img> for the main actions); size in px (default 1em via CSS). Meal icons are 3:2 (class "wide"). */
 export function icon(name, { size, cls = "icon", stroke = 2.2 } = {}) {
   if (PICTURES[name]) {
     const img = document.createElement("img");
@@ -86,24 +100,31 @@ export function icon(name, { size, cls = "icon", stroke = 2.2 } = {}) {
     if (size) { img.width = size; img.height = size; }
     return img;
   }
+  const wide = name in WIDE;
   const s = document.createElementNS(NS, "svg");
-  s.setAttribute("viewBox", "0 0 24 24");
-  s.setAttribute("class", cls);
+  s.setAttribute("viewBox", wide ? "0 0 36 24" : "0 0 24 24");
+  s.setAttribute("class", wide ? `${cls} wide` : cls);
   s.setAttribute("aria-hidden", "true");
   s.setAttribute("focusable", "false");
-  if (size) { s.setAttribute("width", size); s.setAttribute("height", size); }
+  if (size) { s.setAttribute("width", wide ? size * 1.5 : size); s.setAttribute("height", size); }
   const p = document.createElementNS(NS, "path");
-  p.setAttribute("d", P[name] ?? P.pills);
+  p.setAttribute("d", wide ? WIDE[name].s : P[name] ?? P.pills);
   p.setAttribute("fill", "none");
   p.setAttribute("stroke", "currentColor");
-  p.setAttribute("stroke-width", stroke);
+  p.setAttribute("stroke-width", wide ? Math.max(stroke, 2.6) : stroke);
   p.setAttribute("stroke-linecap", "round");
   p.setAttribute("stroke-linejoin", "round");
   s.append(p);
+  if (wide && WIDE[name].f) {
+    const f = document.createElementNS(NS, "path");
+    f.setAttribute("d", WIDE[name].f);
+    f.setAttribute("fill", "currentColor");
+    s.append(f);
+  }
   return s;
 }
 
-export const hasIcon = (name) => name in P;
+export const hasIcon = (name) => name in P || name in WIDE;
 
 /** What a medication is for, as an icon. Keyed by ATC prefix (longest wins). */
 const PURPOSE = [

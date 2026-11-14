@@ -23,6 +23,10 @@ in the PR why one side waits. Requirements behind these items: [PRD print sheet]
 - PWA section codes 411–425 and free-text headings; `X`/`R` lines; multi-page `MP/@a/@z/@U` merge with a missing-page notice; an empty plan can't be adopted.
 - PWA print (`print-sheet.js`, `bmp-writer.js`): retitled "Meine Medikamente mit Bildern", no BMP code built from the phone's list, slot words, "Größe unbekannt" instead of a default size, units/weekly/reason as above, meal-tag negation fix.
 - PWA print layout to [PRD print sheet](docs/PRD-print-sheet.md) §5.4–5.8 (was T-28): ≥ 12 pt body, 14–18 pt names and doses, Nr. column, source line per picture, 5 cm control bar, 6 rows per page with the header repeated, slot words.
+- PWA print layout (14 Nov, by Sumayya, from the hackathon repo): picture at true size and enlarged in their own columns, description
+  column, meal tag (drawn icons, colour) and black weekday tag next to the plan's Hinweis as written, "Sieht aus wie Nr. …" by a fixed
+  rule, pages split by measuring (≤ 6 rows, no row cut off), a preview per page, "0" as on the BMP, German hyphenation, fonts ≥ 9 pt
+  (Wofür ≥ 12, ingredient ≥ 14). Checks: `pwa/tests/print-sheet.test.js`. iOS: T-30.
 - Python demo print (`tools/make-bmp-sheet.py`, `print/*`): faithful BMP page plus a separate picture companion sheet per [PRD print sheet](docs/PRD-print-sheet.md) §5.
 - Example plan A: weekly MTX moved into `<S c="425">` (BMP 2.8 §6.2.11), code regenerated; `sheet-plan-a.png` is now the picture sheet carrying the plan's code.
 - A card opened from the day list says "Auf Ihrem Plan" (was "Ihre Tablette", also for insulin).
@@ -558,9 +562,14 @@ hidden button is the only way to pick an existing photo.
 A pharmacy scanning it would import a patient-edited list as a professional plan (D-09: no BMP code from the phone's list).
 
 **Fix.** Mirror the PWA print change: no generated code, title "Meine Medikamente mit Bildern", plus the [PRD print sheet](docs/PRD-print-sheet.md) §5 sizes, source lines,
-"Größe unbekannt" and slot words. Keep `BmpWriter` only for tests, or delete it.
+"Größe unbekannt" and slot words. Keep `BmpWriter` only for tests, or delete it. Since 14 Nov the web sheet also has: picture at
+true size ("echte Größe" / "nicht maßstäblich" under it) and enlarged (known size only) in two columns plus an "Aussehen" column
+(`lookLines`); the black weekday tag and the meal tag (drawn plate icons, `MEAL_ICON`) before the plan's Hinweis, which stays as
+written; "Sieht aus wie Nr. …" (`lookAlike`: same colours, shape family oval≈oblong, lengths within 1.5 mm); "0" set lighter; pages
+split by measured height (`fillPages`, ≤ 6 rows; else `pageRows`); one preview per page.
 
-**Test.** `ios/checks/run.sh`; a visual check of a printed PDF.
+**Test.** `ios/checks/run.sh` with the `print-sheet.test.js` cases (Hinweis as written, "0", "echte Größe" only with a known size,
+look-alike rule, page split); a visual check of a printed PDF.
 
 ### T-31 iOS: `MealTiming.swift` inverts negations (pharmacist + physician, verified)
 

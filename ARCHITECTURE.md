@@ -205,7 +205,7 @@ Every change goes into both columns (`AGENTS.md` → “Two clients, one product
 | Pill pixels | `PillRecognizer.swift` (+ Vision OCR) | `js/recognizer.js` (no OCR: the imprint is typed) | PWA (`recognizer.test.js`), iOS (`ios/eval/`) |
 | State (`myMeds`, `unknownPZNs`, learned leaflet looks) | `Store.swift` (UserDefaults) | `js/store.js` (localStorage, + `learnedLeaflets`) | PWA (`pwa.test.js`) |
 | Meal tags | `MealTiming.swift` (iOS: T-31) | `js/bmp-writer.js` `meal()` | both |
-| Plan drucken | `PlanPrint.swift`, `BmpWriter.swift` (iOS: T-30) | `js/print-sheet.js` ("Meine Medikamente mit Bildern", no code); `bmp-writer.js` / `code-writer.js` unused for print (D-09) | PWA (`print.test.js`) |
+| Plan drucken | `PlanPrint.swift`, `BmpWriter.swift` (iOS: T-30) | `js/print-sheet.js` ("Meine Medikamente mit Bildern", no code; true-size + enlarged picture, look-alike line, measured page split); `bmp-writer.js` / `code-writer.js` unused for print (D-09) | PWA (`print.test.js`, `print-sheet.test.js`) |
 | Leaflet look for an unknown PZN | `LeafletLookup.swift`, `LeafletOnline.swift` (live download after "Erlauben"), `LeafletParser.swift` | `js/leaflet-parser.js` (1:1 port), `js/leaflet-pdf.js` (the person opens the leaflet link, saves the PDF and picks it; read with vendored pdf.js – no download: the hosts send no CORS headers) | both (`leaflet.test.js`) |
 | Screens and building blocks | `RootView`, `ResultViews`, `PackViews`, `PlanInput`, `OtherViews`, `ExamplesView`, `PillView`, `Theme` | `js/app.js`, `js/ui.js`, `js/icons.js`, `app.css` | — |
 | Read-aloud | `Theme.swift` (AVSpeechSynthesizer) | `js/speech.js` (speechSynthesis, de-DE) | — |

@@ -53,7 +53,8 @@ only the medication lines: name, birth date, insurance number and practice are n
 4. **Packung.** Scan the securPharm Data Matrix on the box, or the PZN barcode on non-prescription packs. The PZN gives exact identity:
    on your plan · same substance, other pack (only the pharmacy says whether it replaces yours) · same substance, other strength or form ·
    not on your plan (can be put on your own list) · not in the database. Best-before date and batch from the code, **Abgelaufen** when expired.
-5. **Plan drucken.** The sheet "Meine Medikamente mit Bildern" for the older person (A4 landscape, large print, no 2D code of its own).
+5. **Plan drucken.** The sheet "Meine Medikamente mit Bildern" for the older person (A4 landscape, large print, no 2D code of its own):
+   each pill at true size and enlarged, the plan's Hinweis as written with a meal or weekday tag, "Sieht aus wie Nr. …" for look-alikes.
    The paper BMP from the practice stays the valid plan.
 6. **Sprachberater (bonus).** The button top right opens the voice advisor, a separate web app
    (<https://blister-kompass-voice.vercel.app/voice>), in the browser after a short note: describe a medicine in words, it shows possible

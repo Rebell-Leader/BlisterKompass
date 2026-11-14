@@ -353,6 +353,9 @@ dialog.sheet::backdrop { background: rgba(0, 0, 0, .4); }
   h1 { font-size: 30px; }
 }
 
+/* Meal icons are 3:2 (tablet → plate …), wherever a square icon size is set */
+svg.icon.wide { width: auto !important; aspect-ratio: 3 / 2; }
+
 /* Plan drucken ------------------------------------------------------------------------------------------------------
    The sheet is laid out in mm (A4 landscape, 297 × 210) and always light: it is paper. On screen it is scaled with
    --scale (set from the box width); printed, it is the page itself. */
@@ -362,11 +365,11 @@ dialog.sheet::backdrop { background: rgba(0, 0, 0, .4); }
   display: flex; flex-direction: column; -webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
 /* Companion sheet after G_plan_review §5: ≥ 12 pt body, 14–18 pt names and doses, nothing below 9 pt, no grey text. */
-.ps-head { display: grid; grid-template-columns: 96mm 1fr 46mm; gap: 5mm; align-items: start; padding-bottom: 2.5mm; border-bottom: .5mm solid #111; }
-.ps-brand { display: flex; gap: 3mm; align-items: flex-start; }
+.ps-head { display: grid; grid-template-columns: 100mm 1fr 46mm; gap: 6mm; align-items: start; padding-bottom: 2.5mm; border-bottom: .5mm solid #111; }
+.ps-headbrand { display: flex; gap: 3mm; align-items: flex-start; }
 .ps-mascot { width: 17mm; height: 17mm; flex: none; }
-.ps-title { font-size: 20pt; font-weight: 700; line-height: 1.05; }
-.ps-page { font-size: 12pt; margin-top: 1.5mm; }
+.ps-title { font-size: 24pt; font-weight: 700; line-height: 1.05; }
+.ps-page { font-size: 13pt; margin-top: 1.5mm; }
 .ps-for { display: flex; align-items: flex-end; gap: 2mm; font-size: 12pt; margin-bottom: 1.5mm; }
 .ps-write { flex: 1; border-bottom: .3mm solid #111; height: 6mm; }
 .ps-belongs { font-weight: 700; margin-bottom: 1mm; }
@@ -374,17 +377,36 @@ dialog.sheet::backdrop { background: rgba(0, 0, 0, .4); }
 .ps-table { width: 100%; border-collapse: collapse; margin-top: 3mm; table-layout: fixed; }
 .ps-table th, .ps-table td { border: .3mm solid #111; padding: 1mm 1.6mm; vertical-align: middle; }
 .ps-table th { font-size: 12pt; font-weight: 700; text-align: left; background: #fff; }
-.ps-table th.ps-slot { font-size: 10.5pt; padding: 1mm .4mm; text-align: center; }
-.ps-table td { overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; }
+.ps-table th.ps-slot { font-size: 10pt; padding: .6mm .3mm; text-align: center; line-height: 1; }
+.ps-slot-ic { display: block; } .ps-slot-ic .icon { width: 6mm; height: 6mm; }
+/* no automatic hyphens: a broken word ("Levothyroxin-Na-trium") is harder to read than a wrapped line */
+.ps-table td { overflow-wrap: break-word; hyphens: manual; -webkit-hyphens: manual; }
+.ps-table td.ps-zero { font-weight: 400; }
+/* German hyphenation (the sheet is lang="de") where single long words meet narrow columns, so a word is split at a
+   syllable ("Acetylsalicyl-säure", "Nebenhöhlen-entzündung") instead of anywhere, at full size (no smaller "long" variant). */
+.ps-table td.ps-reason, .ps-table .ps-sub, .ps-table .ps-look-main { hyphens: auto; -webkit-hyphens: auto;
+  hyphenate-limit-chars: 6 3 3; -webkit-hyphenate-limit-before: 3; -webkit-hyphenate-limit-after: 3; }   /* never "Na-trium" */
 .ps-table .ps-center { text-align: center; }
-.ps-c-nr { width: 11mm; } .ps-c-look { width: 57mm; } .ps-c-med { width: 55mm; } .ps-c-n { width: 18.5mm; } .ps-c-reason { width: 34mm; }
+.ps-c-nr { width: 12mm; } .ps-c-pic { width: 25mm; } .ps-c-big { width: 29mm; } .ps-c-desc { width: 31mm; } .ps-c-med { width: 45mm; }
+.ps-c-n { width: 17mm; } .ps-c-reason { width: 31mm; }   /* the rest goes to Hinweise (auto width) */
+.ps-table th.ps-th-pic { line-height: 1.05; } .ps-th-pic small { display: block; font-size: 9.5pt; font-weight: 400; }
+.ps-table td.ps-big { text-align: center; padding: 1mm; }
+.ps-big > svg { display: inline-block; vertical-align: middle; }
+.ps-alike { margin-top: .8mm; font-weight: 700; }
+/* labels never stick out of their cell: they may wrap inside it */
+.ps-table .ps-meal, .ps-table .ps-day-tag { max-width: 100%; box-sizing: border-box; }
+.ps-table .ps-meal .icon { flex: none; }
+.ps-table .ps-meal { font-size: 9.5pt; padding: .3mm 1.5mm; white-space: normal; }   /* may wrap inside a narrow Hinweise cell */
+.ps-day-tag { display: inline-block; margin-top: .8mm; padding: .4mm 2mm; border-radius: 1.5mm; background: #111; color: #fff;
+  font-size: 12pt; font-weight: 700; line-height: 1.2; white-space: nowrap; }
 .ps-table tbody tr { height: 15mm; }
-.ps-nr { text-align: center; font-size: 18pt; font-weight: 700; }
-.ps-look { display: table-cell; }
-.ps-pic { float: left; width: 15mm; min-height: 11mm; display: grid; place-items: center; margin-right: 2mm; }
-.ps-pic > svg { display: block; }
-.ps-desc { font-size: 10.5pt; line-height: 1.15; overflow: hidden; }
-.ps-size { font-size: 10pt; font-weight: 700; }
+.ps-nr { text-align: center; font-size: 18pt; font-weight: 700; white-space: nowrap; }
+.ps-table td.ps-pic { text-align: center; padding: 1mm; }
+.ps-pic > svg { display: inline-block; vertical-align: middle; }
+.ps-scale { font-size: 9pt; line-height: 1.1; margin-top: .6mm; }
+.ps-desc { font-size: 11pt; line-height: 1.15; overflow: hidden; padding-block: .6mm; }
+.ps-look-main { font-size: 12.5pt; font-weight: 700; }
+.ps-size { font-size: 10pt; }
 .ps-src { font-size: 9pt; }
 .ps-sub { font-size: 14pt; font-weight: 700; } .ps-str { font-size: 12pt; }
 .ps-brand { font-size: 11pt; }
@@ -398,11 +420,18 @@ dialog.sheet::backdrop { background: rgba(0, 0, 0, .4); }
 .ps-foot p { margin: 0 0 .8mm; }
 .ps-bar-row { display: flex; align-items: center; gap: 4mm; font-size: 9pt; }
 .ps-bar { display: inline-block; width: 50mm; height: 1.6mm; background: #111; flex: none; }
+/* meal labels from the Hinweise, colour-coded (white text ≥ 4.5:1; distinct from the time-of-day colours) */
+.ps-meal { display: inline-flex; align-items: center; gap: .8mm; margin-bottom: .6mm; padding: .3mm 1.8mm; border-radius: 2.5mm;
+  color: #fff; font-size: 10pt; font-weight: 700; white-space: nowrap; }
+.ps-meal .icon { width: 3.4mm; height: 4.4mm; }
+.ps-meal.m-fasting { background: #0277BD; } .ps-meal.m-before { background: #2E7D32; }
+.ps-meal.m-with { background: #C2185B; }    .ps-meal.m-after { background: #6D4C41; }
+
 
 .ps-preview { position: relative; display: block; width: 100%; aspect-ratio: 297 / 210; overflow: hidden; border-radius: 10px;
   background: #fff; box-shadow: 0 2px 10px rgba(0, 0, 0, .2); cursor: zoom-in; }
 .ps-preview > .ps-sheet { position: absolute; top: 0; left: 0; transform: scale(var(--scale, .3)); transform-origin: 0 0; pointer-events: none; }
-.ps-expand { position: absolute; right: 8px; bottom: 8px; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+.ps-expand { position: absolute; right: 8px; bottom: 8px; width: 48px; height: 48px; border: 0; padding: 0; cursor: zoom-in; border-radius: 50%; display: grid; place-items: center;
   background: var(--accent-fill); color: #fff; }
 .privacy.left { justify-content: flex-start; text-align: left; }
 .day-meal { display: flex; align-items: center; gap: 6px; color: var(--accent); font-weight: 600; }

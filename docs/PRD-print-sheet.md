@@ -1,6 +1,6 @@
 # PRD: "Meine Medikamente mit Bildern" – the printable sheet for the older person
 
-Status: v1 built in the web app (`pwa/js/print-sheet.js`); iPhone app still prints an older layout (T-30). Demo sheets: [`print/`](../print/).
+Status: v1 built in the web app (`pwa/js/print-sheet.js`; picture columns, look-alike line and measured page split since 14 Nov); iPhone app still prints an older layout (T-30). Demo sheets: [`print/`](../print/).
 Owner: team BlisterKompass. Last update: 13 Nov 2026. Related: [PRD scanner app](PRD-scanner-app.md), [decisions](DECISIONS.md).
 
 ## 1. Problem
@@ -70,9 +70,9 @@ small type (8.5 pt), its own 2D code, or licensed product images.
 
 | ID | Requirement | State |
 |---|---|---|
-| PS-08 | Columns: Nr. · Aussehen · Medikament · morgens · mittags · abends · zur Nacht · Wofür · Hinweise. Rows in plan order; Nr. = row. | Now |
+| PS-08 | Columns: Nr. · Bild (as drawn, "echte Größe" / "nicht maßstäblich" under it) · Bild vergrößert (known size only) · Aussehen · Medikament · morgens · mittags · abends · zur Nacht · Wofür · Hinweise. Rows in plan order; Nr. = row. | Now |
 | PS-09 | Medikament: ingredient (14 pt bold) and strength, brand beneath; block heading (e.g. "zeitlich befristet") when the plan has one. | Now |
-| PS-10 | Doses in the plan's notation (½, ¼, ¾, "1,5") at 18 pt, unit when it isn't "Stück" (e.g. "20 IE"). Weekly: the doses plus "nur montags · 1× pro Woche". Free-text dosing across the four time columns, as written. | Now |
+| PS-10 | Doses in the plan's notation (½, ¼, ¾, "1,5", "0" as on the BMP) at 18 pt, unit when it isn't "Stück" (e.g. "20 IE"). Weekly: the doses plus a black "nur montags" tag in Hinweise. Free-text dosing across the four time columns, as written. | Now |
 | PS-11 | As-needed medicines in their own block "Bei Bedarf" with the plan's text (e.g. "max. 3 pro Tag"). | Now |
 | PS-12 | Wofür = the plan's reason (`M/@r`) only; empty when the plan states none. Hinweise = the plan's hint and extra line, as written. | Now |
 
@@ -82,7 +82,7 @@ small type (8.5 pt), its own 2D code, or licensed product images.
 |---|---|---|
 | PS-13 | Picture plus a description in cue order: size → shape → score line → imprint → colour ("8 mm, rund, Kerbe, „75“, weiß"). | Now |
 | PS-14 | Source line under every picture ("Aussehen laut Packungsbeilage", "… EMA-Produktinformation", "US-Referenzdaten", "Beispieldaten"). | Now |
-| PS-15 | True size ("Originalgröße") only when the source gives millimetres (length, and width for non-round forms); otherwise a fixed schematic size with "Größe unbekannt – nicht maßstäblich". Never a default size. | Now |
+| PS-15 | True size ("echte Größe") only when the source gives millimetres (length, and width for non-round forms); otherwise a fixed schematic size with "nicht maßstäblich" and "Größe unbekannt", and no enlarged picture. Never a default size. | Now |
 | PS-16 | No look: grey dashed outline of the dosage form plus "Aussehen unbekannt – bitte Apotheke fragen". Never a picture from another maker, strength or substance match (INV-05). | Now |
 | PS-17 | Black-and-white printing stays usable: no colour coding of rows or time slots; colour is the last word in the description. | Now |
 | PS-18 | A score line is drawn as the leaflet states it and never means "may be split". | Now; T-36 for the app's question |
@@ -98,7 +98,7 @@ small type (8.5 pt), its own 2D code, or licensed product images.
 | ID | Requirement | State |
 |---|---|---|
 | PS-20 | Body ≥ 12 pt; ingredient 14 pt; doses and Nr. 18 pt; nothing below 9 pt; no grey text for content; black on white; ruled rows. | Now (web; imprint lettering inside a true-size drawing is smaller, and also written out at 11 pt) |
-| PS-21 | At most 6 rows per page rather than smaller type; column titles repeated on each page. | Now |
+| PS-21 | At most 6 rows per page rather than smaller type, fewer when they don't fit (pages split by measured height, no row cut off); column titles repeated on each page. | Now |
 
 ### 5.8 Footer
 
