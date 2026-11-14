@@ -113,12 +113,6 @@ public class MainActivity extends Activity {
         if (web.getUrl() == null) web.loadUrl(START);
     }
 
-    @Override
-    protected void onDestroy() {
-        clearPhotos();
-        super.onDestroy();
-    }
-
     /** Edge-to-edge is forced from Android 15; keep the page clear of the bars and the keyboard instead. */
     private void applySystemBars() {
         Window w = getWindow();
@@ -172,6 +166,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        clearPhotos(); // T-55: no capture outlives the app
         if (tts != null) tts.shutdown();
         web.destroy();
         super.onDestroy();
